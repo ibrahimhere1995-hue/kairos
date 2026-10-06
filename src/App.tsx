@@ -1,4 +1,11 @@
-// Intentionally empty shell: tokens arrive in P1-T02, the app shell and routing in P1-T03.
+import { ThemeProvider } from "@/app/theme/ThemeProvider";
+import { Styleguide } from "@/features/dev/Styleguide";
+
+// Temporary: the styleguide shows in dev builds until routing arrives in P1-T03.
 export default function App() {
-  return <main className="min-h-screen" />;
+  return (
+    <ThemeProvider>
+      {import.meta.env.DEV ? <Styleguide /> : <main className="min-h-screen" />}
+    </ThemeProvider>
+  );
 }

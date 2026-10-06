@@ -1,3 +1,106 @@
 @import "tailwindcss";
+@import "./tokens.css";
 
-/* Design tokens (colours, type, spacing, motion) are added in P1-T02 via tokens.css. */
+/*
+ * Map Kairos tokens into Tailwind. Tailwind's default colour palette, shadows, radii and
+ * font sizes are cleared first, so components can only use Kairos tokens (PROJECT_RULES #7).
+ */
+@theme inline {
+  --color-*: initial;
+  --shadow-*: initial;
+  --radius-*: initial;
+  --text-*: initial;
+  --font-*: initial;
+
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-subtle: var(--text-subtle);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-text: var(--accent-text);
+  --color-on-accent: var(--on-accent);
+  --color-focus-ring: var(--focus-ring);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-on-danger: var(--on-danger);
+  --color-info: var(--info);
+
+  --color-area-work: var(--area-work);
+  --color-area-home: var(--area-home);
+  --color-area-personal: var(--area-personal);
+  --color-area-learning: var(--area-learning);
+  --color-area-health: var(--area-health);
+
+  --color-status-now: var(--status-now);
+  --color-status-upcoming: var(--status-upcoming);
+  --color-status-slipped: var(--status-slipped);
+  --color-status-done: var(--status-done);
+  --color-status-skipped: var(--status-skipped);
+
+  --shadow-sm: var(--elevation-sm);
+  --shadow-md: var(--elevation-md);
+  --shadow-lg: var(--elevation-lg);
+
+  /* §5 Radius */
+  --radius-sm: 0.375rem; /* 6px  chips, inputs */
+  --radius-md: 0.625rem; /* 10px buttons, cards */
+  --radius-lg: 1rem; /* 16px panels, dialogs */
+
+  /* §4 Typography */
+  --font-display: "Fraunces Variable", Fraunces, Georgia, "Times New Roman", serif;
+  --font-sans: "Inter Variable", Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --text-display: 2.25rem; /* 36 */
+  --text-display--line-height: 2.75rem; /* 44 */
+  --text-display--font-weight: 500;
+  --text-h1: 1.75rem; /* 28 */
+  --text-h1--line-height: 2.25rem; /* 36 */
+  --text-h1--font-weight: 500;
+  --text-h2: 1.25rem; /* 20 */
+  --text-h2--line-height: 1.75rem; /* 28 */
+  --text-h2--font-weight: 600;
+  --text-h3: 1rem; /* 16 */
+  --text-h3--line-height: 1.5rem; /* 24 */
+  --text-h3--font-weight: 600;
+  --text-body: 0.9375rem; /* 15 */
+  --text-body--line-height: 1.375rem; /* 22 */
+  --text-small: 0.8125rem; /* 13 */
+  --text-small--line-height: 1.125rem; /* 18 */
+  --text-small--font-weight: 500;
+  --text-caption: 0.75rem; /* 12 */
+  --text-caption--line-height: 1rem; /* 16 */
+  --text-caption--font-weight: 500;
+  --text-caption--letter-spacing: 0.02em;
+}
+
+@layer base {
+  html {
+    background-color: var(--bg);
+  }
+
+  body {
+    min-height: 100vh;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* §8 Focus: 2px ring, 2px offset, always visible on keyboard focus. */
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+}
