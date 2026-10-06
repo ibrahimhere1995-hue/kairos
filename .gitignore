@@ -21,3 +21,6 @@ src-tauri/gen/schemas/
 Thumbs.db
 *.log
 coverage/
+
+# dev-only app data (see CLAUDE.md)
+.devdata/
