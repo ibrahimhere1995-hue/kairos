@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 import App from "@/App";
 
 describe("App", () => {
-  it("renders the main landmark", () => {
+  it("boots into the app shell", async () => {
     render(<App />);
-    expect(screen.getByRole("main")).toBeInTheDocument();
+    expect(await screen.findByRole("main")).toBeInTheDocument();
   });
 });

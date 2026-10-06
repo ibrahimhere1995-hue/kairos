@@ -1,11 +1,16 @@
+import { RouterProvider } from "@tanstack/react-router";
+import { createAppRouter } from "@/app/router";
 import { ThemeProvider } from "@/app/theme/ThemeProvider";
-import { Styleguide } from "@/features/dev/Styleguide";
+import { TooltipProvider } from "@/components/ui/Tooltip";
 
-// Temporary: the styleguide shows in dev builds until routing arrives in P1-T03.
+const router = createAppRouter();
+
 export default function App() {
   return (
     <ThemeProvider>
-      {import.meta.env.DEV ? <Styleguide /> : <main className="min-h-screen" />}
+      <TooltipProvider delayDuration={400}>
+        <RouterProvider router={router} />
+      </TooltipProvider>
     </ThemeProvider>
   );
 }
