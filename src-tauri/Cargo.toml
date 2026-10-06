@@ -1,0 +1,33 @@
+[package]
+name = "kairos"
+version = "0.1.0"
+description = "Kairos — the perfect moment to act. A local-first personal planner."
+authors = ["Zack"]
+edition = "2024"
+
+[lib]
+# The `_lib` suffix avoids a lib/bin name clash on Windows,
+# see https://github.com/rust-lang/cargo/issues/8519
+name = "kairos_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[lints.clippy]
+# PROJECT_RULES: no unwrap()/expect() outside tests and startup-fatal paths.
+unwrap_used = "warn"
+expect_used = "warn"
+
+# Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+panic = "abort"
+strip = true
