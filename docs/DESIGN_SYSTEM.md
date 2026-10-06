@@ -59,15 +59,16 @@ All colours are defined as CSS custom properties in `src/styles/tokens.css` and 
 | `--border-strong` | `#CFC8B8` | `#3A4560` |
 | `--text` | `#12172A` | `#EEF0F5` |
 | `--text-muted` | `#5B6478` | `#A1A9BB` |
-| `--text-subtle` | `#8A92A3` | `#6E778C` |
+| `--text-subtle` | `#656D7E` | `#7F889C` |
 | `--accent` | `#C9A24A` | `#D4AF5A` |
 | `--accent-hover` | `#B48E38` | `#E2C27A` |
 | `--accent-text` (gold text) | `#8A6516` | `#E2C27A` |
 | `--on-accent` (text on gold) | `#12172A` | `#0B0F1A` |
-| `--focus-ring` | `#C9A24A` | `#E2C27A` |
+| `--focus-ring` | `#8A6516` | `#E2C27A` |
 | `--success` | `#2F8F62` | `#4CC38A` |
 | `--warning` (missed) | `#C7772A` | `#F0A35E` |
 | `--danger` (destructive only) | `#C2413B` | `#F07068` |
+| `--on-danger` (text on danger) | `#FFFFFF` | `#0B0F1A` |
 | `--info` | `#3B6FD8` | `#7AA2F7` |
 
 ### 3.3 Life-area colours (user can change)
@@ -84,7 +85,7 @@ Areas appear as a 4 px left stripe on item cards, a small dot in lists, and a so
 ### 3.4 Status
 | Status | Colour | Icon | Label |
 |--------|--------|------|-------|
-| Ongoing / Now | `--accent` (gold) + soft pulse | `circle-dot` | "Now" |
+| Ongoing / Now | `--accent` (gold) for fills + soft pulse; `--accent-text` for icon and text | `circle-dot` | "Now" |
 | Upcoming | `--info` | `clock` | "Upcoming" |
 | Missed | `--warning` (amber, never red) | `rotate-ccw` | "Slipped" |
 | Done | `--success` | `check-circle-2` | "Done" |
@@ -93,6 +94,7 @@ Areas appear as a 4 px left stripe on item cards, a small dot in lists, and a so
 ### 3.5 Contrast
 - Body text ≥ 4.5:1, large text and UI parts ≥ 3:1 (WCAG 2.2 AA). Verify both themes with an automated contrast check in tests.
 - Gold is a **fill/accent** colour; use `--accent-text` when gold is the text colour on light backgrounds.
+- *Change log (2026-10-07, approved by Zack):* `--text-subtle` (both themes), light `--focus-ring`, the "Now" icon colour, and a new `--on-danger` token were adjusted so every pair meets AA. The original values measured 2.26–4.26:1.
 
 ## 4. Typography
 
@@ -226,7 +228,7 @@ Button (primary gold · secondary · ghost · destructive), IconButton (with too
 | Primary | `--accent` | `--on-accent` | 40 px (44 px for "+ Add task") |
 | Secondary | `--surface-2` + `--border` | `--text` | 36–40 px |
 | Ghost | transparent → `--surface-3` on hover | `--text` | 36 px |
-| Destructive | `--danger` | white | 40 px |
+| Destructive | `--danger` | `--on-danger` | 40 px |
 
 Focus: 2 px `--focus-ring` outline with 2 px offset, always visible on keyboard focus.
 

@@ -11,7 +11,7 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 
 - [x] **P1-T01 🧱 Project scaffold** — Tauri 2 + React + TS + Vite + pnpm. Add Tailwind v4, shadcn/ui, Lucide, ESLint/Prettier, clippy/rustfmt, Vitest, GitHub Actions CI (lint + test on Windows & macOS).
   *Done when:* `pnpm tauri dev` opens a window titled "Kairos"; CI green.
-- [ ] **P1-T02 🎨 Design tokens & fonts** — `tokens.css` with all light/dark tokens from DESIGN_SYSTEM §3; Fraunces + Inter bundled locally; Tailwind mapped to tokens; theme provider (Light/Dark/System) with no flash on load.
+- [x] **P1-T02 🎨 Design tokens & fonts** — `tokens.css` with all light/dark tokens from DESIGN_SYSTEM §3; Fraunces + Inter bundled locally; Tailwind mapped to tokens; theme provider (Light/Dark/System) with no flash on load.
   *Done when:* a `/dev/styleguide` screen shows colours, type scale, buttons in both themes.
 - [ ] **P1-T03 🎨 App shell** — sidebar (icon + label, collapsible), top bar (search placeholder, "+ Add task", theme toggle), routing for My Day, Calendar, Inbox, Settings.
   *Done when:* all nav works by mouse and keyboard; layout holds at 960 px width.

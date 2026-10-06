@@ -26,12 +26,12 @@
   --border-strong: #cfc8b8;
   --text: #12172a;
   --text-muted: #5b6478;
-  --text-subtle: #8a92a3;
+  --text-subtle: #656d7e;
   --accent: #c9a24a;
   --accent-hover: #b48e38;
   --accent-text: #8a6516;
   --on-accent: #12172a;
-  --focus-ring: #c9a24a;
+  --focus-ring: #8a6516;
   --success: #2f8f62;
   --warning: #c7772a;
   --danger: #c2413b;
@@ -62,7 +62,7 @@
   --border-strong: #3a4560;
   --text: #eef0f5;
   --text-muted: #a1a9bb;
-  --text-subtle: #6e778c;
+  --text-subtle: #7f889c;
   --accent: #d4af5a;
   --accent-hover: #e2c27a;
   --accent-text: #e2c27a;
@@ -71,7 +71,7 @@
   --success: #4cc38a;
   --warning: #f0a35e;
   --danger: #f07068;
-  --on-danger: #ffffff;
+  --on-danger: #0b0f1a;
   --info: #7aa2f7;
 
   --area-work: #7aa2f7;
@@ -88,7 +88,7 @@
 
 :root {
   /* §3.4 Status (colour is never used alone — always paired with icon + label) */
-  --status-now: var(--accent);
+  --status-now: var(--accent-text); /* icon/text; "Now" fills and pulse use --accent */
   --status-upcoming: var(--info);
   --status-slipped: var(--warning);
   --status-done: var(--success);
