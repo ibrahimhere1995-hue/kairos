@@ -1,5 +1,7 @@
 > **Project location (chosen by Zack, 2026-10-06):** `I:\Claude Projects\Kairos`
 > All project files, builds, and caches live inside this folder. Nothing goes on C: without explicit approval.
+> Dev toolchain (Rust, pnpm, C++ Build Tools) lives in `I:\DevTools`. Unavoidable on C:: Windows SDK + VS Installer (approved 2026-10-07).
+> **Dev app data** (WebView cache, `kairos.db`, backups) goes in `I:\Claude Projects\Kairos\.devdata` (git-ignored) during development; release builds use the normal OS app-data folder (approved 2026-10-07).
 # Kairos — Project Rules (copy to repo root as CLAUDE.md / AGENTS.md)
 
 You are building **Kairos**, a local-first premium personal planner (Tauri 2 + React + TypeScript + Rust + SQLite). Tagline: *The perfect moment to act.*

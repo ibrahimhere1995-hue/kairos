@@ -9,7 +9,7 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 ## Phase 1 — Foundation
 **Goal:** a usable personal planner you can live in for one week.
 
-- [ ] **P1-T01 🧱 Project scaffold** — Tauri 2 + React + TS + Vite + pnpm. Add Tailwind v4, shadcn/ui, Lucide, ESLint/Prettier, clippy/rustfmt, Vitest, GitHub Actions CI (lint + test on Windows & macOS).
+- [x] **P1-T01 🧱 Project scaffold** — Tauri 2 + React + TS + Vite + pnpm. Add Tailwind v4, shadcn/ui, Lucide, ESLint/Prettier, clippy/rustfmt, Vitest, GitHub Actions CI (lint + test on Windows & macOS).
   *Done when:* `pnpm tauri dev` opens a window titled "Kairos"; CI green.
 - [ ] **P1-T02 🎨 Design tokens & fonts** — `tokens.css` with all light/dark tokens from DESIGN_SYSTEM §3; Fraunces + Inter bundled locally; Tailwind mapped to tokens; theme provider (Light/Dark/System) with no flash on load.
   *Done when:* a `/dev/styleguide` screen shows colours, type scale, buttons in both themes.
@@ -103,8 +103,8 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 ---
 
 ## Before Phase 1 starts (Zack's to-dos)
-- [ ] Decide which drive and folder to build in. The AI will ask you this before creating anything.
-- [ ] Install: Node.js LTS, pnpm, Rust (rustup), Tauri prerequisites for your OS (WebView2 on Windows; Xcode CLT on macOS)
-- [ ] Create a GitHub repo `kairos` and add these docs under `/docs`; copy `PROJECT_RULES.md` → `CLAUDE.md`
+- [x] Decide which drive and folder to build in. The AI will ask you this before creating anything. → `I:\Claude Projects\Kairos`
+- [x] Install: Node.js LTS, pnpm, Rust (rustup), Tauri prerequisites for your OS (WebView2 on Windows; Xcode CLT on macOS) → tools in `I:\DevTools`
+- [x] Create a GitHub repo `kairos` and add these docs under `/docs`; copy `PROJECT_RULES.md` → `CLAUDE.md`
 - [ ] (Phase 3) Get a free Gemini API key from Google AI Studio
 - [ ] (Phase 4) Apple Developer account and Windows code-signing certificate
