@@ -1,0 +1,60 @@
+{
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "Match system"
+  },
+  "status": {
+    "now": "Now",
+    "upcoming": "Upcoming",
+    "slipped": "Slipped",
+    "done": "Done",
+    "skipped": "Skipped"
+  },
+  "areas": {
+    "work": "Work",
+    "home": "Home",
+    "personal": "Personal",
+    "learning": "Learning",
+    "health": "Health"
+  },
+  "styleguide": {
+    "title": "Styleguide",
+    "intro": "Every Kairos colour, text size, and button, shown in both themes. Only visible while developing.",
+    "lightPanel": "Light theme",
+    "darkPanel": "Dark theme",
+    "brand": "Brand",
+    "surfaces": "Surfaces and text",
+    "feedback": "Accent and feedback",
+    "statusTitle": "Status",
+    "areasTitle": "Life areas",
+    "typeTitle": "Type scale",
+    "buttonsTitle": "Buttons",
+    "roles": {
+      "display": "Display",
+      "h1": "Heading 1",
+      "h2": "Heading 2",
+      "h3": "Heading 3",
+      "body": "Body",
+      "small": "Small",
+      "caption": "Caption"
+    },
+    "samples": {
+      "display": "Good morning, Priya.",
+      "h1": "My Day",
+      "h2": "Today",
+      "h3": "Call the bank",
+      "body": "4 tasks today, 2 meetings, 1 slipped from yesterday.",
+      "small": "Tomorrow at 3:00 PM · Home",
+      "caption": "Learning"
+    },
+    "buttons": {
+      "primary": "Add task",
+      "secondary": "Remind me",
+      "ghost": "Move to today",
+      "destructive": "Empty Trash",
+      "disabled": "Not available"
+    }
+  }
+}

@@ -1,0 +1,136 @@
+/*
+ * Kairos design tokens — the ONLY place raw colour, shadow, and type values live.
+ * Source of truth: docs/DESIGN_SYSTEM.md §3–§6. Components use these via Tailwind utilities.
+ *
+ * Light values sit on :root and [data-theme="light"]; dark on [data-theme="dark"].
+ * Because they are plain custom properties, any subtree can force a theme with the attribute.
+ */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* §3.1 Brand core (theme-independent) */
+  --brand-midnight: #0b0f1a;
+  --brand-gold: #c9a24a;
+  --brand-gold-soft: #e6cf94;
+  --brand-gold-deep: #8a6516;
+  --brand-ivory: #faf8f4;
+
+  /* §3.2 Semantic */
+  --bg: #faf8f4;
+  --surface: #ffffff;
+  --surface-2: #f3f0e9;
+  --surface-3: #eae5da;
+  --border: #e4dfd4;
+  --border-strong: #cfc8b8;
+  --text: #12172a;
+  --text-muted: #5b6478;
+  --text-subtle: #8a92a3;
+  --accent: #c9a24a;
+  --accent-hover: #b48e38;
+  --accent-text: #8a6516;
+  --on-accent: #12172a;
+  --focus-ring: #c9a24a;
+  --success: #2f8f62;
+  --warning: #c7772a;
+  --danger: #c2413b;
+  --on-danger: #ffffff;
+  --info: #3b6fd8;
+
+  /* §3.3 Life areas */
+  --area-work: #3b6fd8;
+  --area-home: #2f8f62;
+  --area-personal: #c2547a;
+  --area-learning: #7b5bd6;
+  --area-health: #1e9c9a;
+
+  /* §5 Depth (light: soft shadows) */
+  --elevation-sm: 0 1px 2px rgba(18, 23, 42, 0.06);
+  --elevation-md: 0 4px 12px rgba(18, 23, 42, 0.08);
+  --elevation-lg: 0 12px 32px rgba(18, 23, 42, 0.12);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0b0f1a;
+  --surface: #121828;
+  --surface-2: #1a2134;
+  --surface-3: #232b40;
+  --border: #2a3349;
+  --border-strong: #3a4560;
+  --text: #eef0f5;
+  --text-muted: #a1a9bb;
+  --text-subtle: #6e778c;
+  --accent: #d4af5a;
+  --accent-hover: #e2c27a;
+  --accent-text: #e2c27a;
+  --on-accent: #0b0f1a;
+  --focus-ring: #e2c27a;
+  --success: #4cc38a;
+  --warning: #f0a35e;
+  --danger: #f07068;
+  --on-danger: #ffffff;
+  --info: #7aa2f7;
+
+  --area-work: #7aa2f7;
+  --area-home: #4cc38a;
+  --area-personal: #f28bae;
+  --area-learning: #ae96f5;
+  --area-health: #4fd1cf;
+
+  /* §5 Dark depth: a 1px border instead of heavy shadows */
+  --elevation-sm: 0 0 0 1px var(--border);
+  --elevation-md: 0 0 0 1px var(--border);
+  --elevation-lg: 0 0 0 1px var(--border-strong);
+}
+
+:root {
+  /* §3.4 Status (colour is never used alone — always paired with icon + label) */
+  --status-now: var(--accent);
+  --status-upcoming: var(--info);
+  --status-slipped: var(--warning);
+  --status-done: var(--success);
+  --status-skipped: var(--text-subtle);
+
+  /* §6.1 Motion */
+  --dur-instant: 80ms;
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 320ms;
+  --dur-gentle: 2400ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+
+  /* §5 Layout */
+  --sidebar-width: 15.5rem; /* 248px */
+  --sidebar-rail-width: 4.5rem; /* 72px */
+  --content-max-width: 80rem; /* 1280px */
+}
+
+/* §4 Text-size setting scales the root; every size and space is in rem, so everything follows. */
+:root[data-text-size="small"] {
+  font-size: 90%;
+}
+:root[data-text-size="large"] {
+  font-size: 112.5%;
+}
+:root[data-text-size="xl"] {
+  font-size: 125%;
+}
+
+/* §6.2 Theme switch: colours cross-fade for 200ms only while a switch is happening. */
+:root.theme-transition,
+:root.theme-transition * {
+  transition-property: background-color, color, border-color;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root.theme-transition,
+  :root.theme-transition * {
+    transition-duration: var(--dur-fast);
+  }
+}
