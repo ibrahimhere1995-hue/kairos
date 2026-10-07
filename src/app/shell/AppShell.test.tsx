@@ -1,21 +1,11 @@
-import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
-import { createAppRouter } from "@/app/router";
 import { useThemeStore } from "@/app/theme/themeStore";
 import { useUiStore } from "@/app/uiStore";
-import { TooltipProvider } from "@/components/ui/Tooltip";
+import { renderApp } from "@/test/renderWithProviders";
 
-function renderAt(path = "/") {
-  const router = createAppRouter(createMemoryHistory({ initialEntries: [path] }));
-  render(
-    <TooltipProvider>
-      <RouterProvider router={router} />
-    </TooltipProvider>,
-  );
-  return router;
-}
+const renderAt = (path = "/") => renderApp(path).router;
 
 const pageHeading = (name: string) => screen.findByRole("heading", { level: 1, name });
 
@@ -50,9 +40,11 @@ describe("App shell", () => {
     renderAt();
     await pageHeading("My Day");
 
-    // Tab order follows the layout: skip link, top bar (disabled placeholders are skipped), sidebar.
+    // Tab order follows the layout: skip link, top bar (disabled search is skipped), sidebar.
     await user.tab();
     expect(screen.getByRole("button", { name: "Skip to main content" })).toHaveFocus();
+    await user.tab();
+    expect(screen.getByRole("button", { name: "Add task" })).toHaveFocus();
     await user.tab();
     expect(screen.getByRole("button", { name: "Switch to dark theme" })).toHaveFocus();
     await user.tab(); // My Day

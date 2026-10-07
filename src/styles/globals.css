@@ -83,6 +83,52 @@
   --text-caption--letter-spacing: 0.02em;
 }
 
+/* §6.2 Item editor: slides in 24px from the right + fade, 200ms. */
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(1.5rem);
+  }
+}
+.panel-in {
+  animation: panel-in var(--dur-base) var(--ease-out);
+}
+
+/* §6.2 Skeleton loaders: soft shimmer, no spinners. */
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 25%,
+    var(--surface-3) 50%,
+    var(--surface-2) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.2s linear infinite;
+}
+
+/* §6.3 Reduce motion: movement becomes a short fade, loops stop. */
+@media (prefers-reduced-motion: reduce) {
+  .panel-in {
+    animation: fade-in var(--dur-fast) linear;
+  }
+  .skeleton {
+    animation: none;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
 @layer base {
   html {
     background-color: var(--bg);

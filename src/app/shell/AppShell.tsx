@@ -2,6 +2,7 @@ import { Outlet } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Sidebar } from "@/app/shell/Sidebar";
 import { TopBar } from "@/app/shell/TopBar";
+import { ItemEditor } from "@/features/items/editor/ItemEditor";
 
 const MAIN_ID = "main-content";
 
@@ -27,6 +28,7 @@ export function AppShell() {
           </div>
         </main>
       </div>
+      <ItemEditor />
     </div>
   );
 }
