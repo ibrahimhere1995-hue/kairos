@@ -44,6 +44,15 @@ export function useSaveItem() {
   });
 }
 
+/** Creates an item (Quick Capture). Every view refreshes afterwards. */
+export function useCreateItem() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: ItemInput) => itemsApi.create(input),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: itemKeys.all }),
+  });
+}
+
 /** Moves an item to the Trash and offers Undo (DESIGN_SYSTEM §2.4: forgiving). */
 export function useDeleteItem() {
   const queryClient = useQueryClient();

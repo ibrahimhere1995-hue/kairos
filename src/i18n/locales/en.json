@@ -35,6 +35,23 @@
     "markDone": "Mark “{{title}}” as done",
     "markNotDone": "Mark “{{title}}” as not done"
   },
+  "capture": {
+    "title": "Quick capture",
+    "label": "What needs a moment?",
+    "placeholder": "What needs a moment? e.g. Call bank tomorrow 3pm #home",
+    "recognised": "Recognised details",
+    "hint": "Enter adds “{{title}}” · Esc closes",
+    "moreDetails": "More details",
+    "removeChip": "Remove {{field}} {{value}}",
+    "repeatLater": "{{phrase}} — repeating comes in a later update; saved once for now",
+    "chip": {
+      "date": "Date",
+      "time": "Time",
+      "area": "Life area",
+      "priority": "Priority",
+      "repeat": "Repeat"
+    }
+  },
   "calendar": {
     "today": "Today",
     "viewLabel": "Calendar view",

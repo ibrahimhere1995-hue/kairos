@@ -2,6 +2,7 @@ import { Outlet } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Sidebar } from "@/app/shell/Sidebar";
 import { TopBar } from "@/app/shell/TopBar";
+import { QuickCaptureDialog } from "@/features/capture/QuickCaptureDialog";
 import { ItemEditor } from "@/features/items/editor/ItemEditor";
 
 const MAIN_ID = "main-content";
@@ -29,6 +30,7 @@ export function AppShell() {
         </main>
       </div>
       <ItemEditor />
+      <QuickCaptureDialog />
     </div>
   );
 }

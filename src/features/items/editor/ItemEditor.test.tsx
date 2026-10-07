@@ -53,16 +53,19 @@ afterEach(() => clearMocks());
 
 const callsTo = (cmd: string) => calls.filter((c) => c.cmd === cmd);
 
+/** "+ Add task" opens Quick Capture; "More details" moves on to the full editor. */
 async function openNewEditor() {
   const user = userEvent.setup();
   renderApp();
   await user.click(await screen.findByRole("button", { name: "Add task" }));
+  const capture = await screen.findByRole("dialog", { name: "Quick capture" });
+  await user.click(within(capture).getByRole("button", { name: "More details" }));
   const dialog = await screen.findByRole("dialog", { name: "New item" });
   return { user, dialog };
 }
 
 describe("Item editor", () => {
-  it("opens from + Add task with the title focused", async () => {
+  it("opens from Quick Capture's More details with the title focused", async () => {
     const { dialog } = await openNewEditor();
     expect(within(dialog).getByRole("textbox", { name: "Title" })).toHaveFocus();
   });

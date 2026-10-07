@@ -9,3 +9,9 @@ export async function showMainWindow(): Promise<void> {
   if (!isTauri()) return;
   await getCurrentWindow().show();
 }
+
+/** Hides the window this code runs in (the Quick Capture bar after saving or Esc). */
+export async function hideCurrentWindow(): Promise<void> {
+  if (!isTauri()) return;
+  await getCurrentWindow().hide();
+}

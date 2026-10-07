@@ -1,6 +1,6 @@
-use tauri::State;
+use tauri::{AppHandle, State};
 
-use crate::commands::with_conn;
+use crate::commands::{with_conn, write_items};
 use crate::db::Db;
 use crate::error::AppResult;
 use crate::models::checklist::{ChecklistEntryInput, ChecklistItem, ItemDetail};
@@ -10,38 +10,48 @@ use crate::models::item::Item;
 use crate::services::{checklist, items};
 
 #[tauri::command]
-pub fn create_item(db: State<'_, Db>, input: ItemInput) -> AppResult<Item> {
-    with_conn(&db, |conn| items::create(conn, &input))
+pub fn create_item(app: AppHandle, db: State<'_, Db>, input: ItemInput) -> AppResult<Item> {
+    write_items(&app, &db, |conn| items::create(conn, &input))
 }
 
 #[tauri::command]
-pub fn update_item(db: State<'_, Db>, id: String, input: ItemInput) -> AppResult<Item> {
-    with_conn(&db, |conn| items::update(conn, &id, &input))
+pub fn update_item(
+    app: AppHandle,
+    db: State<'_, Db>,
+    id: String,
+    input: ItemInput,
+) -> AppResult<Item> {
+    write_items(&app, &db, |conn| items::update(conn, &id, &input))
 }
 
 #[tauri::command]
-pub fn delete_item(db: State<'_, Db>, id: String) -> AppResult<()> {
-    with_conn(&db, |conn| items::delete(conn, &id))
+pub fn delete_item(app: AppHandle, db: State<'_, Db>, id: String) -> AppResult<()> {
+    write_items(&app, &db, |conn| items::delete(conn, &id))
 }
 
 #[tauri::command]
-pub fn restore_item(db: State<'_, Db>, id: String) -> AppResult<Item> {
-    with_conn(&db, |conn| items::restore(conn, &id))
+pub fn restore_item(app: AppHandle, db: State<'_, Db>, id: String) -> AppResult<Item> {
+    write_items(&app, &db, |conn| items::restore(conn, &id))
 }
 
 #[tauri::command]
-pub fn complete_item(db: State<'_, Db>, id: String) -> AppResult<Item> {
-    with_conn(&db, |conn| items::complete(conn, &id))
+pub fn complete_item(app: AppHandle, db: State<'_, Db>, id: String) -> AppResult<Item> {
+    write_items(&app, &db, |conn| items::complete(conn, &id))
 }
 
 #[tauri::command]
-pub fn uncomplete_item(db: State<'_, Db>, id: String) -> AppResult<Item> {
-    with_conn(&db, |conn| items::uncomplete(conn, &id))
+pub fn uncomplete_item(app: AppHandle, db: State<'_, Db>, id: String) -> AppResult<Item> {
+    write_items(&app, &db, |conn| items::uncomplete(conn, &id))
 }
 
 #[tauri::command]
-pub fn reschedule_item(db: State<'_, Db>, id: String, schedule: ScheduleInput) -> AppResult<Item> {
-    with_conn(&db, |conn| items::reschedule(conn, &id, &schedule))
+pub fn reschedule_item(
+    app: AppHandle,
+    db: State<'_, Db>,
+    id: String,
+    schedule: ScheduleInput,
+) -> AppResult<Item> {
+    write_items(&app, &db, |conn| items::reschedule(conn, &id, &schedule))
 }
 
 #[tauri::command]
@@ -61,11 +71,12 @@ pub fn get_item_detail(db: State<'_, Db>, id: String) -> AppResult<ItemDetail> {
 
 #[tauri::command]
 pub fn set_checklist(
+    app: AppHandle,
     db: State<'_, Db>,
     item_id: String,
     entries: Vec<ChecklistEntryInput>,
 ) -> AppResult<Vec<ChecklistItem>> {
-    with_conn(&db, |conn| {
+    write_items(&app, &db, |conn| {
         checklist::set_checklist(conn, &item_id, &entries)
     })
 }

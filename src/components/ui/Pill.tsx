@@ -30,8 +30,8 @@ export function Pill({
       {...props}
     >
       <Icon aria-hidden="true" className="size-4 shrink-0" style={iconStyle} />
-      <span className="sr-only">{field}: </span>
-      <span>{children}</span>
+      {/* The space sits outside the hidden span so the name reads "Date: Tomorrow", not "Date:Tomorrow". */}
+      <span className="sr-only">{field}:</span> <span>{children}</span>
     </button>
   );
 }
