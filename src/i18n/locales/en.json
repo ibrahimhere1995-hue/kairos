@@ -2,7 +2,22 @@
   "errors": {
     "database": "Something went wrong while saving or loading your data. Please try again.",
     "file": "Kairos couldn't read or write a file. Check there is free disk space and try again.",
-    "dataDir": "Kairos couldn't find its data folder."
+    "dataDir": "Kairos couldn't find its data folder.",
+    "notFound": "This item no longer exists. It may have been moved to the Trash.",
+    "unknown": "Something unexpected happened. Please try again.",
+    "validation": {
+      "required": "Please add a title.",
+      "tooLong": "This is a bit too long. Please shorten it.",
+      "outOfRange": "Please pick one of the options.",
+      "unknownArea": "That life area no longer exists. Please pick another.",
+      "invalidDateTime": "That date or time doesn't look right.",
+      "invalidDate": "That date doesn't look right.",
+      "conflictsWithTime": "Pick either a whole day or a time, not both.",
+      "requiresStart": "Please add a start time first.",
+      "beforeStart": "The end needs to be after the start.",
+      "eventNeedsDate": "Events need a date.",
+      "eventNeedsEnd": "Events need an end time."
+    }
   },
   "app": {
     "name": "Kairos",

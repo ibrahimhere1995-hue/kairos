@@ -25,6 +25,15 @@ pub fn insert(conn: &Connection, area: &NewArea) -> rusqlite::Result<()> {
     Ok(())
 }
 
+/// True if the area exists and is not deleted (archived areas can still hold items).
+pub fn is_active(conn: &Connection, id: &str) -> rusqlite::Result<bool> {
+    conn.query_row(
+        "SELECT EXISTS(SELECT 1 FROM areas WHERE id = ?1 AND deleted_at IS NULL)",
+        [id],
+        |row| row.get(0),
+    )
+}
+
 /// Area names in display order, excluding archived and deleted ones.
 pub fn active_names(conn: &Connection) -> rusqlite::Result<Vec<String>> {
     let mut stmt = conn.prepare(

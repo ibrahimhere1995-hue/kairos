@@ -53,3 +53,9 @@ jobs:
           pnpm fmt:rust:check
           pnpm lint:rust
           pnpm test:rust
+
+      # `cargo test` regenerates src/types from the Rust structs (ts-rs). If anything changed,
+      # someone edited a Rust type without committing the regenerated TypeScript.
+      - name: Generated TypeScript types are up to date
+        shell: bash
+        run: git diff --exit-code -- src/types

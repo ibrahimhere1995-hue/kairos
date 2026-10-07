@@ -70,6 +70,7 @@ Every library, crate or tool added after the original plan is listed here **in t
 | `uuid` (feature `v7`) | 1.27 | P1-T04 | UUID v7 IDs (ARCHITECTURE §4). Approved 2026-10-07. |
 | `chrono` (features `clock`, `std`) | 0.4 | P1-T04 | UTC ISO-8601 timestamps. Approved 2026-10-07. |
 | `thiserror` | 2.0 | P1-T04 | Defines `AppError`, returned by every command. Approved 2026-10-07. |
+| `ts-rs` (**dev-dependency only**) | 12.0 | P1-T05 | Generates TypeScript types in `src/types/` from Rust structs when `cargo test` runs. Chosen over specta/tauri-specta because the Tauri 2 version of tauri-specta is only a release candidate (`2.0.0-rc`), which this doc forbids. Approved 2026-10-07. Config: `.cargo/config.toml` (`TS_RS_EXPORT_DIR=src/types`, `TS_RS_LARGE_INT=number`). Not compiled into the shipped app. |
 
 ## Decisions explained
 

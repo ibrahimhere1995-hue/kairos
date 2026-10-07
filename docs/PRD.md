@@ -69,8 +69,13 @@ Students, freelancers, homemakers, small business owners. The design must not ex
 - Timed task due later today and not done → `ongoing` until its time passes.
 - Timed task whose time has passed and not done → `missed` (even if it is still today). A passed time is never shown as "Now".
 - Date-only task whose due date is before today and not done → `missed`.
+- **Only tasks can be missed.** An event whose end has passed is simply `past` (shown muted, never "Slipped", never in the missed-items card). *(Decision 2026-10-07.)*
 - Otherwise with a future date → `upcoming`.
 - No date → lives in **Inbox** (status `unscheduled`).
+
+**My Day placement** *(decision 2026-10-07)*: the **Now** section shows only things happening right now: events in progress, and timed tasks whose start ≤ now < end. Other `ongoing` items (date-only tasks due today, timed tasks later today) appear in **Today**.
+
+**Multi-day all-day events** (e.g. a 3-day trip) are **not in Phase 1**. They will be added later with a new migration (an end date for all-day items). *(Decision 2026-10-07.)*
 
 ## 7. Requirements
 

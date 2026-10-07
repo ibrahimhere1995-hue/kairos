@@ -62,6 +62,8 @@ Windows does not let these move:
 | `pnpm test:rust` / `pnpm lint:rust` / `pnpm fmt:rust` | Rust tests, clippy, rustfmt |
 | `pnpm build` | Production frontend build |
 
+**Generated types:** `src/types/*.ts` are generated from Rust structs by `ts-rs` whenever `pnpm test:rust` runs (settings in `.cargo/config.toml` at the repo root). After changing a Rust type that the frontend uses, run `pnpm test:rust` and commit the updated files. CI fails if they are out of date. Never edit them by hand.
+
 Dev-only page: **Styleguide** in the sidebar (`/dev/styleguide`) shows every colour, type size and button in both themes.
 
 ## 5. Workflow
@@ -80,6 +82,8 @@ CI builds the whole Rust side on fresh Windows and macOS machines. After a chang
 | `file watcher error: EBUSY … .devdata\webview` | Vite watching the WebView cache | Fixed: `.devdata` is ignored in `vite.config.ts` |
 | Old `C:\Users\<you>\AppData\Local\com.kairos.app` folder | WebView cache from before dev data moved to `.devdata` | Safe to delete |
 | PowerShell breaks a `git commit -m` message containing double quotes | PowerShell 5.1 argument quoting | Write the message to a file and use `git commit -F <file>` |
+| Types appear in `src-tauri/bindings/` instead of `src/types/` | Cargo didn't find `.cargo/config.toml` | It must stay at the **repo root** (Cargo searches from the current folder upwards) |
+| `Blocking waiting for file lock on build directory` | A running `pnpm tauri dev` is rebuilding at the same time | Wait, or close the dev app first |
 
 ## 7. Inspecting the dev database
 The dev database is `.devdata\kairos.db` (SQLite, WAL mode). Any SQLite viewer works, e.g. *DB Browser for SQLite*. Open it **read-only** while the app is running.
