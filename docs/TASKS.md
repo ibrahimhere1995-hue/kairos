@@ -15,7 +15,7 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
   *Done when:* a `/dev/styleguide` screen shows colours, type scale, buttons in both themes.
 - [x] **P1-T03 🎨 App shell** — sidebar (icon + label, collapsible), top bar (search placeholder, "+ Add task", theme toggle), routing for My Day, Calendar, Inbox, Settings.
   *Done when:* all nav works by mouse and keyboard; layout holds at 960 px width.
-- [ ] **P1-T04 🗄 Database & migrations** — rusqlite bundled, WAL, foreign keys, migration runner, tables `areas`, `items`, `checklist_items`, `reminders`, `settings`, `backup_log`, `items_fts`. Seed default areas.
+- [x] **P1-T04 🗄 Database & migrations** — rusqlite bundled, WAL, foreign keys, migration runner, tables `areas`, `items`, `checklist_items`, `reminders`, `settings`, `backup_log`, `items_fts`. Seed default areas.
   *Done when:* app creates `kairos.db` in app-data on first run; migration tests pass.
 - [ ] **P1-T05 ⚙️ Item service & commands** — create/update/delete(soft)/restore/complete/uncomplete/reschedule, list by range, `get_dashboard`. Type generation to TS.
   *Done when:* Rust unit tests cover CRUD + soft delete + reschedule_count increments.
