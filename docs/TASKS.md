@@ -13,7 +13,7 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
   *Done when:* `pnpm tauri dev` opens a window titled "Kairos"; CI green.
 - [x] **P1-T02 🎨 Design tokens & fonts** — `tokens.css` with all light/dark tokens from DESIGN_SYSTEM §3; Fraunces + Inter bundled locally; Tailwind mapped to tokens; theme provider (Light/Dark/System) with no flash on load.
   *Done when:* a `/dev/styleguide` screen shows colours, type scale, buttons in both themes.
-- [ ] **P1-T03 🎨 App shell** — sidebar (icon + label, collapsible), top bar (search placeholder, "+ Add task", theme toggle), routing for My Day, Calendar, Inbox, Settings.
+- [x] **P1-T03 🎨 App shell** — sidebar (icon + label, collapsible), top bar (search placeholder, "+ Add task", theme toggle), routing for My Day, Calendar, Inbox, Settings.
   *Done when:* all nav works by mouse and keyboard; layout holds at 960 px width.
 - [ ] **P1-T04 🗄 Database & migrations** — rusqlite bundled, WAL, foreign keys, migration runner, tables `areas`, `items`, `checklist_items`, `reminders`, `settings`, `backup_log`, `items_fts`. Seed default areas.
   *Done when:* app creates `kairos.db` in app-data on first run; migration tests pass.

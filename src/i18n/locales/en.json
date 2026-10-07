@@ -1,9 +1,38 @@
 {
+  "app": {
+    "name": "Kairos",
+    "skipToContent": "Skip to main content"
+  },
+  "nav": {
+    "label": "Main",
+    "myDay": "My Day",
+    "calendar": "Calendar",
+    "inbox": "Inbox",
+    "settings": "Settings",
+    "styleguide": "Styleguide",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar"
+  },
+  "topbar": {
+    "search": "Search or type a command…",
+    "searchSoon": "Search is coming in a later update",
+    "addTask": "Add task"
+  },
+  "pages": {
+    "myDay": "Your day at a glance will live here: what's happening now, what's left today, and what slipped by.",
+    "calendar": "Your day, week, and month views will live here.",
+    "inbox": "A holding place for quick notes, screenshots, and voice notes that don't have a date yet.",
+    "settings": "Theme, text size, reminders, and backups will be set here.",
+    "notFoundTitle": "Nothing here",
+    "notFound": "This page doesn't exist. Pick a place from the sidebar."
+  },
   "theme": {
     "label": "Theme",
     "light": "Light",
     "dark": "Dark",
-    "system": "Match system"
+    "system": "Match system",
+    "switchToDark": "Switch to dark theme",
+    "switchToLight": "Switch to light theme"
   },
   "status": {
     "now": "Now",

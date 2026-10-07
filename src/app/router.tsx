@@ -1,0 +1,73 @@
+import {
+  createHashHistory,
+  createRootRoute,
+  createRoute,
+  createRouter,
+  lazyRouteComponent,
+  redirect,
+  type RouterHistory,
+} from "@tanstack/react-router";
+import { NotFoundPage } from "@/app/NotFoundPage";
+import { AppShell } from "@/app/shell/AppShell";
+import { CalendarPage } from "@/features/calendar/CalendarPage";
+import { MyDayPage } from "@/features/dashboard/MyDayPage";
+import { InboxPage } from "@/features/inbox/InboxPage";
+import { SettingsPage } from "@/features/settings/SettingsPage";
+
+const rootRoute = createRootRoute({
+  component: AppShell,
+  notFoundComponent: NotFoundPage,
+});
+
+const myDayRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/",
+  component: MyDayPage,
+});
+const calendarRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/calendar",
+  component: CalendarPage,
+});
+const inboxRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/inbox",
+  component: InboxPage,
+});
+const settingsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/settings",
+  component: SettingsPage,
+});
+
+// Developer-only: redirected away in release builds and lazy-loaded, so it never ships to users.
+const styleguideRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/dev/styleguide",
+  beforeLoad: () => {
+    if (!import.meta.env.DEV) throw redirect({ to: "/" });
+  },
+  component: lazyRouteComponent(() => import("@/features/dev/Styleguide"), "Styleguide"),
+});
+
+const routeTree = rootRoute.addChildren([
+  myDayRoute,
+  calendarRoute,
+  inboxRoute,
+  settingsRoute,
+  styleguideRoute,
+]);
+
+/**
+ * Hash history: a desktop app has no visible URL bar, and hash URLs never depend on the
+ * webview resolving deep paths to index.html. Tests pass a memory history instead.
+ */
+export function createAppRouter(history: RouterHistory = createHashHistory()) {
+  return createRouter({ routeTree, history });
+}
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: ReturnType<typeof createAppRouter>;
+  }
+}
