@@ -55,25 +55,27 @@ Students, freelancers, homemakers, small business owners. The design must not ex
 |---------|-----------|
 | **Item** | Anything scheduled: a *task* (something to do) or an *event* (something that happens at a time, e.g. a meeting). |
 | **Life area** | Category tag: Work, Home, Personal, Learning, Health (user can add/rename/recolour). |
-| **Status** | Derived automatically: **Upcoming** (start in future), **Ongoing** (now within its time window, or due today and not done), **Missed** (past due and not done), **Done** (completed). User can also mark *Skipped*. |
+| **Status** | Derived automatically: **Ongoing** (happening right now), **Due today** (still to do today), **Upcoming** (after today), **Missed** (a task whose moment passed, shown as "Slipped"), **Past** (an event that is over), **Done** (completed). User can also mark *Skipped*. |
 | **Priority** | High, Medium, Low, None. |
 | **Inbox** | Holding area for unprocessed captures (quick notes, screenshots, voice notes) without a date yet. |
 | **Goal** | Long-term outcome broken into milestones, which contain tasks. |
 | **Habit** | A repeating behaviour tracked by streak. |
 
 ### Status rules (exact)
-- Done → status `done` regardless of time.
-- Skipped → status `skipped`.
-- Event with start ≤ now < end → `ongoing`.
-- Date-only task due today and not done → `ongoing` until the end of the day (local time).
-- Timed task due later today and not done → `ongoing` until its time passes.
-- Timed task whose time has passed and not done → `missed` (even if it is still today). A passed time is never shown as "Now".
-- Date-only task whose due date is before today and not done → `missed`.
-- **Only tasks can be missed.** An event whose end has passed is simply `past` (shown muted, never "Slipped", never in the missed-items card). *(Decision 2026-10-07.)*
-- Otherwise with a future date → `upcoming`.
-- No date → lives in **Inbox** (status `unscheduled`).
+Implemented in `src/lib/status/status.ts` (P1-T06). "Today" always means the user's **local** calendar day; on daylight-saving days it lasts 23 or 25 hours. Checked in this order:
 
-**My Day placement** *(decision 2026-10-07)*: the **Now** section shows only things happening right now: events in progress, and timed tasks whose start ≤ now < end. Other `ongoing` items (date-only tasks due today, timed tasks later today) appear in **Today**.
+1. Completed → `done` (regardless of time; beats skipped).
+2. Skipped → `skipped`.
+3. **Timed** item (has a start time):
+   - start is later today → `dueToday`; start is tomorrow or later → `upcoming`.
+   - start ≤ now < end (events, or tasks with a time window) → `ongoing`.
+   - otherwise its time has passed: task → `missed` (even if it is still today; a passed time is never "Now"), event → `past`.
+4. **Date-only** item: due today → `dueToday`; due after today → `upcoming`; due before today: task → `missed`, event → `past`.
+5. No date → lives in **Inbox** (status `unscheduled`).
+
+**Only tasks can be missed.** An event whose time has passed is `past`: shown muted, never "Slipped", never in the missed-items card. *(Decision 2026-10-07.)*
+
+**My Day placement** *(decision 2026-10-07)*: **Now** shows `ongoing` items only (events in progress, timed tasks inside their window). `dueToday` items (date-only tasks due today, anything later today) appear in **Today**.
 
 **Multi-day all-day events** (e.g. a 3-day trip) are **not in Phase 1**. They will be added later with a new migration (an end date for all-day items). *(Decision 2026-10-07.)*
 

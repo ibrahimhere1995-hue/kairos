@@ -19,7 +19,7 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
   *Done when:* app creates `kairos.db` in app-data on first run; migration tests pass.
 - [x] **P1-T05 ⚙️ Item service & commands** — create/update/delete(soft)/restore/complete/uncomplete/reschedule, list by range, `get_dashboard`. Type generation to TS.
   *Done when:* Rust unit tests cover CRUD + soft delete + reschedule_count increments.
-- [ ] **P1-T06 ⚙️ Status engine** — pure functions implementing PRD §6 status rules (TS + Rust where needed).
+- [x] **P1-T06 ⚙️ Status engine** — pure functions implementing PRD §6 status rules (TS + Rust where needed).
   *Done when:* unit tests cover all statuses incl. all-day, midnight, timezone and DST boundaries.
 - [ ] **P1-T07 🎨 Item editor side panel** — title, date, time, duration, all-day, area, priority, notes, checklist; friendly pill pickers; validation with Zod.
   *Done when:* create and edit work; Esc closes; unsaved-change guard.
