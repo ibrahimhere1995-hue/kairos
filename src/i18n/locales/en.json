@@ -35,6 +35,42 @@
     "markDone": "Mark “{{title}}” as done",
     "markNotDone": "Mark “{{title}}” as not done"
   },
+  "calendar": {
+    "today": "Today",
+    "viewLabel": "Calendar view",
+    "views": {
+      "day": "Day",
+      "week": "Week",
+      "month": "Month",
+      "agenda": "Agenda"
+    },
+    "previous": {
+      "day": "Previous day",
+      "week": "Previous week",
+      "month": "Previous month",
+      "agenda": "Previous two weeks"
+    },
+    "next": {
+      "day": "Next day",
+      "week": "Next week",
+      "month": "Next month",
+      "agenda": "Next two weeks"
+    },
+    "allDay": "All day",
+    "more_one": "+{{count}} more",
+    "more_other": "+{{count}} more",
+    "openDay": "Open {{date}}",
+    "resize": "Change how long “{{title}}” lasts",
+    "agendaEmpty": "Nothing planned for these two weeks. A good moment to add something.",
+    "moveFailed": "That couldn't be moved. It's back where it was.",
+    "dnd": {
+      "instructions": "To move an item, press Space to pick it up. Use the arrow keys to move it by 15 minutes or one day, then press Space to drop it, or Escape to cancel. Press Enter to open it.",
+      "start": "Picked up {{title}}.",
+      "over": "Moving {{title}}.",
+      "end": "Dropped {{title}}.",
+      "cancel": "Stopped moving {{title}}. It stays where it was."
+    }
+  },
   "myDay": {
     "goodMorning": "Good morning.",
     "goodAfternoon": "Good afternoon.",

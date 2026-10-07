@@ -16,7 +16,7 @@ export function TopBar() {
       </span>
       <SearchPlaceholder />
       <div className="ml-auto flex shrink-0 items-center gap-2">
-        <Button size="lg" onClick={openNew}>
+        <Button size="lg" onClick={() => openNew()}>
           <Plus aria-hidden="true" />
           {t("topbar.addTask")}
         </Button>

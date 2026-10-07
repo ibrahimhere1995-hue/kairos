@@ -8,7 +8,7 @@ import { getDayContext } from "@/lib/dates/dayContext";
 /** Mounted once in the app shell; opens for a new item ("+ Add task") or an existing one. */
 export function ItemEditor() {
   const { t } = useTranslation();
-  const { open, itemId, close } = useEditorStore();
+  const { open, itemId, prefill, close } = useEditorStore();
   const detail = useItemDetail(open ? itemId : null);
   if (!open) return null;
 
@@ -38,6 +38,7 @@ export function ItemEditor() {
     <ItemEditorForm
       key={itemId ?? "new"}
       detail={itemId === null ? null : (detail.data ?? null)}
+      prefill={prefill}
       today={today}
       onClose={close}
     />

@@ -61,7 +61,7 @@ export function MyDayPage() {
           icon={Sparkles}
           message={t("myDay.emptyDay")}
           action={
-            <Button size="lg" onClick={openNew}>
+            <Button size="lg" onClick={() => openNew()}>
               <Plus aria-hidden="true" />
               {t("myDay.addFirst")}
             </Button>

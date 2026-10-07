@@ -55,6 +55,7 @@ Every library, crate or tool added after the original plan is listed here **in t
 | `react-hook-form`, `zod` | 7.89 / 4.6 | P1-T07 | Planned above. Zod schema + a small hand-written resolver in `src/features/items/itemForm.ts` (no `@hookform/resolvers` package needed). |
 | `motion` | 14.0 | P1-T08 | Planned above (Motion, formerly Framer Motion): completion animation, list enter/exit. Respects reduced motion. |
 | `@radix-ui/react-dialog`, `@radix-ui/react-popover`, `@radix-ui/react-toast` | 1.2 / 1.2 / 1.2 | P1-T07/T08 | Radix primitives behind shadcn/ui's Sheet (side panel), Popover (pill pickers) and Toast (Undo). Same family as the approved tooltip. |
+| `@dnd-kit/core` | 6.3 | P1-T09 | Planned above (dnd-kit): drag to move/resize calendar items, with keyboard dragging and translated screen-reader announcements. |
 | Native `<input type="date">` / `type="time"` | — | P1-T07 | Date and time inside the pill pickers use the WebView's built-in inputs instead of a date-picker library (accessible, zero size). A custom premium picker can replace them in P2-T14 polish. |
 | `date-fns` | 4.4 | P1-T06 | Planned above; installed for the status engine's local-day maths (`src/lib/dates/dayContext.ts`). Uses the device's time zone; no extra time-zone library. Tests simulate other zones by setting `process.env.TZ`. |
 

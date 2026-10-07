@@ -37,16 +37,20 @@ const SERVER_FIELDS: Record<string, FieldPath<ItemFormValues>> = {
 
 export function ItemEditorForm({
   detail,
+  prefill = null,
   today,
   onClose,
 }: {
   detail: ItemDetail | null;
+  prefill?: Partial<ItemFormValues> | null;
   today: string;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
   const form = useForm<ItemFormValues>({
-    defaultValues: detail ? formFromDetail(detail, today) : emptyItemForm(today),
+    defaultValues: detail
+      ? formFromDetail(detail, today)
+      : { ...emptyItemForm(today), ...(prefill ?? {}) },
     resolver: itemFormResolver,
   });
   const { register, handleSubmit, setError, setValue, getValues, control, formState } = form;

@@ -9,6 +9,7 @@ import type { DashboardQuery } from "@/types/DashboardQuery";
 import type { DateRange } from "@/types/DateRange";
 import type { Item } from "@/types/Item";
 import type { ItemInput } from "@/types/ItemInput";
+import type { ScheduleInput } from "@/types/ScheduleInput";
 
 export function useAreas() {
   return useQuery({ queryKey: areaKeys.all, queryFn: areasApi.list, staleTime: Infinity });
@@ -88,6 +89,37 @@ export function useUncompleteItem() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (item: Item) => itemsApi.uncomplete(item.id),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: itemKeys.all }),
+  });
+}
+
+/**
+ * Moves an item to a new time (calendar drag & resize). The item jumps immediately in every
+ * cached calendar range; if saving fails it snaps back and a gentle message appears.
+ */
+export function useRescheduleItem() {
+  const queryClient = useQueryClient();
+  const { t } = useTranslation();
+  const showToast = useToastStore((state) => state.show);
+  const rangeKey = ["items", "range"] as const;
+
+  return useMutation({
+    mutationFn: ({ item, schedule }: { item: Item; schedule: ScheduleInput }) =>
+      itemsApi.reschedule(item.id, schedule),
+    onMutate: async ({ item, schedule }) => {
+      await queryClient.cancelQueries({ queryKey: rangeKey });
+      const previous = queryClient.getQueriesData<Item[]>({ queryKey: rangeKey });
+      queryClient.setQueriesData<Item[]>({ queryKey: rangeKey }, (items) =>
+        items?.map((i) =>
+          i.id === item.id ? { ...i, ...schedule, allDay: schedule.dueDate !== null } : i,
+        ),
+      );
+      return { previous };
+    },
+    onError: (_error, _vars, context) => {
+      for (const [key, data] of context?.previous ?? []) queryClient.setQueryData(key, data);
+      showToast({ message: t("calendar.moveFailed") });
+    },
     onSettled: () => queryClient.invalidateQueries({ queryKey: itemKeys.all }),
   });
 }

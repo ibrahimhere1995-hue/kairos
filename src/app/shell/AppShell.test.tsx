@@ -9,10 +9,13 @@ import { renderApp } from "@/test/renderWithProviders";
 
 const renderAt = (path = "/") => renderApp(path).router;
 
-// My Day's heading is the greeting; other screens use their name.
-const GREETING = /^Good (morning|afternoon|evening)\.$/;
+// My Day's heading is the greeting, the Calendar's is the visible dates; others use their name.
+const HEADINGS: Record<string, RegExp> = {
+  "My Day": /^Good (morning|afternoon|evening)\.$/,
+  Calendar: /\d{4}$/,
+};
 const pageHeading = (name: string) =>
-  screen.findByRole("heading", { level: 1, name: name === "My Day" ? GREETING : name });
+  screen.findByRole("heading", { level: 1, name: HEADINGS[name] ?? name });
 
 describe("App shell", () => {
   beforeEach(() => {
