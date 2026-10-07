@@ -79,5 +79,9 @@ You are building **Kairos**, a local-first premium personal planner (Tauri 2 + R
 - Lists over 200 rows are virtualised.
 - Calendar queries are range-bounded (never "load all items").
 
+## Dependencies
+- Do not add libraries, crates, or tools not listed in `TECH_STACK.md` without asking.
+- When one is approved, **update `docs/TECH_STACK.md` (what, version, why) in the same PR**. Installed tools, paths, env vars and dev quirks go in `docs/SETUP.md`.
+
 ## When unsure
-Ask a short question rather than guessing. Prefer the simpler solution that matches the docs. Do not add libraries not listed in `TECH_STACK.md` without asking.
+Ask a short question rather than guessing. Prefer the simpler solution that matches the docs.

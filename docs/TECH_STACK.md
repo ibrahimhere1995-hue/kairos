@@ -38,6 +38,39 @@ Goal: **modern, lightweight, fast, offline, small installer.** Every choice belo
 | Package manager | **pnpm** | Fast, disk-efficient. |
 | CI | **GitHub Actions** with `tauri-action` | Builds Windows + macOS installers on every release tag. |
 
+## Additions & pinned versions (kept up to date)
+
+Every library, crate or tool added after the original plan is listed here **in the same PR that adds it** (PROJECT_RULES → "Dependencies"). Exact versions live in `package.json`, `pnpm-lock.yaml` and `src-tauri/Cargo.lock`; this table explains *why*.
+
+### Frontend (npm)
+| Package | Version | Added in | Why |
+|---------|---------|----------|-----|
+| `@fontsource-variable/inter`, `@fontsource-variable/fraunces` | 5.3.0 | P1-T02 | Ship the official Inter and Fraunces `.woff2` files inside the app (Vite bundles them). No runtime font downloads. Fraunces uses the `opsz.css` (weight + optical-size) variant. |
+| `i18next`, `react-i18next` | 26.4 / 17.0 | P1-T02 | Planned above; set up early because every visible string must go through `t()`. Strings live in `src/i18n/locales/en.json`. |
+| `zustand` | 5.0 | P1-T02 | Planned above; theme preference and sidebar state. |
+| `@tanstack/react-router` | 1.170 | P1-T03 | Chosen over React Router (approved). Code-based routes with **hash history** (desktop app, no URL bar). |
+| `@radix-ui/react-tooltip` | 1.2 | P1-T03 | The Radix primitive behind shadcn/ui's Tooltip; required for icon-only buttons (DESIGN_SYSTEM §2). |
+| `class-variance-authority`, `clsx`, `tailwind-merge` | 0.7 / 2.1 / 3.7 | P1-T01 | Standard shadcn/ui helpers for component variants and the `cn()` class merger. |
+
+### Frontend tooling (npm, dev only)
+| Package | Version | Why |
+|---------|---------|-----|
+| `typescript` | **6.0.3 (pinned below 6.1)** | TypeScript 7 is out, but `typescript-eslint` only supports `<6.1`. Upgrade both together once it does. |
+| `vite` / `vitest` / `jsdom` | 8.3 / 5.0 / 30.1 | Build tool and unit tests. Vitest replaces CSS imports with empty strings, so tests that inspect CSS read the file from disk. |
+| `@testing-library/react`, `jest-dom`, `user-event` | 16.3 / 7.0 / 14.6 | React Testing Library. |
+| `eslint`, `typescript-eslint`, `eslint-plugin-react-hooks`, `eslint-plugin-react-refresh`, `eslint-config-prettier`, `globals` | 10.12 / 8.71 / 7.1 / 0.5 / 10.1 / 17.13 | Linting (strict TS rules, no `any`). |
+| `prettier` | 3.9 | Formatting (`printWidth` 100, LF line endings). |
+| `@types/node` | 26.6 | Types for `vite.config.ts` and test files only (`tsconfig.node.json`, `tsconfig.test.json`), never app code. |
+
+### Backend (Rust crates)
+| Crate | Version | Added in | Why |
+|-------|---------|----------|-----|
+| `rusqlite` | 0.40, features `bundled`, `backup` | P1-T04 | Planned above. `bundled` compiles SQLite into the app; `backup` enables the Online Backup API (pre-migration and scheduled backups). Must match the version `rusqlite_migration` uses (one SQLite in the binary). |
+| `rusqlite_migration` | 2.6 | P1-T04 | Planned above. Migrations are numbered `.sql` files in `src-tauri/src/db/migrations/`. |
+| `uuid` (feature `v7`) | 1.27 | P1-T04 | UUID v7 IDs (ARCHITECTURE §4). Approved 2026-10-07. |
+| `chrono` (features `clock`, `std`) | 0.4 | P1-T04 | UTC ISO-8601 timestamps. Approved 2026-10-07. |
+| `thiserror` | 2.0 | P1-T04 | Defines `AppError`, returned by every command. Approved 2026-10-07. |
+
 ## Decisions explained
 
 ### Tauri vs Electron → Tauri
@@ -57,4 +90,4 @@ Consumer chat apps (free ChatGPT/Claude/Gemini web) have no permitted programmat
 - **Inter** (variable sans) — UI and body
 - **JetBrains Mono** — numbers in timers/time grids (optional)
 
-All three are open-source (SIL OFL). Ship the `.woff2` files inside the app; never load from Google Fonts at runtime.
+All three are open-source (SIL OFL). Ship the `.woff2` files inside the app; never load from Google Fonts at runtime. Fraunces and Inter are bundled via the Fontsource packages listed above; JetBrains Mono is not used yet (numbers use Inter with `tabular-nums`).

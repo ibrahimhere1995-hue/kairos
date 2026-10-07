@@ -1,4 +1,9 @@
 {
+  "errors": {
+    "database": "Something went wrong while saving or loading your data. Please try again.",
+    "file": "Kairos couldn't read or write a file. Check there is free disk space and try again.",
+    "dataDir": "Kairos couldn't find its data folder."
+  },
   "app": {
     "name": "Kairos",
     "skipToContent": "Skip to main content"

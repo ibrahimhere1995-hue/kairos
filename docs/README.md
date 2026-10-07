@@ -15,6 +15,7 @@ This folder is the complete specification. It is written so an AI coding assista
 | 5 | `DESIGN_SYSTEM.md` | Brand, colours, fonts, components, UX principles | 7 Design |
 | 6 | `PROJECT_RULES.md` | Non-negotiable rules for whoever writes the code | 8 Project rules |
 | 7 | `TASKS.md` | Phased, ordered build plan with acceptance criteria | 9 Task breakdown |
+| 8 | `SETUP.md` | Dev machine setup: tools, paths, commands, workflow, known quirks | 10 Setup |
 
 ## How to use these files with an AI coding assistant
 

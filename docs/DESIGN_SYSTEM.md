@@ -75,7 +75,7 @@ All colours are defined as CSS custom properties in `src/styles/tokens.css` and 
 | Area | Light | Dark | Default icon |
 |------|-------|------|--------------|
 | Work | `#3B6FD8` | `#7AA2F7` | `briefcase` |
-| Home | `#2F8F62` | `#4CC38A` | `home` |
+| Home | `#2F8F62` | `#4CC38A` | `house` (Lucide renamed `home`) |
 | Personal | `#C2547A` | `#F28BAE` | `heart` |
 | Learning | `#7B5BD6` | `#AE96F5` | `graduation-cap` |
 | Health | `#1E9C9A` | `#4FD1CF` | `activity` |
