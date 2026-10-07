@@ -11,6 +11,12 @@ import { ErrorPage } from "@/app/ErrorPage";
 import { NotFoundPage } from "@/app/NotFoundPage";
 import { AppShell } from "@/app/shell/AppShell";
 import { CalendarPage } from "@/features/calendar/CalendarPage";
+import { parseCalendarSearch, type CalendarView } from "@/features/calendar/calendarView";
+
+interface CalendarSearchParams {
+  view?: CalendarView;
+  date?: string;
+}
 import { MyDayPage } from "@/features/dashboard/MyDayPage";
 import { InboxPage } from "@/features/inbox/InboxPage";
 import { SettingsPage } from "@/features/settings/SettingsPage";
@@ -29,6 +35,14 @@ const myDayRoute = createRoute({
 const calendarRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/calendar",
+  // Optional: missing or invalid values fall back to "this week" in the page.
+  validateSearch: (search: Record<string, unknown>): CalendarSearchParams => {
+    const parsed = parseCalendarSearch(search, "");
+    return {
+      view: search.view === parsed.view ? parsed.view : undefined,
+      date: parsed.date || undefined,
+    };
+  },
   component: CalendarPage,
 });
 const inboxRoute = createRoute({
