@@ -51,6 +51,7 @@ Every library, crate or tool added after the original plan is listed here **in t
 | `@tanstack/react-router` | 1.170 | P1-T03 | Chosen over React Router (approved). Code-based routes with **hash history** (desktop app, no URL bar). |
 | `@radix-ui/react-tooltip` | 1.2 | P1-T03 | The Radix primitive behind shadcn/ui's Tooltip; required for icon-only buttons (DESIGN_SYSTEM §2). |
 | `class-variance-authority`, `clsx`, `tailwind-merge` | 0.7 / 2.1 / 3.7 | P1-T01 | Standard shadcn/ui helpers for component variants and the `cn()` class merger. |
+| `date-fns` | 4.4 | P1-T06 | Planned above; installed for the status engine's local-day maths (`src/lib/dates/dayContext.ts`). Uses the device's time zone; no extra time-zone library. Tests simulate other zones by setting `process.env.TZ`. |
 
 ### Frontend tooling (npm, dev only)
 | Package | Version | Why |
