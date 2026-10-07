@@ -36,3 +36,6 @@ lto = true
 opt-level = "s"
 panic = "abort"
 strip = true
+
+[dev-dependencies]
+ts-rs = "12"

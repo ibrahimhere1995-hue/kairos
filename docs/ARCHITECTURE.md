@@ -69,7 +69,7 @@ kairos/
 ```
 
 ## 3. Type sharing
-Rust structs are the source of truth. Generate TypeScript types with **specta + tauri-specta** (or `ts-rs`) into `src/types/`. Frontend validates user input with Zod before sending; backend validates again.
+Rust structs are the source of truth. TypeScript types are generated with **`ts-rs`** into `src/types/` (decision 2026-10-07: tauri-specta for Tauri 2 is still a release candidate). Structs use `#[cfg_attr(test, derive(ts_rs::TS), ts(export))]` and `#[serde(rename_all = "camelCase")]`; integers crossing the boundary are `i32` (never `bigint`). Run `pnpm test:rust` to regenerate; CI fails if `src/types/` is out of date. Command wrappers are written by hand in `src/lib/api/` and tested against the command names. Frontend validates user input with Zod before sending; backend validates again.
 
 ## 4. Data model (SQLite)
 

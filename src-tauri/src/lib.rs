@@ -1,6 +1,8 @@
 pub mod backup;
+pub mod commands;
 pub mod db;
 pub mod error;
+pub mod models;
 pub mod paths;
 pub mod repo;
 pub mod services;
@@ -42,6 +44,17 @@ pub fn run() {
             }
             Ok(())
         })
+        .invoke_handler(tauri::generate_handler![
+            commands::items::create_item,
+            commands::items::update_item,
+            commands::items::delete_item,
+            commands::items::restore_item,
+            commands::items::complete_item,
+            commands::items::uncomplete_item,
+            commands::items::reschedule_item,
+            commands::items::list_items,
+            commands::items::get_dashboard,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running Kairos");
 }

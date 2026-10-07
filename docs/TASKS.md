@@ -17,7 +17,7 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
   *Done when:* all nav works by mouse and keyboard; layout holds at 960 px width.
 - [x] **P1-T04 🗄 Database & migrations** — rusqlite bundled, WAL, foreign keys, migration runner, tables `areas`, `items`, `checklist_items`, `reminders`, `settings`, `backup_log`, `items_fts`. Seed default areas.
   *Done when:* app creates `kairos.db` in app-data on first run; migration tests pass.
-- [ ] **P1-T05 ⚙️ Item service & commands** — create/update/delete(soft)/restore/complete/uncomplete/reschedule, list by range, `get_dashboard`. Type generation to TS.
+- [x] **P1-T05 ⚙️ Item service & commands** — create/update/delete(soft)/restore/complete/uncomplete/reschedule, list by range, `get_dashboard`. Type generation to TS.
   *Done when:* Rust unit tests cover CRUD + soft delete + reschedule_count increments.
 - [ ] **P1-T06 ⚙️ Status engine** — pure functions implementing PRD §6 status rules (TS + Rust where needed).
   *Done when:* unit tests cover all statuses incl. all-day, midnight, timezone and DST boundaries.
