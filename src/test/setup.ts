@@ -19,6 +19,12 @@ Object.defineProperty(window, "matchMedia", {
     }) as MediaQueryList,
 });
 
+// jsdom lacks pointer capture (used by Radix toast swipe) and scrollIntoView; real WebViews have both.
+Element.prototype.hasPointerCapture ??= () => false;
+Element.prototype.setPointerCapture ??= () => {};
+Element.prototype.releasePointerCapture ??= () => {};
+Element.prototype.scrollIntoView ??= () => {};
+
 afterEach(() => {
   cleanup();
   localStorage.clear();

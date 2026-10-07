@@ -4,6 +4,7 @@ import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
 import { render } from "@testing-library/react";
 import { createQueryClient } from "@/app/queryClient";
 import { createAppRouter } from "@/app/router";
+import { Toaster } from "@/components/ui/Toaster";
 import { TooltipProvider } from "@/components/ui/Tooltip";
 
 /** Renders UI with the same providers as the app (fresh query cache per test). */
@@ -13,7 +14,10 @@ export function renderWithProviders(ui: ReactElement) {
     queryClient,
     ...render(
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider>{ui}</TooltipProvider>
+        <TooltipProvider>
+          {ui}
+          <Toaster />
+        </TooltipProvider>
       </QueryClientProvider>,
     ),
   };

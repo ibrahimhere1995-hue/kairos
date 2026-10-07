@@ -175,7 +175,7 @@ export function ItemEditorForm({
                     className="ml-auto text-text-muted"
                     disabled={remove.isPending}
                     onClick={async () => {
-                      await remove.mutateAsync(detail.item.id);
+                      await remove.mutateAsync(detail.item);
                       onClose();
                     }}
                   >

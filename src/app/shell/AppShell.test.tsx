@@ -1,19 +1,26 @@
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it } from "vitest";
+import { clearMocks } from "@tauri-apps/api/mocks";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { useThemeStore } from "@/app/theme/themeStore";
 import { useUiStore } from "@/app/uiStore";
+import { mockBackend } from "@/test/mockBackend";
 import { renderApp } from "@/test/renderWithProviders";
 
 const renderAt = (path = "/") => renderApp(path).router;
 
-const pageHeading = (name: string) => screen.findByRole("heading", { level: 1, name });
+// My Day's heading is the greeting; other screens use their name.
+const GREETING = /^Good (morning|afternoon|evening)\.$/;
+const pageHeading = (name: string) =>
+  screen.findByRole("heading", { level: 1, name: name === "My Day" ? GREETING : name });
 
 describe("App shell", () => {
   beforeEach(() => {
     useUiStore.setState({ sidebarCollapsed: false });
     useThemeStore.setState({ preference: "light" });
+    mockBackend();
   });
+  afterEach(() => clearMocks());
 
   it("opens on My Day with the main landmarks", async () => {
     renderAt();

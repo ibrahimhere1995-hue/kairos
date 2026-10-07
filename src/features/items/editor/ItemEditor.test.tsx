@@ -1,10 +1,11 @@
 import { addDays } from "date-fns";
-import { clearMocks, mockIPC } from "@tauri-apps/api/mocks";
+import { clearMocks } from "@tauri-apps/api/mocks";
 import { act, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { useEditorStore } from "@/features/items/editorStore";
 import { toLocalDateString } from "@/lib/dates/dayContext";
+import { mockBackend, type Call } from "@/test/mockBackend";
 import { renderApp } from "@/test/renderWithProviders";
 import type { Item } from "@/types/Item";
 
@@ -33,40 +34,19 @@ const savedItem: Item = {
   deletedAt: null,
 };
 
-type Call = { cmd: string; args: Record<string, unknown> };
 let calls: Call[] = [];
 let failCreateWith: unknown = null;
 
 beforeEach(() => {
-  calls = [];
   failCreateWith = null;
   useEditorStore.setState({ open: false, itemId: null });
-  mockIPC((cmd, args) => {
-    calls.push({ cmd, args: (args ?? {}) as Record<string, unknown> });
-    switch (cmd) {
-      case "list_areas":
-        return [
-          {
-            id: "a1",
-            name: "Work",
-            color: "area.work",
-            icon: "briefcase",
-            sortOrder: 0,
-            isArchived: false,
-          },
-        ];
-      case "create_item":
-        if (failCreateWith) throw failCreateWith;
-        return savedItem;
-      case "update_item":
-        return savedItem;
-      case "set_checklist":
-        return [];
-      case "get_item_detail":
-        return { item: savedItem, checklist: [] };
-      default:
-        return null;
-    }
+  calls = mockBackend({
+    create_item: () => {
+      if (failCreateWith) throw failCreateWith;
+      return savedItem;
+    },
+    update_item: () => savedItem,
+    get_item_detail: () => ({ item: savedItem, checklist: [] }),
   });
 });
 afterEach(() => clearMocks());

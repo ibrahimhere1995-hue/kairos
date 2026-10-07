@@ -90,6 +90,11 @@ Areas appear as a 4 px left stripe on item cards, a small dot in lists, and a so
 | Missed | `--warning` (amber, never red) | `rotate-ccw` | "Slipped" |
 | Done | `--success` | `check-circle-2` | "Done" |
 | Skipped | `--text-subtle` | `minus-circle` | "Skipped" |
+| Due today *(added P1-T08, pending Zack's confirmation)* | `--accent-text` (`--status-today`) | `sun` | "Today" |
+| Past *(events only; added P1-T08, pending confirmation)* | `--text-subtle` (`--status-past`), shown muted | `history` | "Past" |
+| No date (Inbox) | `--text-subtle` | `inbox` | "No date" |
+
+Checkbox ring (unchecked) uses `--text-subtle`, not `--border`, so the control meets the 3:1 non-text contrast rule.
 
 ### 3.5 Contrast
 - Body text ≥ 4.5:1, large text and UI parts ≥ 3:1 (WCAG 2.2 AA). Verify both themes with an automated contrast check in tests.

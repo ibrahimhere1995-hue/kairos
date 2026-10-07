@@ -65,7 +65,8 @@ const routeTree = rootRoute.addChildren([
  * webview resolving deep paths to index.html. Tests pass a memory history instead.
  */
 export function createAppRouter(history: RouterHistory = createHashHistory()) {
-  return createRouter({ routeTree, history });
+  // A crashing screen shows the error page inside the shell, so navigation keeps working.
+  return createRouter({ routeTree, history, defaultErrorComponent: ErrorPage });
 }
 
 declare module "@tanstack/react-router" {

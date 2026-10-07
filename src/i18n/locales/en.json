@@ -22,7 +22,43 @@
   },
   "common": {
     "close": "Close",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "tryAgain": "Try again",
+    "notifications": "Notifications"
+  },
+  "toast": {
+    "undo": "Undo",
+    "done": "Done: {{title}}",
+    "movedToTrash": "Moved to Trash: {{title}}"
+  },
+  "items": {
+    "markDone": "Mark “{{title}}” as done",
+    "markNotDone": "Mark “{{title}}” as not done"
+  },
+  "myDay": {
+    "goodMorning": "Good morning.",
+    "goodAfternoon": "Good afternoon.",
+    "goodEvening": "Good evening.",
+    "summaryTasks_one": "{{count}} task today",
+    "summaryTasks_other": "{{count}} tasks today",
+    "summaryMeetings_one": "{{count}} meeting",
+    "summaryMeetings_other": "{{count}} meetings",
+    "summarySlipped_one": "{{count}} slipped by",
+    "summarySlipped_other": "{{count}} slipped by",
+    "summaryClear": "Nothing left for today.",
+    "loading": "Loading your day",
+    "filterLabel": "Show one life area",
+    "allAreas": "All areas",
+    "balanceTitle": "This week's balance",
+    "balanceEmpty": "No time planned this week yet. Give an item a start time and length to see it here.",
+    "now": "Now",
+    "today": "Today",
+    "slipped": "Slipped by",
+    "thisWeek": "This week",
+    "doneToday": "Done today",
+    "emptyDay": "A clear day. Perfect moment to plan something that matters.",
+    "addFirst": "Add your first task",
+    "emptyFiltered": "Nothing in this area right now."
   },
   "dates": {
     "today": "Today",
@@ -117,7 +153,10 @@
     "upcoming": "Upcoming",
     "slipped": "Slipped",
     "done": "Done",
-    "skipped": "Skipped"
+    "skipped": "Skipped",
+    "today": "Today",
+    "past": "Past",
+    "unscheduled": "No date"
   },
   "areas": {
     "work": "Work",
