@@ -116,6 +116,17 @@
   animation: skeleton-shimmer 1.2s linear infinite;
 }
 
+/* §6.2 Quick Capture: scales 0.96 → 1 with a fade, 160ms. */
+@keyframes capture-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+.capture-in {
+  animation: capture-in 160ms var(--ease-out);
+}
+
 /* §6.2 Undo toast: slides up 12px + fade; hairline shrinks over the undo window. */
 @keyframes toast-in {
   from {
@@ -192,7 +203,8 @@
 /* §6.3 Reduce motion: movement becomes a short fade, loops stop. */
 @media (prefers-reduced-motion: reduce) {
   .panel-in,
-  .toast-in {
+  .toast-in,
+  .capture-in {
     animation: fade-in var(--dur-fast) linear;
   }
   .skeleton,

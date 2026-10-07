@@ -1,4 +1,5 @@
 pub mod backup;
+pub mod capture;
 pub mod commands;
 pub mod db;
 pub mod error;
@@ -17,6 +18,33 @@ use tauri::Manager;
 /// (no white flash). If that never happens, show it anyway so the user is never left with nothing.
 const SHOW_WINDOW_FALLBACK: Duration = Duration::from_secs(3);
 
+/// Registers Ctrl/⌘+Shift+Space for Quick Capture. If another app already owns the
+/// shortcut, Kairos still starts: the in-app "+ Add task" bar works without it.
+#[cfg(desktop)]
+fn register_capture_shortcut(app: &tauri::App) {
+    use tauri_plugin_global_shortcut::ShortcutState;
+
+    let plugin = tauri_plugin_global_shortcut::Builder::new()
+        .with_shortcut(capture::CAPTURE_SHORTCUT)
+        .map(|builder| {
+            builder
+                .with_handler(|app, _shortcut, event| {
+                    if event.state == ShortcutState::Pressed {
+                        capture::toggle(app);
+                    }
+                })
+                .build()
+        });
+    match plugin {
+        Ok(plugin) => {
+            if let Err(error) = app.handle().plugin(plugin) {
+                eprintln!("Quick Capture shortcut unavailable: {error}");
+            }
+        }
+        Err(error) => eprintln!("Quick Capture shortcut unavailable: {error}"),
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     // Development only: keep the WebView2 cache inside the project (.devdata), off the C: drive.
@@ -34,6 +62,9 @@ pub fn run() {
         .setup(|app| {
             let data_dir = paths::data_dir(app.handle())?;
             app.manage(startup::open_database(&data_dir)?);
+
+            #[cfg(desktop)]
+            register_capture_shortcut(app);
 
             if let Some(window) = app.get_webview_window("main") {
                 std::thread::spawn(move || {

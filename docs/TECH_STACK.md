@@ -55,6 +55,7 @@ Every library, crate or tool added after the original plan is listed here **in t
 | `react-hook-form`, `zod` | 7.89 / 4.6 | P1-T07 | Planned above. Zod schema + a small hand-written resolver in `src/features/items/itemForm.ts` (no `@hookform/resolvers` package needed). |
 | `motion` | 14.0 | P1-T08 | Planned above (Motion, formerly Framer Motion): completion animation, list enter/exit. Respects reduced motion. |
 | `@radix-ui/react-dialog`, `@radix-ui/react-popover`, `@radix-ui/react-toast` | 1.2 / 1.2 / 1.2 | P1-T07/T08 | Radix primitives behind shadcn/ui's Sheet (side panel), Popover (pill pickers) and Toast (Undo). Same family as the approved tooltip. |
+| `chrono-node` | 2.10 | P1-T11 | Planned above: offline English date/time parsing for Quick Capture (`src/lib/nlp/parseCapture.ts`), with our own `#area`, `!priority` and "every …" (flagged for Phase 2) handling. |
 | `@dnd-kit/core` | 6.3 | P1-T09 | Planned above (dnd-kit): drag to move/resize calendar items, with keyboard dragging and translated screen-reader announcements. |
 | Native `<input type="date">` / `type="time"` | — | P1-T07 | Date and time inside the pill pickers use the WebView's built-in inputs instead of a date-picker library (accessible, zero size). A custom premium picker can replace them in P2-T14 polish. |
 | `date-fns` | 4.4 | P1-T06 | Planned above; installed for the status engine's local-day maths (`src/lib/dates/dayContext.ts`). Uses the device's time zone; no extra time-zone library. Tests simulate other zones by setting `process.env.TZ`. |
@@ -77,6 +78,7 @@ Every library, crate or tool added after the original plan is listed here **in t
 | `uuid` (feature `v7`) | 1.27 | P1-T04 | UUID v7 IDs (ARCHITECTURE §4). Approved 2026-10-07. |
 | `chrono` (features `clock`, `std`) | 0.4 | P1-T04 | UTC ISO-8601 timestamps. Approved 2026-10-07. |
 | `thiserror` | 2.0 | P1-T04 | Defines `AppError`, returned by every command. Approved 2026-10-07. |
+| `tauri-plugin-global-shortcut` (desktop only) | 2.4 | P1-T12 | Planned above: Ctrl/⌘+Shift+Space opens the Quick Capture window from any app. If another app owns the shortcut, Kairos starts anyway and logs it. |
 | `ts-rs` (**dev-dependency only**) | 12.0 | P1-T05 | Generates TypeScript types in `src/types/` from Rust structs when `cargo test` runs. Chosen over specta/tauri-specta because the Tauri 2 version of tauri-specta is only a release candidate (`2.0.0-rc`), which this doc forbids. Approved 2026-10-07. Config: `.cargo/config.toml` (`TS_RS_EXPORT_DIR=src/types`, `TS_RS_LARGE_INT=number`). Not compiled into the shipped app. |
 
 ## Decisions explained

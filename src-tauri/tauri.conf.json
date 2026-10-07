@@ -20,6 +20,20 @@
         "minHeight": 640,
         "center": true,
         "visible": false
+      },
+      {
+        "label": "capture",
+        "title": "Kairos Quick Capture",
+        "url": "capture.html",
+        "width": 600,
+        "height": 236,
+        "resizable": false,
+        "decorations": false,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "center": true,
+        "visible": false,
+        "focus": false
       }
     ],
     "security": {

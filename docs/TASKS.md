@@ -25,12 +25,12 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
   *Done when:* create and edit work; Esc closes; unsaved-change guard.
 - [x] **P1-T08 🎨 My Day dashboard** — greeting, summary line, Now/Today/Slipped/This week/Done sections, area filter, one-click complete with gold animation + Undo toast, empty state.
   *Done when:* matches PRD R2 acceptance criteria.
-- [ ] **P1-T09 🎨 Calendar: Week & Day views** — hour grid, now line, events/tasks blocks, all-day row, drag to move, drag edge to resize, click-drag to create.
+- [x] **P1-T09 🎨 Calendar: Week & Day views** — hour grid, now line, events/tasks blocks, all-day row, drag to move, drag edge to resize, click-drag to create.
   *Done when:* drag/resize persist; works with 500 items in a week without lag.
-- [ ] **P1-T10 🎨 Calendar: Month & Agenda views** — month grid with "+N more", agenda list grouped by day; Today button and `T` shortcut.
-- [ ] **P1-T11 ⚙️ Offline natural-language parser** — chrono-node + `#area` + `!priority` parsing, returns title + chips.
+- [x] **P1-T10 🎨 Calendar: Month & Agenda views** — month grid with "+N more", agenda list grouped by day; Today button and `T` shortcut.
+- [x] **P1-T11 ⚙️ Offline natural-language parser** — chrono-node + `#area` + `!priority` parsing, returns title + chips.
   *Done when:* 40+ test phrases pass ("tomorrow 3pm", "next Fri", "in 2 hours", "every Monday" flagged for Phase 2).
-- [ ] **P1-T12 🎨 Quick Capture** — in-app "+ Add" quick bar and global shortcut floating window; chips preview; Enter saves.
+- [x] **P1-T12 🎨 Quick Capture** — in-app "+ Add" quick bar and global shortcut floating window; chips preview; Enter saves.
   *Done when:* capture from another app in < 5 s; window hides after save; main view updates.
 - [ ] **P1-T13 🎨 Trash** — list soft-deleted items, restore, empty Trash (confirm), auto-purge after 30 days.
 - [ ] **P1-T14 ⚙️ Automatic backups & restore** — Online Backup API, on close + every 24 h, retention 14 daily / 8 weekly, verification, optional user folder, Settings › Backups screen with list + Restore + "Back up now".

@@ -39,3 +39,7 @@ strip = true
 
 [dev-dependencies]
 ts-rs = "12"
+
+# Desktop only: the Quick Capture shortcut (Ctrl/⌘+Shift+Space) from any app.
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-global-shortcut = "2"
