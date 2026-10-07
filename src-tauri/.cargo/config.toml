@@ -1,0 +1,4 @@
+# ts-rs: generated TypeScript types go to the frontend (run `cargo test` to regenerate).
+[env]
+TS_RS_EXPORT_DIR = { value = "../src/types", relative = true }
+TS_RS_LARGE_INT = "number"
