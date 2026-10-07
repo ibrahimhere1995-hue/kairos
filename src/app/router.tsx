@@ -7,6 +7,7 @@ import {
   redirect,
   type RouterHistory,
 } from "@tanstack/react-router";
+import { ErrorPage } from "@/app/ErrorPage";
 import { NotFoundPage } from "@/app/NotFoundPage";
 import { AppShell } from "@/app/shell/AppShell";
 import { CalendarPage } from "@/features/calendar/CalendarPage";
@@ -17,6 +18,7 @@ import { SettingsPage } from "@/features/settings/SettingsPage";
 const rootRoute = createRootRoute({
   component: AppShell,
   notFoundComponent: NotFoundPage,
+  errorComponent: ErrorPage,
 });
 
 const myDayRoute = createRoute({
@@ -63,7 +65,8 @@ const routeTree = rootRoute.addChildren([
  * webview resolving deep paths to index.html. Tests pass a memory history instead.
  */
 export function createAppRouter(history: RouterHistory = createHashHistory()) {
-  return createRouter({ routeTree, history });
+  // A crashing screen shows the error page inside the shell, so navigation keeps working.
+  return createRouter({ routeTree, history, defaultErrorComponent: ErrorPage });
 }
 
 declare module "@tanstack/react-router" {

@@ -89,6 +89,8 @@
 :root {
   /* §3.4 Status (colour is never used alone — always paired with icon + label) */
   --status-now: var(--accent-text); /* icon/text; "Now" fills and pulse use --accent */
+  --status-today: var(--accent-text);
+  --status-past: var(--text-subtle);
   --status-upcoming: var(--info);
   --status-slipped: var(--warning);
   --status-done: var(--success);

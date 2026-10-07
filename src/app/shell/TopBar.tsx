@@ -3,9 +3,11 @@ import { useTranslation } from "react-i18next";
 import { SearchPlaceholder } from "@/app/shell/SearchPlaceholder";
 import { ThemeToggle } from "@/app/theme/ThemeToggle";
 import { Button } from "@/components/ui/Button";
+import { useEditorStore } from "@/features/items/editorStore";
 
 export function TopBar() {
   const { t } = useTranslation();
+  const openNew = useEditorStore((state) => state.openNew);
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-4 border-b border-border bg-surface px-4">
@@ -14,8 +16,7 @@ export function TopBar() {
       </span>
       <SearchPlaceholder />
       <div className="ml-auto flex shrink-0 items-center gap-2">
-        {/* Opens the item editor once it exists (P1-T07). */}
-        <Button size="lg" disabled>
+        <Button size="lg" onClick={openNew}>
           <Plus aria-hidden="true" />
           {t("topbar.addTask")}
         </Button>

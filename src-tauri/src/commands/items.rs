@@ -3,10 +3,11 @@ use tauri::State;
 use crate::commands::with_conn;
 use crate::db::Db;
 use crate::error::AppResult;
+use crate::models::checklist::{ChecklistEntryInput, ChecklistItem, ItemDetail};
 use crate::models::dashboard::{Dashboard, DashboardQuery};
 use crate::models::inputs::{DateRange, ItemFilters, ItemInput, ScheduleInput};
 use crate::models::item::Item;
-use crate::services::items;
+use crate::services::{checklist, items};
 
 #[tauri::command]
 pub fn create_item(db: State<'_, Db>, input: ItemInput) -> AppResult<Item> {
@@ -51,6 +52,22 @@ pub fn list_items(
 ) -> AppResult<Vec<Item>> {
     let filters = filters.unwrap_or_default();
     with_conn(&db, |conn| items::list(conn, &range, &filters))
+}
+
+#[tauri::command]
+pub fn get_item_detail(db: State<'_, Db>, id: String) -> AppResult<ItemDetail> {
+    with_conn(&db, |conn| checklist::get_detail(conn, &id))
+}
+
+#[tauri::command]
+pub fn set_checklist(
+    db: State<'_, Db>,
+    item_id: String,
+    entries: Vec<ChecklistEntryInput>,
+) -> AppResult<Vec<ChecklistItem>> {
+    with_conn(&db, |conn| {
+        checklist::set_checklist(conn, &item_id, &entries)
+    })
 }
 
 #[tauri::command]

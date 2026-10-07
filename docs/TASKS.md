@@ -21,9 +21,9 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
   *Done when:* Rust unit tests cover CRUD + soft delete + reschedule_count increments.
 - [x] **P1-T06 ⚙️ Status engine** — pure functions implementing PRD §6 status rules (TS + Rust where needed).
   *Done when:* unit tests cover all statuses incl. all-day, midnight, timezone and DST boundaries.
-- [ ] **P1-T07 🎨 Item editor side panel** — title, date, time, duration, all-day, area, priority, notes, checklist; friendly pill pickers; validation with Zod.
+- [x] **P1-T07 🎨 Item editor side panel** — title, date, time, duration, all-day, area, priority, notes, checklist; friendly pill pickers; validation with Zod.
   *Done when:* create and edit work; Esc closes; unsaved-change guard.
-- [ ] **P1-T08 🎨 My Day dashboard** — greeting, summary line, Now/Today/Slipped/This week/Done sections, area filter, one-click complete with gold animation + Undo toast, empty state.
+- [x] **P1-T08 🎨 My Day dashboard** — greeting, summary line, Now/Today/Slipped/This week/Done sections, area filter, one-click complete with gold animation + Undo toast, empty state.
   *Done when:* matches PRD R2 acceptance criteria.
 - [ ] **P1-T09 🎨 Calendar: Week & Day views** — hour grid, now line, events/tasks blocks, all-day row, drag to move, drag edge to resize, click-drag to create.
   *Done when:* drag/resize persist; works with 500 items in a week without lag.

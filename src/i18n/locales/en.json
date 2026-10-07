@@ -16,8 +16,101 @@
       "requiresStart": "Please add a start time first.",
       "beforeStart": "The end needs to be after the start.",
       "eventNeedsDate": "Events need a date.",
-      "eventNeedsEnd": "Events need an end time."
+      "eventNeedsEnd": "Events need an end time.",
+      "tooMany": "That's a lot of steps. Try splitting this into a few items."
     }
+  },
+  "common": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "tryAgain": "Try again",
+    "notifications": "Notifications"
+  },
+  "toast": {
+    "undo": "Undo",
+    "done": "Done: {{title}}",
+    "movedToTrash": "Moved to Trash: {{title}}"
+  },
+  "items": {
+    "markDone": "Mark “{{title}}” as done",
+    "markNotDone": "Mark “{{title}}” as not done"
+  },
+  "myDay": {
+    "goodMorning": "Good morning.",
+    "goodAfternoon": "Good afternoon.",
+    "goodEvening": "Good evening.",
+    "summaryTasks_one": "{{count}} task today",
+    "summaryTasks_other": "{{count}} tasks today",
+    "summaryMeetings_one": "{{count}} meeting",
+    "summaryMeetings_other": "{{count}} meetings",
+    "summarySlipped_one": "{{count}} slipped by",
+    "summarySlipped_other": "{{count}} slipped by",
+    "summaryClear": "Nothing left for today.",
+    "loading": "Loading your day",
+    "filterLabel": "Show one life area",
+    "allAreas": "All areas",
+    "balanceTitle": "This week's balance",
+    "balanceEmpty": "No time planned this week yet. Give an item a start time and length to see it here.",
+    "now": "Now",
+    "today": "Today",
+    "slipped": "Slipped by",
+    "thisWeek": "This week",
+    "doneToday": "Done today",
+    "emptyDay": "A clear day. Perfect moment to plan something that matters.",
+    "addFirst": "Add your first task",
+    "emptyFiltered": "Nothing in this area right now."
+  },
+  "dates": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "nextWeek": "Next week",
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min",
+    "hours_one": "{{count}} h",
+    "hours_other": "{{count}} h"
+  },
+  "kind": {
+    "task": "Task",
+    "event": "Event"
+  },
+  "priority": {
+    "none": "No priority",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High"
+  },
+  "editor": {
+    "newTitle": "New item",
+    "editTitle": "Edit item",
+    "title": "Title",
+    "titlePlaceholder": "What needs a moment?",
+    "kind": "Task or event",
+    "date": "Date",
+    "noDate": "No date",
+    "pickDate": "Pick a date",
+    "time": "Time",
+    "allDay": "All day",
+    "startTime": "Start time",
+    "duration": "How long",
+    "noEndTime": "No end time",
+    "area": "Life area",
+    "noArea": "No area",
+    "priority": "Priority",
+    "checklist": "Steps",
+    "addStep": "Add a step",
+    "stepPlaceholder": "A small step",
+    "stepText": "Step {{number}}",
+    "stepDone": "Step {{number}} done",
+    "removeStep": "Remove step {{number}}",
+    "moreDetails": "More details",
+    "notes": "Notes",
+    "addTask": "Add task",
+    "addEvent": "Add event",
+    "save": "Save changes",
+    "moveToTrash": "Move to Trash",
+    "discardQuestion": "You have unsaved changes. Discard them?",
+    "keepEditing": "Keep editing",
+    "discard": "Discard"
   },
   "app": {
     "name": "Kairos",
@@ -43,6 +136,7 @@
     "calendar": "Your day, week, and month views will live here.",
     "inbox": "A holding place for quick notes, screenshots, and voice notes that don't have a date yet.",
     "settings": "Theme, text size, reminders, and backups will be set here.",
+    "errorTitle": "Something went wrong",
     "notFoundTitle": "Nothing here",
     "notFound": "This page doesn't exist. Pick a place from the sidebar."
   },
@@ -59,7 +153,10 @@
     "upcoming": "Upcoming",
     "slipped": "Slipped",
     "done": "Done",
-    "skipped": "Skipped"
+    "skipped": "Skipped",
+    "today": "Today",
+    "past": "Past",
+    "unscheduled": "No date"
   },
   "areas": {
     "work": "Work",

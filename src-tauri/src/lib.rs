@@ -54,6 +54,9 @@ pub fn run() {
             commands::items::reschedule_item,
             commands::items::list_items,
             commands::items::get_dashboard,
+            commands::items::get_item_detail,
+            commands::items::set_checklist,
+            commands::areas::list_areas,
         ])
         .run(tauri::generate_context!())
         .expect("error while running Kairos");
