@@ -44,7 +44,24 @@
     "mb": "{{value}} MB"
   },
   "settings": {
-    "intro": "Your backups live here. Theme, text size, week start and reminders are coming next."
+    "intro": "Make Kairos fit the way you work. Changes save straight away.",
+    "appearance": "Appearance",
+    "themeHelp": "Match system follows your computer's light or dark mode.",
+    "textSize": "Text size",
+    "textSizeHelp": "Makes all text and buttons bigger or smaller.",
+    "sizes": {
+      "small": "Small",
+      "default": "Default",
+      "large": "Large",
+      "xl": "Extra large"
+    },
+    "weekStart": "Week starts on",
+    "weekStartHelp": "Used by the week view and “This week” on My Day.",
+    "monday": "Monday",
+    "sunday": "Sunday",
+    "reminders": "Reminders",
+    "reminderTime": "Remind me about all-day tasks at",
+    "reminderTimeHelp": "Reminders arrive in the next update; your choice is saved and ready for them."
   },
   "trash": {
     "title": "Trash",

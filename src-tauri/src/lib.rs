@@ -141,6 +141,8 @@ pub fn run() {
             commands::backups::get_backup_settings,
             commands::backups::set_backup_folder,
             commands::backups::take_startup_notice,
+            commands::settings::get_settings,
+            commands::settings::update_settings,
         ])
         .build(tauri::generate_context!())
         .expect("error while building Kairos");

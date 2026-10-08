@@ -2,8 +2,10 @@ import type { ReactElement } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
 import { render } from "@testing-library/react";
+import { AppearanceSync } from "@/app/AppearanceSync";
 import { createQueryClient } from "@/app/queryClient";
 import { createAppRouter } from "@/app/router";
+import { ThemeProvider } from "@/app/theme/ThemeProvider";
 import { Toaster } from "@/components/ui/Toaster";
 import { TooltipProvider } from "@/components/ui/Tooltip";
 
@@ -14,10 +16,13 @@ export function renderWithProviders(ui: ReactElement) {
     queryClient,
     ...render(
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          {ui}
-          <Toaster />
-        </TooltipProvider>
+        <AppearanceSync />
+        <ThemeProvider>
+          <TooltipProvider>
+            {ui}
+            <Toaster />
+          </TooltipProvider>
+        </ThemeProvider>
       </QueryClientProvider>,
     ),
   };
