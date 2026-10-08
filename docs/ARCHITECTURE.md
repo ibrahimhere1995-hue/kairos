@@ -200,6 +200,7 @@ CREATE VIRTUAL TABLE items_fts USING fts5(title, notes, content='items', content
 - Database: `{appDataDir}/kairos.db` (WAL mode, `foreign_keys=ON`, `synchronous=NORMAL`)
 - Attachments: `{appDataDir}/attachments/{yyyy}/{mm}/{uuid}.{ext}`
 - Backups: `{appDataDir}/backups/` + optional user folder
+- Damaged database files (startup recovery): `{appDataDir}/damaged/`
 - Logs: `{appLogDir}/kairos.log` (rotated, no personal content)
 
 ## 6. Key flows
@@ -216,9 +217,15 @@ CREATE VIRTUAL TABLE items_fts USING fts5(title, notes, content='items', content
 - Missed reminders while the computer was off: show one combined notification ("While you were away: 3 reminders").
 
 ### 6.3 Backups
-- Use SQLite **Online Backup API** (safe while running) → write `kairos-YYYYMMDD-HHmm.db` + copy of attachments folder (incremental).
-- Retention: 14 daily, 8 weekly. Verify each backup by opening it read-only and counting items; record in `backup_log`.
-- Restore: back up current → close pool → replace file → reopen → emit `data:reloaded`.
+- Use SQLite **Online Backup API** (safe while running) through a **separate read-only connection**, so the app's connection is never blocked → write `kairos-<label>-YYYYMMDD-HHMMSS.mmm.db` (UTC). Labels: `auto`, `manual`, `pre-restore`, `pre-migration`, `pre-purge`. Attachments folder copy: added with attachments (P2-T11).
+- When: every 24 h (background check every 30 min) and on every app close; "Back up now"; automatically before a migration, a restore, or a Trash purge.
+- Retention: automatic → newest per day for the last 14 backup days, then newest per ISO week for 8 more weeks; safety copies (`pre-*`) → newest 10 of each; manual backups are never removed. Applied to the app folder and the extra folder.
+- Verify each backup by opening it read-only (`PRAGMA quick_check` + item count); record successes and failures in `backup_log` (failures are shown in Settings › Backups).
+- Optional extra folder (settings key `backup.folder`): every backup is copied there; its backups are listed and restorable too.
+- Restore: validate the file name (no paths) → verify the backup → back up current data (`pre-restore`) → copy the backup into the live connection with the Online Backup API → run migrations → emit `data:reloaded` (every window refetches everything).
+
+### 6.3a Startup integrity & recovery (P1-T15)
+`PRAGMA quick_check` on the database file before opening. If it fails (or the file can't be read): move the file and its `-wal`/`-shm` into `{appDataDir}/damaged/` (never deleted) → copy in the newest backup that passes verification → show a one-time calm notice (`take_startup_notice`). With no good backup, Kairos starts with a fresh database and the notice says where the damaged file was kept. Trash items older than 30 days are purged at startup (backed up first).
 
 ### 6.4 Quick Capture
 Global shortcut → small always-on-top Tauri window → user types → frontend parses with chrono-node + tag parser → shows chips → Enter → `create_item` command → window hides → main window receives `items:changed`.

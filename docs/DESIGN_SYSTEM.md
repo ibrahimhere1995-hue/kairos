@@ -90,8 +90,8 @@ Areas appear as a 4 px left stripe on item cards, a small dot in lists, and a so
 | Missed | `--warning` (amber, never red) | `rotate-ccw` | "Slipped" |
 | Done | `--success` | `check-circle-2` | "Done" |
 | Skipped | `--text-subtle` | `minus-circle` | "Skipped" |
-| Due today *(added P1-T08, pending Zack's confirmation)* | `--accent-text` (`--status-today`) | `sun` | "Today" |
-| Past *(events only; added P1-T08, pending confirmation)* | `--text-subtle` (`--status-past`), shown muted | `history` | "Past" |
+| Due today *(added P1-T08, confirmed 2026-10-08)* | `--accent-text` (`--status-today`) | `sun` | "Today" |
+| Past *(events only; added P1-T08, confirmed 2026-10-08)* | `--text-subtle` (`--status-past`), shown muted | `history` | "Past" |
 | No date (Inbox) | `--text-subtle` | `inbox` | "No date" |
 
 Checkbox ring (unchecked) uses `--text-subtle`, not `--border`, so the control meets the 3:1 non-text contrast rule.
@@ -154,7 +154,7 @@ Motion in Kairos should feel **calm, quick, and purposeful**: it explains what c
 | **Complete a task (signature)** | Checkbox fills gold from centre, white tick draws on (stroke-dashoffset), thin gold arc sweeps once around, title strikes through left → right and fades to muted; item then slides into "Done today" | 80 ms fill → 200 ms tick → 400 ms total; slide 200 ms | The reward moment: calm satisfaction, no confetti |
 | **Undo toast** | Slides up 12 px + fade in; progress hairline shrinks over 8 s | 200 ms in, ease-in out | Shows how long Undo is available |
 | **Slipped card** | Gentle fade-in after the Now section; when an item is moved, it collapses height to 0 and the card re-measures; when empty, card fades out and shows a 1-line "All caught up" | 200 ms collapse, 320 ms card exit | Calm resolution, never alarming. **No shaking, no red flashes** |
-| **Add task (+ Add button)** | Button presses to 0.97 scale; the in-app Quick Capture bar opens (TASKS P1-T12); its "More details" opens the item editor side panel, which slides in from right 24 px + fade *(changed P1-T12, pending Zack's confirmation)* | 80 ms press; 160 ms bar; 200 ms panel | Clear cause → effect |
+| **Add task (+ Add button)** | Button presses to 0.97 scale; the in-app Quick Capture bar opens (TASKS P1-T12); its "More details" opens the item editor side panel, which slides in from right 24 px + fade *(changed P1-T12, confirmed 2026-10-08)* | 80 ms press; 160 ms bar; 200 ms panel | Clear cause → effect |
 | **New item appears in a list** | Expands from height 0, background flashes a soft gold tint that fades out | 200 ms expand, 900 ms tint fade | "Here's what you just added" |
 | **Quick Capture window** | Scales 0.96 → 1 + fade, backdrop blur in; parsed chips pop in one by one as recognised | 160 ms window; chips 120 ms each | Feels instant and smart |
 | **Calendar view switch** (Day/Week/Month) | Cross-fade + 8 px horizontal slide in the direction of time | 200 ms | Keeps spatial sense of time |

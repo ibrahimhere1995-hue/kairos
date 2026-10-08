@@ -37,6 +37,9 @@ export function mockBackend(overrides: Record<string, Handler> = {}): Call[] {
     get_dashboard: () => emptyDashboard,
     list_items: () => [],
     set_checklist: () => [],
+    list_trash: () => [],
+    list_backups: () => [],
+    get_backup_settings: () => ({ folder: null, lastBackupAt: null, lastFailureAt: null }),
   };
   mockIPC((cmd, args) => {
     const payload = (args ?? {}) as Record<string, unknown>;

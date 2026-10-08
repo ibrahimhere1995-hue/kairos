@@ -23,6 +23,7 @@ uuid = { version = "1.27.0", features = ["v7"] }
 chrono = { version = "0.4.45", default-features = false, features = ["clock", "std"] }
 thiserror = "2.0.21"
 rusqlite = { version = "0.40", features = ["bundled", "backup"] }
+tauri-plugin-dialog = "2"
 
 [lints.clippy]
 # PROJECT_RULES: no unwrap()/expect() outside tests and startup-fatal paths.

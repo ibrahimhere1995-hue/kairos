@@ -4,6 +4,7 @@
     "file": "Kairos couldn't read or write a file. Check there is free disk space and try again.",
     "dataDir": "Kairos couldn't find its data folder.",
     "notFound": "This item no longer exists. It may have been moved to the Trash.",
+    "invalidBackup": "This backup is damaged or isn't a Kairos backup, so it wasn't used. Your data is unchanged.",
     "unknown": "Something unexpected happened. Please try again.",
     "validation": {
       "required": "Please add a title.",
@@ -17,13 +18,16 @@
       "beforeStart": "The end needs to be after the start.",
       "eventNeedsDate": "Events need a date.",
       "eventNeedsEnd": "Events need an end time.",
-      "tooMany": "That's a lot of steps. Try splitting this into a few items."
+      "tooMany": "That's a lot of steps. Try splitting this into a few items.",
+      "folderNotAbsolute": "Please choose a full folder location.",
+      "folderNotWritable": "Kairos can't save files in that folder. Please choose another one."
     }
   },
   "common": {
     "close": "Close",
     "cancel": "Cancel",
     "tryAgain": "Try again",
+    "dismiss": "Dismiss",
     "notifications": "Notifications"
   },
   "toast": {
@@ -34,6 +38,70 @@
   "items": {
     "markDone": "Mark “{{title}}” as done",
     "markNotDone": "Mark “{{title}}” as not done"
+  },
+  "units": {
+    "kb": "{{value}} KB",
+    "mb": "{{value}} MB"
+  },
+  "settings": {
+    "intro": "Your backups live here. Theme, text size, week start and reminders are coming next."
+  },
+  "trash": {
+    "title": "Trash",
+    "intro": "Deleted items wait here for 30 days, then they're removed for good.",
+    "empty": "Empty Trash",
+    "emptyState": "The Trash is empty.",
+    "deletedWhen": "Deleted {{when}}",
+    "daysLeft_one": "removed for good in {{count}} day",
+    "daysLeft_other": "removed for good in {{count}} days",
+    "goingSoon": "removed for good today",
+    "restore": "Restore",
+    "restoreItem": "Restore “{{title}}”",
+    "restored": "Restored: {{title}}",
+    "emptied": "Trash emptied. A backup copy was saved first, just in case.",
+    "confirmTitle": "Empty the Trash?",
+    "confirmBody_one": "{{count}} item will be removed for good. Kairos saves a backup copy first, just in case.",
+    "confirmBody_other": "{{count}} items will be removed for good. Kairos saves a backup copy first, just in case."
+  },
+  "backups": {
+    "title": "Backups",
+    "lastBackup": "Last backup: {{when}}",
+    "never": "No backups yet. Kairos makes one every day and each time you close it.",
+    "now": "Back up now",
+    "saved": "Backup saved.",
+    "failed": "The last backup ({{when}}) couldn't be saved. Check there's free space on your disk, then choose Back up now.",
+    "listTitle": "Saved backups",
+    "empty": "No backups yet.",
+    "kind": {
+      "automatic": "Automatic",
+      "manual": "Made by you",
+      "safety": "Safety copy"
+    },
+    "location": {
+      "app": "On this computer",
+      "folder": "In your extra folder"
+    },
+    "items_one": "{{count}} item",
+    "items_other": "{{count}} items",
+    "unreadable": "Can't be read",
+    "restore": "Restore",
+    "restoreFrom": "Restore the backup from {{when}}",
+    "restored": "Restored the backup from {{when}}.",
+    "confirmTitle": "Restore this backup?",
+    "confirmBody": "Your data will go back to how it was on {{when}}. Kairos saves your current data first as a safety copy, so you can switch back.",
+    "folder": {
+      "title": "Extra copy",
+      "intro": "Also save every backup to a folder you choose, like OneDrive, Dropbox or a USB drive. If this computer breaks, your plans are still safe.",
+      "notSet": "No extra folder chosen.",
+      "choose": "Choose folder…",
+      "change": "Change folder…",
+      "stop": "Stop copying",
+      "pickerTitle": "Choose a folder for Kairos backups"
+    }
+  },
+  "startup": {
+    "restored": "Kairos found a problem with its data file and put back your backup from {{when}}. Anything added after that may be missing. The damaged file was kept here: {{path}}",
+    "unrecoverable": "Kairos found a problem with its data file and couldn't find a good backup, so it started fresh. The damaged file was kept here, in case it can be recovered: {{path}}"
   },
   "capture": {
     "title": "Quick capture",
@@ -117,6 +185,8 @@
     "today": "Today",
     "tomorrow": "Tomorrow",
     "nextWeek": "Next week",
+    "todayAt": "Today, {{time}}",
+    "yesterdayAt": "Yesterday, {{time}}",
     "minutes_one": "{{count}} min",
     "minutes_other": "{{count}} min",
     "hours_one": "{{count}} h",
@@ -175,6 +245,7 @@
     "calendar": "Calendar",
     "inbox": "Inbox",
     "settings": "Settings",
+    "trash": "Trash",
     "styleguide": "Styleguide",
     "collapse": "Collapse sidebar",
     "expand": "Expand sidebar"
