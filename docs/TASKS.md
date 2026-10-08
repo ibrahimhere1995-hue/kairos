@@ -37,7 +37,7 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
   *Done when:* E2E: create items → backup → delete DB items → restore → items back.
 - [x] **P1-T15 ⚙️ Startup integrity check & recovery** — quick_check, auto-restore latest good backup, calm notice.
 - [x] **P1-T16 🎨 Settings (basic)** — theme, text size, week start, default reminder time, backup folder.
-- [ ] **P1-T17 🧪 Phase 1 test pass** — E2E for create/complete/undo/reschedule/backup; manual check of the UI checklist on every screen.
+- [x] **P1-T17 🧪 Phase 1 test pass** — E2E for create/complete/undo/reschedule/backup; manual check of the UI checklist on every screen. Results: `docs/qa/PHASE1_CHECKLIST.md`.
 
 **🛑 Checkpoint:** use Kairos daily for one week. Log frustrations in a notes file → feed into Phase 2.
 

@@ -24,3 +24,6 @@ coverage/
 
 # dev-only app data (see CLAUDE.md)
 .devdata/
+
+# E2E test build output
+src-tauri/target-e2e/

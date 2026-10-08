@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { format, parse } from "date-fns";
 import { Clock } from "lucide-react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -24,13 +25,15 @@ export function TimePill() {
   const setTime = (value: string) => setValue("time", value, opts);
   const setDuration = (value: number) => setValue("durationMinutes", value, opts);
 
+  // Same style as the rest of the app ("3:00 PM"), not the raw "15:00" form value.
+  const shownTime = time ? format(parse(time, "HH:mm", new Date()), "p") : time;
   const durations = DURATION_OPTIONS.filter((m) => kind === "task" || m > 0);
   const label =
     schedule === "date"
       ? t("editor.allDay")
       : duration > 0
-        ? `${time} · ${friendlyDuration(duration, t)}`
-        : time;
+        ? `${shownTime} · ${friendlyDuration(duration, t)}`
+        : shownTime;
 
   return (
     <Popover

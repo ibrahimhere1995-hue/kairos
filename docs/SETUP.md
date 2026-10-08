@@ -27,6 +27,8 @@ Rule: nothing goes on the C: drive without approval. The only approved exception
 | pnpm | 12.9.1 | `I:\DevTools\npm-global` | `npm install -g pnpm --prefix I:\DevTools\npm-global` |
 | Rust (stable, MSVC) | 1.99 | `I:\DevTools\rustup` + `I:\DevTools\cargo` | `rustup-init.exe -y` with the env vars below set first |
 | C++ Build Tools (VS 2022, "Desktop development with C++") | 17.x | `I:\DevTools\VSBuildTools` | `vs_BuildTools.exe --installPath I:\DevTools\VSBuildTools --path cache=I:\DevTools\VSCache --path shared=I:\DevTools\VSShared --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended` |
+| tauri-driver (E2E) | 2.1.0 | `I:\DevTools\cargo\bin` | `cargo install tauri-driver --locked` |
+| msedgedriver (E2E) | **must match the WebView2 version** (154.0.4258.62 at setup) | `I:\DevTools\edgedriver` | Download `https://msedgedriver.microsoft.com/<WebView2 version>/edgedriver_win64.zip` and unzip there |
 
 Installers are kept in `I:\DevTools\installers\`.
 
@@ -61,6 +63,9 @@ Windows does not let these move:
 | `pnpm lint` / `pnpm typecheck` / `pnpm format` | Code quality |
 | `pnpm test:rust` / `pnpm lint:rust` / `pnpm fmt:rust` | Rust tests, clippy, rustfmt |
 | `pnpm build` | Production frontend build |
+| `pnpm test:e2e` | End-to-end tests on the real app (Windows): builds a debug app into `src-tauri\target-e2e`, opens it, and runs `tests/e2e/specs`. Uses a fresh data folder under `.devdata\e2e` each run. Set `E2E_SKIP_BUILD=1` to reuse the last build. |
+
+**End-to-end tests:** a second Kairos window opens and clicks through the critical paths by itself, through WebDriver (only inside that window, never system-wide keystrokes). If they suddenly fail after a Windows update, WebView2 probably updated: download the matching `msedgedriver` (see §2; check the version in the registry key `HKLM\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}` → `pv`). CI doesn't run them yet (driver version matching on CI machines is fragile; tracked for Phase 4 QA). Old `.devdata\e2e\run-*` folders and `src-tauri\target-e2e` are safe to delete to free space. UI-checklist screenshots land in `.devdata\e2e\screens`.
 
 **Generated types:** `src/types/*.ts` are generated from Rust structs by `ts-rs` whenever `pnpm test:rust` runs (settings in `.cargo/config.toml` at the repo root). After changing a Rust type that the frontend uses, run `pnpm test:rust` and commit the updated files. CI fails if they are out of date. Never edit them by hand.
 

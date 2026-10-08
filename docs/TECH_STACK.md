@@ -68,6 +68,7 @@ Every library, crate or tool added after the original plan is listed here **in t
 | `@testing-library/react`, `jest-dom`, `user-event` | 16.3 / 7.0 / 14.6 | React Testing Library. |
 | `eslint`, `typescript-eslint`, `eslint-plugin-react-hooks`, `eslint-plugin-react-refresh`, `eslint-config-prettier`, `globals` | 10.12 / 8.71 / 7.1 / 0.5 / 10.1 / 17.13 | Linting (strict TS rules, no `any`). |
 | `prettier` | 3.9 | Formatting (`printWidth` 100, LF line endings). |
+| `webdriverio`, `@wdio/cli`, `@wdio/local-runner`, `@wdio/mocha-framework`, `@wdio/spec-reporter`, `@wdio/globals` | 10.0 | Planned above (WebdriverIO E2E, P1-T17). Drives the real app through **tauri-driver** + **msedgedriver** (tools, see SETUP.md). Windows only for now (Tauri's WebDriver doesn't support macOS WKWebView). pnpm `allowBuilds` blocks the driver packages' own downloads. |
 | `@types/node` | 26.6 | Types for `vite.config.ts` and test files only (`tsconfig.node.json`, `tsconfig.test.json`), never app code. |
 
 ### Backend (Rust crates)

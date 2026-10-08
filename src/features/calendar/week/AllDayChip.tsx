@@ -22,6 +22,8 @@ export function AllDayChip({ item, area }: { item: Item; area: Area | undefined 
       {...attributes}
       {...listeners}
       onClick={() => openItem(item.id)}
+      // Narrow day columns truncate the title: show it in full on hover.
+      title={item.title}
       className={cn(
         "flex w-full items-center gap-1.5 rounded-sm border border-border bg-surface-2 px-1.5 py-0.5 text-left text-caption",
         "hover:bg-surface-3",

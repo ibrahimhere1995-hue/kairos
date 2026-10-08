@@ -8,3 +8,4 @@ src/types
 docs
 CLAUDE.md
 .devdata
+src-tauri/target-e2e

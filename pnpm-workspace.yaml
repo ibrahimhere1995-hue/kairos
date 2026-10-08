@@ -1,1 +1,9 @@
-﻿saveExact: true
+saveExact: true
+
+# Install scripts are off by default (pnpm security). Only esbuild (used by the E2E test
+# runner) may run one. The WebdriverIO driver packages must NOT download their own browser
+# drivers: E2E uses the msedgedriver matching WebView2 in I:\DevTools (see docs/SETUP.md).
+allowBuilds:
+  esbuild: true
+  edgedriver: false
+  geckodriver: false

@@ -152,6 +152,6 @@ describe("Calendar", () => {
 
     const dialog = await screen.findByRole("dialog", { name: "New item" });
     expect(within(dialog).getByRole("radio", { name: "Event" })).toBeChecked();
-    expect(within(dialog).getByText("14:00 · 1 h")).toBeInTheDocument();
+    expect(within(dialog).getByText("2:00 PM · 1 h")).toBeInTheDocument();
   });
 });
