@@ -4,12 +4,16 @@ import {
   writeStoredPreference,
   type ThemePreference,
 } from "@/app/theme/theme";
+import { readStoredTextSize, TEXT_SIZE_STORAGE_KEY } from "@/app/theme/textSize";
+import type { TextSize } from "@/types/TextSize";
 
-// Cached in localStorage for now so the pre-paint script can read it.
-// P1-T16 also persists it to the settings table (the source of truth from then on).
+// Appearance lives here first (instant, and cached in localStorage for the pre-paint script),
+// and is mirrored into the settings table by AppearanceSync so backups include it.
 interface ThemeState {
   preference: ThemePreference;
+  textSize: TextSize;
   setPreference: (preference: ThemePreference) => void;
+  setTextSize: (size: TextSize) => void;
 }
 
 function safeLocalStorage(): Storage | undefined {
@@ -22,8 +26,17 @@ function safeLocalStorage(): Storage | undefined {
 
 export const useThemeStore = create<ThemeState>((set) => ({
   preference: readStoredPreference(safeLocalStorage()),
+  textSize: readStoredTextSize(safeLocalStorage()),
   setPreference: (preference) => {
     writeStoredPreference(safeLocalStorage(), preference);
     set({ preference });
+  },
+  setTextSize: (textSize) => {
+    try {
+      safeLocalStorage()?.setItem(TEXT_SIZE_STORAGE_KEY, textSize);
+    } catch {
+      // Storage unavailable: the size still applies for this session.
+    }
+    set({ textSize });
   },
 }));

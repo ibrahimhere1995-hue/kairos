@@ -38,6 +38,12 @@ export function mockBackend(overrides: Record<string, Handler> = {}): Call[] {
     list_items: () => [],
     set_checklist: () => [],
     list_trash: () => [],
+    get_settings: () => ({
+      theme: "system",
+      textSize: "default",
+      weekStartsOn: "monday",
+      defaultReminderTime: "09:00",
+    }),
     list_backups: () => [],
     get_backup_settings: () => ({ folder: null, lastBackupAt: null, lastFailureAt: null }),
   };

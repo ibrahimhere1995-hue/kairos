@@ -80,8 +80,10 @@ fn automatic_backup(app: &AppHandle, only_if_due: bool) {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     // Development only: keep the WebView2 cache inside the project (.devdata), off the C: drive.
+    // Not under WebDriver (E2E): msedgedriver chooses the WebView2 folder itself and attaches
+    // through it; tauri-driver marks those runs with TAURI_WEBVIEW_AUTOMATION.
     #[cfg(all(debug_assertions, windows))]
-    {
+    if std::env::var_os("TAURI_WEBVIEW_AUTOMATION").is_none() {
         let webview_dir = paths::dev_data_dir().join("webview");
         // SAFETY: runs first in `run`, before Tauri or any other thread starts,
         // so nothing can be reading the environment concurrently.
@@ -141,6 +143,8 @@ pub fn run() {
             commands::backups::get_backup_settings,
             commands::backups::set_backup_folder,
             commands::backups::take_startup_notice,
+            commands::settings::get_settings,
+            commands::settings::update_settings,
         ])
         .build(tauri::generate_context!())
         .expect("error while building Kairos");

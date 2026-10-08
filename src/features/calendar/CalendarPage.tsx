@@ -17,6 +17,7 @@ import { useTodayShortcut } from "@/features/calendar/useTodayShortcut";
 import { TimeGrid } from "@/features/calendar/week/TimeGrid";
 import { useNow } from "@/features/dashboard/useNow";
 import { useAreas, useItemsInRange } from "@/features/items/api";
+import { useWeekStartsOn } from "@/features/settings/api";
 import { EmptyState } from "@/components/EmptyState";
 import { Button } from "@/components/ui/Button";
 import { getDayContext } from "@/lib/dates/dayContext";
@@ -31,7 +32,8 @@ export function CalendarPage() {
 
   const view: CalendarView = search.view ?? "week";
   const anchor = search.date ?? ctx.today;
-  const days = useMemo(() => visibleDays(view, anchor), [view, anchor]);
+  const weekStartsOn = useWeekStartsOn();
+  const days = useMemo(() => visibleDays(view, anchor, weekStartsOn), [view, anchor, weekStartsOn]);
   const range = useMemo(() => rangeForDays(days), [days]);
   const items = useItemsInRange(range);
   const { data: areaList = [] } = useAreas();

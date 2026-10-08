@@ -3,6 +3,7 @@
 pub mod areas;
 pub mod backups;
 pub mod items;
+pub mod settings;
 pub mod trash;
 
 use rusqlite::Connection;

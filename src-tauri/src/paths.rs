@@ -7,9 +7,14 @@ use crate::error::{AppError, AppResult};
 /// Where Kairos keeps its database, backups and (later) attachments.
 ///
 /// Development builds use `<project>/.devdata` so nothing lands on the system drive
-/// (decision recorded in CLAUDE.md, 2026-10-07). Release builds use the OS app-data folder.
+/// (decision recorded in CLAUDE.md, 2026-10-07), or `KAIROS_DATA_DIR` when set (E2E tests).
+/// Release builds always use the OS app-data folder.
 pub fn data_dir(app: &AppHandle) -> AppResult<PathBuf> {
     if cfg!(debug_assertions) {
+        // E2E tests point each run at a throwaway folder. Ignored in release builds.
+        if let Some(dir) = std::env::var_os("KAIROS_DATA_DIR") {
+            return Ok(PathBuf::from(dir));
+        }
         Ok(dev_data_dir())
     } else {
         app.path().app_data_dir().map_err(|_| AppError::DataDir)

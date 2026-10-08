@@ -11,6 +11,7 @@ import { groupDashboard, isEmpty, summarize } from "@/features/dashboard/groupDa
 import { useNow } from "@/features/dashboard/useNow";
 import { useAreas, useDashboard, useItemsInRange } from "@/features/items/api";
 import { useEditorStore } from "@/features/items/editorStore";
+import { useWeekStartsOn } from "@/features/settings/api";
 import { EmptyState } from "@/components/EmptyState";
 import { Button } from "@/components/ui/Button";
 import { getDayContext } from "@/lib/dates/dayContext";
@@ -23,8 +24,9 @@ export function MyDayPage() {
   const [areaId, setAreaId] = useState<string | null>(null);
   const openNew = useEditorStore((state) => state.openNew);
 
-  const dashboard = useDashboard(buildDashboardQuery(ctx));
-  const week = useItemsInRange(currentWeekRange(ctx));
+  const weekStartsOn = useWeekStartsOn();
+  const dashboard = useDashboard(buildDashboardQuery(ctx, weekStartsOn));
+  const week = useItemsInRange(currentWeekRange(ctx, weekStartsOn));
   const { data: areaList = [] } = useAreas();
   const areas = useMemo(() => new Map(areaList.map((a) => [a.id, a])), [areaList]);
 

@@ -135,7 +135,7 @@ export function useRescheduleItem() {
 
 export function useDashboard(query: DashboardQuery) {
   return useQuery({
-    queryKey: itemKeys.dashboard(query.today),
+    queryKey: itemKeys.dashboard(query.today, query.weekEndDate),
     queryFn: () => itemsApi.dashboard(query),
   });
 }
