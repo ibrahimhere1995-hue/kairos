@@ -66,6 +66,49 @@ pub fn get(conn: &Connection, id: &str) -> rusqlite::Result<Option<Item>> {
     .optional()
 }
 
+/// Items in the Trash, most recently deleted first.
+pub fn list_deleted(conn: &Connection) -> rusqlite::Result<Vec<Item>> {
+    query_items(
+        conn,
+        &format!(
+            "SELECT {COLUMNS} FROM items WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC"
+        ),
+        &[],
+    )
+}
+
+/// Trash items deleted before `cutoff` (all of them when `cutoff` is None).
+const IN_TRASH: &str = "deleted_at IS NOT NULL AND (?1 IS NULL OR deleted_at < ?1)";
+
+pub fn count_deleted(conn: &Connection, cutoff: Option<&str>) -> rusqlite::Result<i64> {
+    conn.query_row(
+        &format!("SELECT COUNT(*) FROM items WHERE {IN_TRASH}"),
+        [cutoff],
+        |r| r.get(0),
+    )
+}
+
+/// Permanently removes Trash items (and their steps and reminders). Callers must back up first
+/// (PROJECT_RULES #1) and run this inside a transaction.
+pub fn purge_deleted(conn: &Connection, cutoff: Option<&str>) -> rusqlite::Result<usize> {
+    let doomed = format!("SELECT id FROM items WHERE {IN_TRASH}");
+    conn.execute(
+        &format!("DELETE FROM checklist_items WHERE item_id IN ({doomed})"),
+        [cutoff],
+    )?;
+    conn.execute(
+        &format!("DELETE FROM reminders WHERE item_id IN ({doomed})"),
+        [cutoff],
+    )?;
+    conn.execute(
+        &format!(
+            "UPDATE items SET recurrence_parent_id = NULL WHERE recurrence_parent_id IN ({doomed})"
+        ),
+        [cutoff],
+    )?;
+    conn.execute(&format!("DELETE FROM items WHERE {IN_TRASH}"), [cutoff])
+}
+
 pub fn insert(conn: &Connection, item: &Item) -> rusqlite::Result<()> {
     conn.execute(
         &format!(

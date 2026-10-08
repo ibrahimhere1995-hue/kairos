@@ -12,14 +12,15 @@ import { NotFoundPage } from "@/app/NotFoundPage";
 import { AppShell } from "@/app/shell/AppShell";
 import { CalendarPage } from "@/features/calendar/CalendarPage";
 import { parseCalendarSearch, type CalendarView } from "@/features/calendar/calendarView";
+import { MyDayPage } from "@/features/dashboard/MyDayPage";
+import { InboxPage } from "@/features/inbox/InboxPage";
+import { SettingsPage } from "@/features/settings/SettingsPage";
+import { TrashPage } from "@/features/trash/TrashPage";
 
 interface CalendarSearchParams {
   view?: CalendarView;
   date?: string;
 }
-import { MyDayPage } from "@/features/dashboard/MyDayPage";
-import { InboxPage } from "@/features/inbox/InboxPage";
-import { SettingsPage } from "@/features/settings/SettingsPage";
 
 const rootRoute = createRootRoute({
   component: AppShell,
@@ -55,6 +56,11 @@ const settingsRoute = createRoute({
   path: "/settings",
   component: SettingsPage,
 });
+const trashRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/trash",
+  component: TrashPage,
+});
 
 // Developer-only: redirected away in release builds and lazy-loaded, so it never ships to users.
 const styleguideRoute = createRoute({
@@ -71,6 +77,7 @@ const routeTree = rootRoute.addChildren([
   calendarRoute,
   inboxRoute,
   settingsRoute,
+  trashRoute,
   styleguideRoute,
 ]);
 

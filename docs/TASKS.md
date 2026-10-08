@@ -32,10 +32,10 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
   *Done when:* 40+ test phrases pass ("tomorrow 3pm", "next Fri", "in 2 hours", "every Monday" flagged for Phase 2).
 - [x] **P1-T12 🎨 Quick Capture** — in-app "+ Add" quick bar and global shortcut floating window; chips preview; Enter saves.
   *Done when:* capture from another app in < 5 s; window hides after save; main view updates.
-- [ ] **P1-T13 🎨 Trash** — list soft-deleted items, restore, empty Trash (confirm), auto-purge after 30 days.
-- [ ] **P1-T14 ⚙️ Automatic backups & restore** — Online Backup API, on close + every 24 h, retention 14 daily / 8 weekly, verification, optional user folder, Settings › Backups screen with list + Restore + "Back up now".
+- [x] **P1-T13 🎨 Trash** — list soft-deleted items, restore, empty Trash (confirm), auto-purge after 30 days.
+- [x] **P1-T14 ⚙️ Automatic backups & restore** — Online Backup API, on close + every 24 h, retention 14 daily / 8 weekly, verification, optional user folder, Settings › Backups screen with list + Restore + "Back up now".
   *Done when:* E2E: create items → backup → delete DB items → restore → items back.
-- [ ] **P1-T15 ⚙️ Startup integrity check & recovery** — quick_check, auto-restore latest good backup, calm notice.
+- [x] **P1-T15 ⚙️ Startup integrity check & recovery** — quick_check, auto-restore latest good backup, calm notice.
 - [ ] **P1-T16 🎨 Settings (basic)** — theme, text size, week start, default reminder time, backup folder.
 - [ ] **P1-T17 🧪 Phase 1 test pass** — E2E for create/complete/undo/reschedule/backup; manual check of the UI checklist on every screen.
 

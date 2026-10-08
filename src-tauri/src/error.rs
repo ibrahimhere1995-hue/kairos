@@ -21,6 +21,8 @@ pub enum AppError {
     NotFound,
     #[error("the database is unavailable (lock poisoned)")]
     Lock,
+    #[error("the backup file is damaged or not a Kairos backup")]
+    InvalidBackup,
 }
 
 impl AppError {
@@ -37,6 +39,7 @@ impl AppError {
             AppError::Validation { .. } => "validation",
             AppError::NotFound => "not_found",
             AppError::Lock => "lock",
+            AppError::InvalidBackup => "invalid_backup",
         }
     }
 
@@ -50,6 +53,7 @@ impl AppError {
             AppError::DataDir => "errors.dataDir".into(),
             AppError::Validation { reason, .. } => format!("errors.validation.{reason}"),
             AppError::NotFound => "errors.notFound".into(),
+            AppError::InvalidBackup => "errors.invalidBackup".into(),
         }
     }
 

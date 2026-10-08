@@ -25,3 +25,26 @@ pub fn dev_data_dir() -> PathBuf {
 pub fn backups_dir(data_dir: &std::path::Path) -> PathBuf {
     data_dir.join("backups")
 }
+
+/// Damaged database files are moved here (never deleted) by startup recovery.
+pub fn corrupt_dir(data_dir: &std::path::Path) -> PathBuf {
+    data_dir.join("damaged")
+}
+
+/// Every file location Kairos uses, shared through Tauri state.
+#[derive(Debug, Clone)]
+pub struct AppPaths {
+    pub data_dir: PathBuf,
+    pub db_path: PathBuf,
+    pub backups_dir: PathBuf,
+}
+
+impl AppPaths {
+    pub fn new(data_dir: PathBuf) -> Self {
+        Self {
+            db_path: data_dir.join(crate::db::DB_FILE_NAME),
+            backups_dir: backups_dir(&data_dir),
+            data_dir,
+        }
+    }
+}

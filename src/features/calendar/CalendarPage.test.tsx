@@ -3,7 +3,10 @@ import { clearMocks } from "@tauri-apps/api/mocks";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { friendlyDate } from "@/features/items/editor/friendlyDate";
 import { useEditorStore } from "@/features/items/editorStore";
+import i18n from "@/i18n";
+import { toLocalDateString } from "@/lib/dates/dayContext";
 import { mockBackend, type Call } from "@/test/mockBackend";
 import { renderApp } from "@/test/renderWithProviders";
 import type { Item } from "@/types/Item";
@@ -128,10 +131,12 @@ describe("Calendar", () => {
 
   it("lists the coming days in the Agenda", async () => {
     renderApp("/calendar?view=agenda&date=2026-10-07");
-    const wednesday = await screen.findByRole("region", { name: /Wed 7 Oct|Today/ });
+    // Day headings are relative to the real date ("Today", "Tomorrow", or "Wed 7 Oct").
+    const heading = (date: string) => friendlyDate(date, toLocalDateString(new Date()), i18n.t);
+    const wednesday = await screen.findByRole("region", { name: heading("2026-10-07") });
     expect(within(wednesday).getByText("Standup")).toBeInTheDocument();
     expect(within(wednesday).getByText("Review")).toBeInTheDocument();
-    const thursday = screen.getByRole("region", { name: /Thu 8 Oct|Tomorrow/ });
+    const thursday = screen.getByRole("region", { name: heading("2026-10-08") });
     expect(within(thursday).getByText("Pay bills")).toBeInTheDocument();
   });
 

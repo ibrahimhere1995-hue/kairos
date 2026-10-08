@@ -1,8 +1,16 @@
 import { useTranslation } from "react-i18next";
-import { PlaceholderPage } from "@/components/PlaceholderPage";
+import { BackupsSection } from "@/features/settings/backups/BackupsSection";
 
-// Filled in by P1-T16 (basic settings).
+/** Settings. Backups now (P1-T14); theme, text size, week start and reminders follow in P1-T16. */
 export function SettingsPage() {
   const { t } = useTranslation();
-  return <PlaceholderPage title={t("nav.settings")} description={t("pages.settings")} />;
+  return (
+    <div className="flex max-w-3xl flex-col gap-8">
+      <header className="flex flex-col gap-1">
+        <h1 className="font-display text-h1">{t("nav.settings")}</h1>
+        <p className="text-text-muted">{t("settings.intro")}</p>
+      </header>
+      <BackupsSection />
+    </div>
+  );
 }

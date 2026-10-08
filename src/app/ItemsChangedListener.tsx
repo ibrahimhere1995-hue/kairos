@@ -1,17 +1,21 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { itemKeys } from "@/features/items/queryKeys";
-import { onItemsChanged } from "@/lib/api/events";
+import { onDataReloaded, onItemsChanged } from "@/lib/api/events";
 
-/** Refreshes every item view when another window (e.g. Quick Capture) changes items. */
+/**
+ * Keeps this window's data fresh: refreshes item views when another window changes items,
+ * and everything after a backup is restored.
+ */
 export function ItemsChangedListener() {
   const queryClient = useQueryClient();
   useEffect(() => {
-    const stop = onItemsChanged(
-      () => void queryClient.invalidateQueries({ queryKey: itemKeys.all }),
-    );
+    const stops = [
+      onItemsChanged(() => void queryClient.invalidateQueries({ queryKey: itemKeys.all })),
+      onDataReloaded(() => void queryClient.invalidateQueries()),
+    ];
     return () => {
-      void stop.then((unlisten) => unlisten());
+      for (const stop of stops) void stop.then((unlisten) => unlisten());
     };
   }, [queryClient]);
   return null;

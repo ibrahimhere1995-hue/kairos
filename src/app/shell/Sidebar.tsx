@@ -6,6 +6,7 @@ import {
   PanelLeftOpen,
   Settings,
   Sunrise,
+  Trash2,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { NavItem } from "@/app/shell/NavItem";
@@ -49,6 +50,7 @@ export function Sidebar() {
             collapsed={collapsed}
           />
         )}
+        <NavItem to="/trash" icon={Trash2} label={t("nav.trash")} collapsed={collapsed} />
         <NavItem to="/settings" icon={Settings} label={t("nav.settings")} collapsed={collapsed} />
       </ul>
 

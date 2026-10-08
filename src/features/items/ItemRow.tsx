@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { CalendarClock, Flag } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
@@ -19,11 +19,14 @@ export function ItemRow({
   status,
   area,
   today,
+  style,
 }: {
   item: Item;
   status: ItemStatus;
   area: Area | undefined;
   today: string;
+  /** Set by VirtualList for long lists. */
+  style?: CSSProperties;
 }) {
   const { t } = useTranslation();
   const openItem = useEditorStore((state) => state.openItem);
@@ -34,6 +37,65 @@ export function ItemRow({
   const done = optimisticDone ?? item.completedAt !== null;
   const when = itemWhen(item, today, t);
 
+  const row = (
+    <div
+      className={cn(
+        "relative flex items-center gap-2 rounded-md border border-border bg-surface py-1.5 pr-3 pl-3",
+        "transition-colors duration-(--dur-fast) hover:bg-surface-3",
+      )}
+    >
+      <span
+        aria-hidden="true"
+        className="absolute inset-y-2 left-0 w-1 rounded-full"
+        style={{ backgroundColor: areaColor(area?.color) }}
+      />
+      {item.kind === "task" ? (
+        <CompleteCheckbox
+          checked={done}
+          label={t(done ? "items.markNotDone" : "items.markDone", { title: item.title })}
+          onChange={(next) => {
+            setOptimisticDone(next);
+            const action = next ? complete : uncomplete;
+            action.mutate(item, { onError: () => setOptimisticDone(null) });
+          }}
+        />
+      ) : (
+        <span className="flex size-9 shrink-0 items-center justify-center text-text-muted">
+          <CalendarClock aria-hidden="true" className="size-5" />
+        </span>
+      )}
+      <button
+        type="button"
+        onClick={() => openItem(item.id)}
+        className="flex min-w-0 flex-1 flex-col items-start rounded-sm py-1 text-left"
+      >
+        <span className={cn("max-w-full truncate text-body", done && "strike text-text-muted")}>
+          {item.title}
+        </span>
+        {(when ?? area) && (
+          <span className="max-w-full truncate text-small text-text-muted">
+            {[when, area?.name].filter(Boolean).join(" · ")}
+          </span>
+        )}
+      </button>
+      {item.priority === 3 && (
+        <span className="inline-flex items-center gap-1 text-caption text-text-muted">
+          <Flag aria-hidden="true" className="size-4" />
+          {t("priority.high")}
+        </span>
+      )}
+      <StatusBadge status={done ? "done" : status} />
+    </div>
+  );
+
+  // Inside a windowed list (VirtualList): fixed position, no enter animation.
+  if (style) {
+    return (
+      <li style={style} className="pb-2">
+        {row}
+      </li>
+    );
+  }
   return (
     <motion.li
       layout
@@ -43,54 +105,7 @@ export function ItemRow({
       transition={{ duration: 0.2, ease: [0.2, 0.8, 0.2, 1] }}
       className="overflow-hidden"
     >
-      <div
-        className={cn(
-          "relative flex items-center gap-2 rounded-md border border-border bg-surface py-1.5 pr-3 pl-3",
-          "transition-colors duration-(--dur-fast) hover:bg-surface-3",
-        )}
-      >
-        <span
-          aria-hidden="true"
-          className="absolute inset-y-2 left-0 w-1 rounded-full"
-          style={{ backgroundColor: areaColor(area?.color) }}
-        />
-        {item.kind === "task" ? (
-          <CompleteCheckbox
-            checked={done}
-            label={t(done ? "items.markNotDone" : "items.markDone", { title: item.title })}
-            onChange={(next) => {
-              setOptimisticDone(next);
-              const action = next ? complete : uncomplete;
-              action.mutate(item, { onError: () => setOptimisticDone(null) });
-            }}
-          />
-        ) : (
-          <span className="flex size-9 shrink-0 items-center justify-center text-text-muted">
-            <CalendarClock aria-hidden="true" className="size-5" />
-          </span>
-        )}
-        <button
-          type="button"
-          onClick={() => openItem(item.id)}
-          className="flex min-w-0 flex-1 flex-col items-start rounded-sm py-1 text-left"
-        >
-          <span className={cn("max-w-full truncate text-body", done && "strike text-text-muted")}>
-            {item.title}
-          </span>
-          {(when ?? area) && (
-            <span className="max-w-full truncate text-small text-text-muted">
-              {[when, area?.name].filter(Boolean).join(" · ")}
-            </span>
-          )}
-        </button>
-        {item.priority === 3 && (
-          <span className="inline-flex items-center gap-1 text-caption text-text-muted">
-            <Flag aria-hidden="true" className="size-4" />
-            {t("priority.high")}
-          </span>
-        )}
-        <StatusBadge status={done ? "done" : status} />
-      </div>
+      {row}
     </motion.li>
   );
 }

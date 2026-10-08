@@ -3,6 +3,7 @@ import { ChevronDown, type LucideIcon } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import type { DashboardItem } from "@/features/dashboard/groupDashboard";
 import { ItemRow } from "@/features/items/ItemRow";
+import { VIRTUALIZE_AFTER, VirtualList } from "@/components/VirtualList";
 import { cn } from "@/lib/utils";
 import type { Area } from "@/types/Area";
 
@@ -61,7 +62,27 @@ export function DashboardSection({
           <span className="inline-flex items-center gap-2">{heading}</span>
         )}
       </h2>
-      {expanded && (
+      {expanded && entries.length > VIRTUALIZE_AFTER && (
+        <div id={listId}>
+          <VirtualList
+            items={entries}
+            label={title}
+            rowHeightRem={4}
+            heightRem={32}
+            getKey={(entry) => entry.item.id}
+            renderRow={({ item, status }, style) => (
+              <ItemRow
+                item={item}
+                status={status}
+                area={item.areaId ? areas.get(item.areaId) : undefined}
+                today={today}
+                style={style}
+              />
+            )}
+          />
+        </div>
+      )}
+      {expanded && entries.length <= VIRTUALIZE_AFTER && (
         <ul id={listId} className="flex flex-col gap-2">
           <AnimatePresence initial={false}>
             {entries.map(({ item, status }) => (
