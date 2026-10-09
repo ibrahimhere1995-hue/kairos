@@ -4,6 +4,7 @@ import { Sidebar } from "@/app/shell/Sidebar";
 import { StartupNoticeBanner } from "@/app/shell/StartupNoticeBanner";
 import { TopBar } from "@/app/shell/TopBar";
 import { QuickCaptureDialog } from "@/features/capture/QuickCaptureDialog";
+import { PlanDialog } from "@/features/ai/plan/PlanDialog";
 import { SuggestDialog } from "@/features/feedback/SuggestDialog";
 import { FocusOverlay } from "@/features/focus/FocusOverlay";
 import { ItemEditor } from "@/features/items/editor/ItemEditor";
@@ -41,6 +42,7 @@ export function AppShell() {
       <CommandPalette />
       <FocusOverlay />
       <SuggestDialog />
+      <PlanDialog />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { useThemeStore } from "@/app/theme/themeStore";
 import { useCaptureStore } from "@/features/capture/captureStore";
+import { usePlanStore } from "@/features/ai/plan/planStore";
 import { useFeedbackStore } from "@/features/feedback/feedbackStore";
 import { screenName } from "@/features/feedback/screenName";
 import { useFocusStore } from "@/features/focus/focusStore";
@@ -22,6 +23,7 @@ export function usePaletteCommands(query: string): PaletteCommand[] {
   const setPreference = useThemeStore((s) => s.setPreference);
   const openFocus = useFocusStore((s) => s.openFocus);
   const openSuggest = useFeedbackStore((s) => s.openSuggest);
+  const openPlan = usePlanStore((s) => s.openPlan);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const all = useMemo<PaletteCommand[]>(() => {
@@ -80,6 +82,18 @@ export function usePaletteCommands(query: string): PaletteCommand[] {
         run: () => openFocus(),
       },
       {
+        id: "plan-day",
+        label: t("palette.cmd.planDay"),
+        keywords: "ai smart schedule organise organize",
+        run: () => openPlan("day"),
+      },
+      {
+        id: "plan-week",
+        label: t("palette.cmd.planWeek"),
+        keywords: "ai smart schedule organise organize",
+        run: () => openPlan("week"),
+      },
+      {
         id: "suggest",
         label: t("palette.cmd.suggest"),
         keywords: "feedback idea wish bug frustration",
@@ -135,7 +149,7 @@ export function usePaletteCommands(query: string): PaletteCommand[] {
         run: () => setPreference("system"),
       },
     ];
-  }, [t, navigate, openCapture, setPreference, openFocus, openSuggest, pathname]);
+  }, [t, navigate, openCapture, setPreference, openFocus, openSuggest, openPlan, pathname]);
 
   return useMemo(() => {
     const matched = matchCommands(all, query);

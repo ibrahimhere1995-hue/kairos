@@ -1,10 +1,14 @@
 import { format, parseISO } from "date-fns";
-import { ListPlus, Trash2 } from "lucide-react";
+import { ListPlus, Sparkles, Trash2 } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
+import { useAiReady } from "@/features/ai/api";
+import { useImageToTask } from "@/features/ai/useImageToTask";
 import { useInboxActions, useInboxImage } from "@/features/inbox/api";
 import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
+import { toErrorPayload } from "@/lib/api/errors";
+import { useToastStore } from "@/lib/toastStore";
 import type { InboxEntry } from "@/types/InboxEntry";
 
 /** One note or picture: "Make it a task" (one click, PRD R18) or delete (with Undo). */
@@ -12,6 +16,14 @@ export function InboxEntryCard({ entry }: { entry: InboxEntry }) {
   const { t } = useTranslation();
   const { process, remove } = useInboxActions();
   const image = useInboxImage(entry.id, entry.hasImage);
+  const aiReady = useAiReady();
+  const read = useImageToTask();
+  const showToast = useToastStore((s) => s.show);
+  const readWithAi = (dataUrl: string) =>
+    void fetch(dataUrl)
+      .then((r) => r.blob())
+      .then((blob) => read.mutateAsync(blob))
+      .catch((e: unknown) => showToast({ message: t(toErrorPayload(e).message) }));
 
   return (
     <motion.li
@@ -38,6 +50,17 @@ export function InboxEntryCard({ entry }: { entry: InboxEntry }) {
           <span className="mr-auto text-small text-text-muted">
             {t("inbox.added", { date: format(parseISO(entry.createdAt), "EEE d MMM") })}
           </span>
+          {aiReady && image.data && (
+            <Button
+              size="sm"
+              variant="ghost"
+              disabled={read.isPending}
+              onClick={() => image.data && readWithAi(image.data)}
+            >
+              <Sparkles aria-hidden="true" />
+              {t(read.isPending ? "ai.readingPicture" : "ai.readPicture")}
+            </Button>
+          )}
           <Button
             size="sm"
             variant="secondary"

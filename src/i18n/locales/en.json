@@ -40,7 +40,10 @@
       "busy": "Gemini is busy or your free daily limit is used up. Please try again later.",
       "unreadable": "Gemini’s answer couldn’t be read this time. Please try again.",
       "failed": "Something went wrong with the smart feature. Please try again.",
-      "keychain": "Kairos couldn’t reach your computer’s password storage for the key."
+      "keychain": "Kairos couldn’t reach your computer’s password storage for the key.",
+      "imageType": "Kairos can read PNG, JPEG and WebP pictures.",
+      "imageSize": "That picture is too big to send. Try a smaller screenshot.",
+      "nothingToPlan": "There are no open tasks without a time to plan. Add some, or give tasks a date first."
     }
   },
   "common": {
@@ -603,7 +606,9 @@
       "startFocus": "Start focus",
       "goReview": "Go to Weekly review",
       "suggest": "Suggest a feature",
-      "goWishlist": "Go to Wishlist"
+      "goWishlist": "Go to Wishlist",
+      "planDay": "Plan my day",
+      "planWeek": "Plan my week"
     },
     "keywords": {
       "newTask": "add create capture task event",
@@ -837,6 +842,29 @@
     "aiRead": "Read by AI. Check it before saving.",
     "consentData": "Smart features need the internet. Each time you use one, only what that request needs is sent to Google Gemini: for example the sentence you typed. Never your notes or attachments unless you include them.",
     "consentKey": "Your key is kept in your computer’s password storage (Windows Credential Manager or macOS Keychain), never in Kairos’ data, backups or exports.",
-    "consentConfirm": "Nothing is ever saved without your OK: you always check the result first."
+    "consentConfirm": "Nothing is ever saved without your OK: you always check the result first.",
+    "fromPicture": "From a picture",
+    "readPicture": "Read with AI",
+    "readingPicture": "Reading the picture…"
+  },
+  "plan": {
+    "title": "Plan with AI",
+    "intro": "Kairos suggests times for your open tasks around what's already planned. Nothing moves until you accept.",
+    "myDay": "Plan my day",
+    "span": "What to plan",
+    "today": "Today",
+    "week": "Rest of the week",
+    "instruction": "Anything to keep in mind? (optional)",
+    "instructionPlaceholder": "e.g. Keep mornings free for deep work",
+    "privacy": "Only task titles and the times you're busy are sent, never notes.",
+    "make": "Make a plan",
+    "thinking": "Planning…",
+    "check": "Untick anything you don't want. The rest goes on your calendar.",
+    "accept_one": "Add {{count}} to my calendar",
+    "accept_other": "Add {{count}} to my calendar",
+    "none": "None, thanks",
+    "noSlots": "Nothing fitted in the free time this time. Try the rest of the week, or fewer tasks.",
+    "applied_one": "{{count}} task planned.",
+    "applied_other": "{{count}} tasks planned."
   }
 }

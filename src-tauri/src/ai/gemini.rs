@@ -5,8 +5,9 @@ use std::time::Duration;
 use reqwest::{Client, StatusCode};
 use serde_json::{Value, json};
 
-use crate::ai::AiProvider;
+use crate::ai::{AiProvider, Part};
 use crate::error::{AppError, AppResult};
+use crate::util::base64;
 
 const BASE: &str = "https://generativelanguage.googleapis.com/v1beta";
 const MODEL: &str = "gemini-2.5-flash";
@@ -73,9 +74,18 @@ fn answer(body: &Value) -> AppResult<Value> {
 }
 
 impl AiProvider for Gemini {
-    async fn generate_json(&self, prompt: &str, schema: &Value) -> AppResult<Value> {
+    async fn generate_json(&self, parts: &[Part], schema: &Value) -> AppResult<Value> {
+        let parts: Vec<Value> = parts
+            .iter()
+            .map(|part| match part {
+                Part::Text(text) => json!({ "text": text }),
+                Part::Image { mime, bytes } => {
+                    json!({ "inline_data": { "mime_type": mime, "data": base64(bytes) } })
+                }
+            })
+            .collect();
         let request = json!({
-            "contents": [{ "parts": [{ "text": prompt }] }],
+            "contents": [{ "parts": parts }],
             "generationConfig": {
                 "responseMimeType": "application/json",
                 "responseSchema": schema,

@@ -77,9 +77,9 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 - [x] **P3-T07 🎨 Feedback loop** — "Suggest a feature" button, wishlist board, behaviour-based suggestions. *(Behaviour-based: the R6 "keeps moving" nudge plus a suggestion link on the weekly review; more can come later.)*
 - [ ] **P3-T07a 📝 Decide the feedback email** — "Email to the developer" uses the developer's personal address for now (`services/feedback.rs` `DEVELOPER_EMAIL`). Decide the final address, or make it a setting (admin or in the UI).
 - [x] **P3-T08 ⚙️ AI foundation** — `AiProvider` trait, Gemini provider, keychain key storage, consent screen, Settings › Smart features, error handling and timeouts.
-- [ ] **P3-T09 ⚙️🎨 A1 Screenshot/image → task** (drag, paste, pick) with confirm form.
+- [x] **P3-T09 ⚙️🎨 A1 Screenshot/image → task** (drag, paste, pick) with confirm form. *(Paste and pick; dragging files in comes later.)*
 - [x] **P3-T10 ⚙️ A2 Smart natural language** fallback when offline parser is unsure.
-- [ ] **P3-T11 ⚙️🎨 A3 Plan my day/week** with accept-all/some/none.
+- [x] **P3-T11 ⚙️🎨 A3 Plan my day/week** with accept-all/some/none.
 - [ ] **P3-T12 ⚙️🎨 A4 Overflow rescheduling suggestions.**
 - [ ] **P3-T13 ⚙️ A5 Energy-aware suggestions** from local completion patterns.
 - [ ] **P3-T14 ⚙️ Voice capture** (OS speech-to-text) in Quick Capture.

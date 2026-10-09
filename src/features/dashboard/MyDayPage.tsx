@@ -13,6 +13,8 @@ import { groupDashboard, isEmpty, summarize } from "@/features/dashboard/groupDa
 import { useNow } from "@/features/dashboard/useNow";
 import { useAreas, useDashboard, useItemsInRange } from "@/features/items/api";
 import { useEditorStore } from "@/features/items/editorStore";
+import { useAiReady } from "@/features/ai/api";
+import { usePlanStore } from "@/features/ai/plan/planStore";
 import { ReviewNudge } from "@/features/review/ReviewNudge";
 import { SamplesNote } from "@/features/onboarding/SamplesNote";
 import { useWeekStartsOn } from "@/features/settings/api";
@@ -27,6 +29,8 @@ export function MyDayPage() {
   const ctx = useMemo(() => getDayContext(now), [now]);
   const [areaId, setAreaId] = useState<string | null>(null);
   const openNew = useEditorStore((state) => state.openNew);
+  const aiReady = useAiReady();
+  const openPlan = usePlanStore((state) => state.openPlan);
 
   const weekStartsOn = useWeekStartsOn();
   const dashboard = useDashboard(buildDashboardQuery(ctx, weekStartsOn));
@@ -78,7 +82,15 @@ export function MyDayPage() {
         />
       ) : (
         <>
-          <AreaFilter areas={activeAreas} value={areaId} onChange={setAreaId} />
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <AreaFilter areas={activeAreas} value={areaId} onChange={setAreaId} />
+            {aiReady && (
+              <Button variant="ghost" size="sm" onClick={() => openPlan("day")}>
+                <Sparkles aria-hidden="true" />
+                {t("plan.myDay")}
+              </Button>
+            )}
+          </div>
           {week.data && <BalanceStrip balance={weeklyBalance(week.data, activeAreas)} />}
           {isEmpty(sections) && (
             <p className="text-body text-text-muted">{t("myDay.emptyFiltered")}</p>

@@ -56,7 +56,7 @@ export function EditorFooter({
     body = <DiscardPrompt onKeep={onKeepEditing} onDiscard={onDiscard} />;
   } else {
     body = (
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <Button type="submit" disabled={busy}>
           {t(isNew ? (isEvent ? "editor.addEvent" : "editor.addTask") : "editor.save")}
         </Button>

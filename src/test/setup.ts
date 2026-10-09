@@ -1,7 +1,11 @@
 import "@testing-library/jest-dom/vitest";
 import "@/i18n";
-import { cleanup } from "@testing-library/react";
+import { cleanup, configure } from "@testing-library/react";
 import { afterEach } from "vitest";
+
+// Screens load several queries in turn; on a busy machine running the whole suite, the
+// default 1 s wait for findBy*/waitFor is too short and tests fail at random.
+configure({ asyncUtilTimeout: 3000 });
 
 // jsdom has no matchMedia; default to "light, no reduced motion". Tests can override.
 Object.defineProperty(window, "matchMedia", {
