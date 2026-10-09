@@ -136,14 +136,15 @@ fn prompt(req: &PlanRequest, now: NaiveDateTime) -> String {
         "days": days,
         "tasks": tasks,
         "request": req.instruction.trim(),
+        "bestHours": req.preferred_hours.as_deref().map(short),
     });
     format!(
         "You are a calm planning assistant. Propose times for the open tasks on the given \
          days, following the user's request if there is one.\n\
          Rules: only use the listed task ids and days; stay inside working hours; never overlap \
          busy times or each other; nothing earlier than now; use a task's durationMinutes when \
-         given, otherwise a sensible length (15–120 minutes); leave short breaks; it is fine to \
-         leave tasks out if the days are full.\n\
+         given, otherwise a sensible length (15–120 minutes); leave short breaks; put the most demanding tasks in \
+         bestHours when given; it is fine to leave tasks out if the days are full.\n\
          Return JSON {{\"proposals\": [{{taskId, date (YYYY-MM-DD), start (HH:MM, 24-hour), \
          durationMinutes}}]}}.\n\
          Context: {context}"
@@ -260,6 +261,7 @@ mod tests {
                     duration_minutes: None,
                 },
             ],
+            preferred_hours: Some("09:00–11:00".into()),
         }
     }
 
@@ -276,6 +278,7 @@ mod tests {
             };
             assert!(prompt.contains("Team sync") && prompt.contains("Write report"));
             assert!(prompt.contains("Monday 2026-10-12 10:00"));
+            assert!(prompt.contains("09:00–11:00"), "best hours are passed on");
             Ok(self.0.clone())
         }
     }

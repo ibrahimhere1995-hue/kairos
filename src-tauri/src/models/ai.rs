@@ -54,6 +54,10 @@ pub struct PlanRequest {
     pub day_end: String,
     pub days: Vec<PlanDay>,
     pub tasks: Vec<PlanTask>,
+    /// A5: the user's best hours, e.g. "09:00–11:00" (only the range, never the history).
+    #[serde(default)]
+    #[cfg_attr(test, ts(optional))]
+    pub preferred_hours: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -95,4 +99,17 @@ pub struct PlanProposal {
     /// Local `HH:mm`.
     pub start: String,
     pub duration_minutes: i64,
+}
+
+/// A5: the local hours (`start_hour` ≤ h < `end_hour`) you tick most tasks done, learned on
+/// this computer from the last 8 weeks.
+#[derive(Debug, Clone, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+#[cfg_attr(test, derive(ts_rs::TS), ts(export))]
+pub struct BestHours {
+    pub start_hour: u32,
+    pub end_hour: u32,
+    /// Tasks done in those hours, out of `total`.
+    pub done: u32,
+    pub total: u32,
 }

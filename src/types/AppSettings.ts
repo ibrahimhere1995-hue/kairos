@@ -31,4 +31,8 @@ name: string,
 /**
  * PRD R17: the day the weekly review is offered (Sunday by default).
  */
-reviewDay: Weekday, };
+reviewDay: Weekday, 
+/**
+ * Local `HH:mm`: the hours Plan my day and the overbooked check use (default 09:00–18:00).
+ */
+workDayStart: string, workDayEnd: string, };

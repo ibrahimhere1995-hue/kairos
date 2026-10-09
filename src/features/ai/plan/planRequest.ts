@@ -6,19 +6,29 @@ import type { PlanDay } from "@/types/PlanDay";
 import type { PlanRequest } from "@/types/PlanRequest";
 import type { PlanTask } from "@/types/PlanTask";
 
-export type PlanSpan = "day" | "week";
+/** "lighten": today is overbooked; move some of today's tasks to the coming days (A4). */
+export type PlanSpan = "day" | "week" | "lighten";
 
-/** Hours a plan may use (a setting later). */
-export const DAY_START = "09:00";
-export const DAY_END = "18:00";
 const TASKS_MAX = 30;
+/** Sent to the AI (not shown to the user) when lightening an overbooked day. */
+const LIGHTEN_NOTE =
+  "Today is overbooked. Suggest which of these tasks to move to the coming days so today " +
+  "becomes manageable. Move the least urgent ones first and leave the rest.";
 
-/** Today, or today to the end of this week (`weekEnd` = local date after the last day). */
+/**
+ * Today; today to the end of this week (`weekEnd` = local date after the last day); or, to
+ * lighten today, the next six days.
+ */
 export function planDates(ctx: DayContext, span: PlanSpan, weekEnd: string): string[] {
+  const first = span === "lighten" ? 1 : 0;
   const count =
-    span === "day" ? 1 : Math.max(1, differenceInCalendarDays(parseISO(weekEnd), ctx.dayStart));
+    span === "day"
+      ? 1
+      : span === "lighten"
+        ? 6
+        : Math.max(1, differenceInCalendarDays(parseISO(weekEnd), ctx.dayStart));
   return Array.from({ length: Math.min(7, count) }, (_, i) =>
-    format(addDays(ctx.dayStart, i), "yyyy-MM-dd"),
+    format(addDays(ctx.dayStart, first + i), "yyyy-MM-dd"),
   );
 }
 
@@ -70,14 +80,21 @@ export function buildPlanRequest(args: {
   instruction: string;
   rangeItems: Item[];
   candidates: Item[];
+  /** Working hours from Settings, local `HH:mm`. */
+  dayStart: string;
+  dayEnd: string;
+  /** A5, e.g. "09:00–11:00". */
+  preferredHours?: string | null;
 }): PlanRequest {
+  const note = args.span === "lighten" ? LIGHTEN_NOTE : "";
   const dates = planDates(args.ctx, args.span, args.weekEnd);
   const last = dates[dates.length - 1] ?? args.ctx.today;
   return {
-    instruction: args.instruction.trim(),
+    instruction: [note, args.instruction.trim()].filter(Boolean).join("\n"),
     now: format(args.ctx.now, "yyyy-MM-dd'T'HH:mm"),
-    dayStart: DAY_START,
-    dayEnd: DAY_END,
+    dayStart: args.dayStart,
+    dayEnd: args.dayEnd,
+    preferredHours: args.preferredHours ?? undefined,
     days: busyDays(dates, args.rangeItems),
     tasks: planTasks(args.candidates.filter((i) => !i.dueDate || i.dueDate <= last)),
   };

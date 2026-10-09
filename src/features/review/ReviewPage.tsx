@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import { addDays, format } from "date-fns";
-import { ChevronLeft, ChevronRight, CircleCheck, RotateCcw, Undo2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, CircleCheck, RotateCcw, Sunrise, Undo2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { weeklyBalance } from "@/features/dashboard/balance";
+import { useBestHours } from "@/features/ai/api";
 import { useFeedbackStore } from "@/features/feedback/feedbackStore";
 import { useFocusTotals } from "@/features/focus/api";
 import { friendlyDuration } from "@/features/items/editor/friendlyDate";
@@ -21,6 +22,7 @@ export function ReviewPage() {
   const { t } = useTranslation();
   const weekStartsOn = useWeekStartsOn();
   const openSuggest = useFeedbackStore((s) => s.openSuggest);
+  const best = useBestHours().data ?? null;
   const ctx = useMemo(() => getDayContext(), []);
   const [offset, setOffset] = useState(() => defaultWeekOffset(ctx.now, weekStartsOn));
   const { first, range } = reviewWeek(ctx.now, weekStartsOn, offset);
@@ -80,6 +82,15 @@ export function ReviewPage() {
           />
         </div>
         <AreaTimeList areas={withFocus(weeklyBalance(items.data, active), focus.data)} />
+        {best && (
+          <p className="inline-flex items-center gap-2 text-body">
+            <Sunrise aria-hidden="true" className="size-4 text-accent-text" />
+            {t("review.bestHours", {
+              from: format(new Date(2000, 0, 1, best.startHour), "p"),
+              to: format(new Date(2000, 0, 1, best.endHour % 24), "p"),
+            })}
+          </p>
+        )}
         <Button variant="ghost" className="self-start" onClick={() => openSuggest(t("nav.review"))}>
           {t("feedback.helpful")}
         </Button>

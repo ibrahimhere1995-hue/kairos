@@ -30,7 +30,8 @@
       "openFailed": "Kairos couldn't open that file.",
       "notACalendar": "That doesn't look like a calendar file (.ics).",
       "unknownMilestone": "That goal step no longer exists. Please pick another.",
-      "emailFailed": "Kairos couldn’t open your email app. Try “Export to file” instead."
+      "emailFailed": "Kairos couldn’t open your email app. Try “Export to file” instead.",
+      "workHoursOrder": "The working day has to end after it starts."
     },
     "ai": {
       "off": "Smart features are off. Turn them on in Settings › Smart features.",
@@ -133,7 +134,11 @@
       "friday": "Friday",
       "saturday": "Saturday",
       "sunday": "Sunday"
-    }
+    },
+    "workHours": "Working hours",
+    "workHoursHelp": "Plan my day uses these hours, and My Day mentions when today holds more than they fit.",
+    "workStart": "Working day starts",
+    "workEnd": "Working day ends"
   },
   "trash": {
     "title": "Trash",
@@ -775,7 +780,8 @@
     "insightMost": "{{area}} took most of your time ({{percent}}%).",
     "insightEven": "Your time was spread across your life areas.",
     "nudge": "It is review day. Take a minute to look back on your week.",
-    "open": "Open review"
+    "open": "Open review",
+    "bestHours": "You get the most done between {{from}} and {{to}}. Plan my day puts demanding tasks there."
   },
   "feedback": {
     "exportTitle": "Kairos wishlist",
@@ -865,6 +871,13 @@
     "none": "None, thanks",
     "noSlots": "Nothing fitted in the free time this time. Try the rest of the week, or fewer tasks.",
     "applied_one": "{{count}} task planned.",
-    "applied_other": "{{count}} tasks planned."
+    "applied_other": "{{count}} tasks planned.",
+    "lightenIntro": "Kairos will suggest which of today's tasks to move to the coming days. You choose which moves to make."
+  },
+  "overload": {
+    "text": "Today looks full: about {{planned}} of tasks and {{free}} of free time left.",
+    "offer": "Kairos can suggest what to move.",
+    "hint": "You could move a few to another day.",
+    "suggest": "Suggest what to move"
   }
 }

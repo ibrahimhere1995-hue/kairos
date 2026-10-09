@@ -7,6 +7,8 @@ import { weeklyBalance } from "@/features/dashboard/balance";
 import { buildDashboardQuery, currentWeekRange } from "@/features/dashboard/dashboardQuery";
 import { DashboardSection } from "@/features/dashboard/DashboardSection";
 import { Greeting } from "@/features/dashboard/Greeting";
+import { OverbookedCard } from "@/features/dashboard/OverbookedCard";
+import { overload } from "@/features/dashboard/overload";
 import { RoutinesCard } from "@/features/dashboard/RoutinesCard";
 import { SlippedCard } from "@/features/dashboard/SlippedCard";
 import { groupDashboard, isEmpty, summarize } from "@/features/dashboard/groupDashboard";
@@ -17,7 +19,7 @@ import { useAiReady } from "@/features/ai/api";
 import { usePlanStore } from "@/features/ai/plan/planStore";
 import { ReviewNudge } from "@/features/review/ReviewNudge";
 import { SamplesNote } from "@/features/onboarding/SamplesNote";
-import { useWeekStartsOn } from "@/features/settings/api";
+import { useAppSettings, useWeekStartsOn } from "@/features/settings/api";
 import { EmptyState } from "@/components/EmptyState";
 import { Button } from "@/components/ui/Button";
 import { getDayContext } from "@/lib/dates/dayContext";
@@ -33,6 +35,7 @@ export function MyDayPage() {
   const openPlan = usePlanStore((state) => state.openPlan);
 
   const weekStartsOn = useWeekStartsOn();
+  const { data: settings } = useAppSettings();
   const dashboard = useDashboard(buildDashboardQuery(ctx, weekStartsOn));
   const week = useItemsInRange(currentWeekRange(ctx, weekStartsOn));
   const { data: areaList = [] } = useAreas();
@@ -62,6 +65,9 @@ export function MyDayPage() {
   const sections = groupDashboard(dashboard.data, ctx, areaId);
   const allEmpty = isEmpty(groupDashboard(dashboard.data, ctx));
   const common = { areas, today: ctx.today };
+  const load = settings
+    ? overload(dashboard.data.today, ctx, settings.workDayStart, settings.workDayEnd)
+    : null;
 
   return (
     <div className="flex flex-col gap-8">
@@ -104,6 +110,7 @@ export function MyDayPage() {
           />
           {/* DESIGN_SYSTEM §6: the slipped card comes right after Now. */}
           <SlippedCard entries={sections.slipped} areas={areas} today={ctx.today} />
+          {load && <OverbookedCard load={load} />}
           <RoutinesCard entries={sections.routines} areas={areas} today={ctx.today} />
           <DashboardSection
             title={t("myDay.today")}

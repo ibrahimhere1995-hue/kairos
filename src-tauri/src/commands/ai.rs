@@ -10,8 +10,8 @@ use crate::ai::{image, parse, plan, secrets};
 use crate::commands::with_conn;
 use crate::db::Db;
 use crate::error::{AppError, AppResult};
-use crate::models::ai::{AiDraft, AiImageDraft, AiStatus, PlanProposal, PlanRequest};
-use crate::services::app_settings;
+use crate::models::ai::{AiDraft, AiImageDraft, AiStatus, BestHours, PlanProposal, PlanRequest};
+use crate::services::{app_settings, energy};
 
 const KEY_PAGE: &str = "https://aistudio.google.com/apikey";
 const KEY_MAX: usize = 200;
@@ -111,4 +111,12 @@ pub async fn ai_extract_from_image(
 pub async fn ai_plan(db: State<'_, Db>, request: PlanRequest) -> AppResult<Vec<PlanProposal>> {
     let gemini = provider(&db)?;
     plan::plan(&gemini, &request).await
+}
+
+/// A5: when you usually get things done (local only; no AI involved).
+#[tauri::command]
+pub fn best_hours(db: State<'_, Db>) -> AppResult<Option<BestHours>> {
+    with_conn(&db, |conn| {
+        energy::best_hours(conn, &chrono::Local, chrono::Utc::now())
+    })
 }

@@ -266,6 +266,7 @@ pub fn run() {
             commands::ai::ai_open_key_page,
             commands::ai::ai_extract_from_image,
             commands::ai::ai_plan,
+            commands::ai::best_hours,
             commands::data::export_json,
             commands::data::export_ics,
             commands::data::import_ics,
