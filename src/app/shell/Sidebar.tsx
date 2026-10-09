@@ -2,6 +2,7 @@ import {
   CalendarDays,
   Inbox,
   LayoutTemplate,
+  NotebookPen,
   Palette,
   PanelLeftClose,
   PanelLeftOpen,
@@ -50,6 +51,7 @@ export function Sidebar() {
           label={t("nav.templates")}
           collapsed={collapsed}
         />
+        <NavItem to="/review" icon={NotebookPen} label={t("nav.review")} collapsed={collapsed} />
       </ul>
 
       <ul className="mt-auto flex flex-col gap-1">

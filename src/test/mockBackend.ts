@@ -44,6 +44,7 @@ export function mockBackend(overrides: Record<string, Handler> = {}): Call[] {
     list_habits: () => [],
     list_goals: () => [],
     list_templates: () => [],
+    focus_totals: () => [],
     get_settings: () => ({ ...DEFAULT_SETTINGS }),
     main_window_ready: () => null,
     get_onboarding: () => ({ needed: false, samplesLeft: 0 }),

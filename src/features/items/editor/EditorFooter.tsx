@@ -1,4 +1,4 @@
-import { Trash2 } from "lucide-react";
+import { Timer, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { DiscardPrompt } from "@/features/items/editor/DiscardPrompt";
 import { ScopePrompt } from "@/features/items/editor/ScopePrompt";
@@ -23,6 +23,7 @@ export function EditorFooter({
   onDelete,
   onChooseScope,
   onCancelScope,
+  onFocus,
 }: {
   isNew: boolean;
   isEvent: boolean;
@@ -37,6 +38,8 @@ export function EditorFooter({
   onDelete: () => void;
   onChooseScope: (scope: EditScope) => void;
   onCancelScope: () => void;
+  /** Existing tasks: close the editor and focus on this task (PRD R16). */
+  onFocus?: () => void;
 }) {
   const { t } = useTranslation();
 
@@ -60,6 +63,12 @@ export function EditorFooter({
         <Button variant="ghost" onClick={onCancel}>
           {t("common.cancel")}
         </Button>
+        {onFocus && (
+          <Button variant="ghost" onClick={onFocus}>
+            <Timer aria-hidden="true" />
+            {t("focus.focusOnThis")}
+          </Button>
+        )}
         {!isNew && (
           <Button
             variant="ghost"

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { TEXT_SIZES } from "@/app/theme/textSize";
 import { useThemeStore } from "@/app/theme/themeStore";
 import { useAppSettings, useUpdateSettings } from "@/features/settings/api";
+import { WEEKDAYS } from "@/features/review/review";
 import { SettingRow } from "@/features/settings/SettingRow";
 import { NameInput } from "@/features/settings/NameInput";
 import { ReminderTimeInput } from "@/features/settings/ReminderTimeInput";
@@ -11,6 +12,7 @@ import { Switch } from "@/components/ui/Switch";
 import { DEFAULT_SETTINGS } from "@/lib/api/settings";
 import type { ThemePreference } from "@/types/ThemePreference";
 import type { WeekStart } from "@/types/WeekStart";
+import type { Weekday } from "@/types/Weekday";
 
 /** Appearance, calendar, reminder and startup settings. Every change applies immediately. */
 export function GeneralSettings() {
@@ -76,6 +78,20 @@ export function GeneralSettings() {
               { value: "sunday", label: t("settings.sunday"), icon: CalendarRange },
             ]}
           />
+        </SettingRow>
+        <SettingRow label={t("settings.reviewDay")} description={t("settings.reviewDayHelp")}>
+          <select
+            value={settings.reviewDay}
+            aria-label={t("settings.reviewDay")}
+            onChange={(e) => update.mutate({ reviewDay: e.target.value as Weekday })}
+            className="h-10 rounded-sm border border-border bg-surface-2 px-3 text-body text-text"
+          >
+            {WEEKDAYS.map((day) => (
+              <option key={day} value={day}>
+                {t(`settings.days.${day}`)}
+              </option>
+            ))}
+          </select>
         </SettingRow>
       </section>
 

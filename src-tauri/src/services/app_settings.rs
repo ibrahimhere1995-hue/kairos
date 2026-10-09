@@ -17,6 +17,7 @@ const SUMMARY_ENABLED: &str = "reminders.dailySummary";
 const SUMMARY_TIME: &str = "reminders.dailySummaryTime";
 const LAUNCH_AT_LOGIN: &str = "system.launchAtLogin";
 const NAME: &str = "profile.name";
+const REVIEW_DAY: &str = "review.day";
 pub const NAME_MAX_CHARS: usize = 40;
 /// Internal: the local date the last daily summary was sent for.
 const SUMMARY_LAST_SENT: &str = "reminders.dailySummaryLastSent";
@@ -67,6 +68,7 @@ pub fn get(conn: &Connection) -> AppResult<AppSettings> {
         daily_summary_time: read_time(conn, SUMMARY_TIME, defaults.daily_summary_time)?,
         launch_at_login: read(conn, LAUNCH_AT_LOGIN, defaults.launch_at_login)?,
         name: read(conn, NAME, defaults.name)?,
+        review_day: read(conn, REVIEW_DAY, defaults.review_day)?,
     })
 }
 
@@ -88,6 +90,7 @@ pub fn update(conn: &mut Connection, next: &AppSettings) -> AppResult<AppSetting
     write(&tx, SUMMARY_ENABLED, &next.daily_summary_enabled)?;
     write(&tx, SUMMARY_TIME, &next.daily_summary_time)?;
     write(&tx, LAUNCH_AT_LOGIN, &next.launch_at_login)?;
+    write(&tx, REVIEW_DAY, &next.review_day)?;
     tx.commit()?;
     get(conn)
 }
@@ -127,7 +130,7 @@ pub fn take_tray_hint(conn: &Connection) -> AppResult<bool> {
 mod tests {
     use super::*;
     use crate::db::test_support::migrated_conn;
-    use crate::models::settings::{TextSize, ThemePreference, WeekStart};
+    use crate::models::settings::{TextSize, ThemePreference, WeekStart, Weekday};
 
     #[test]
     fn defaults_when_nothing_is_saved() {
@@ -152,6 +155,7 @@ mod tests {
             daily_summary_time: "06:45".into(),
             launch_at_login: false,
             name: "Zack".into(),
+            review_day: Weekday::Friday,
         };
         assert_eq!(update(&mut c, &next).unwrap(), next);
         assert_eq!(get(&c).unwrap(), next);

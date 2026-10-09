@@ -50,13 +50,15 @@ describe("App shell", () => {
     renderAt();
     await pageHeading("My Day");
 
-    // Tab order follows the layout: skip link, top bar (search, add, theme), sidebar.
+    // Tab order follows the layout: skip link, top bar (search, add, focus, theme), sidebar.
     await user.tab();
     expect(screen.getByRole("button", { name: "Skip to main content" })).toHaveFocus();
     await user.tab();
     expect(screen.getByRole("button", { name: /Search or type a command/ })).toHaveFocus();
     await user.tab();
     expect(screen.getByRole("button", { name: "Add task" })).toHaveFocus();
+    await user.tab();
+    expect(screen.getByRole("button", { name: "Focus mode" })).toHaveFocus();
     await user.tab();
     expect(screen.getByRole("button", { name: "Switch to dark theme" })).toHaveFocus();
     await user.tab(); // My Day

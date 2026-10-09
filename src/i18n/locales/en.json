@@ -108,7 +108,18 @@
     "archive": "Archive",
     "unarchive": "Bring back",
     "name": "Your name",
-    "nameHelp": "Used in the greeting on My Day. Leave it empty if you prefer."
+    "nameHelp": "Used in the greeting on My Day. Leave it empty if you prefer.",
+    "reviewDay": "Weekly review day",
+    "reviewDayHelp": "My Day invites you to look back on this day.",
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    }
   },
   "trash": {
     "title": "Trash",
@@ -336,7 +347,8 @@
     "expand": "Expand sidebar",
     "habits": "Habits",
     "goals": "Goals",
-    "templates": "Templates"
+    "templates": "Templates",
+    "review": "Weekly review"
   },
   "topbar": {
     "search": "Search or type a command…",
@@ -575,7 +587,9 @@
       "goDate": "Show {{date}} in the calendar",
       "goHabits": "Go to Habits",
       "goGoals": "Go to Goals",
-      "goTemplates": "Go to Templates"
+      "goTemplates": "Go to Templates",
+      "startFocus": "Start focus",
+      "goReview": "Go to Weekly review"
     },
     "keywords": {
       "newTask": "add create capture task event",
@@ -698,5 +712,50 @@
     "empty": "No templates yet.",
     "inserted_one": "Inserted {{count}} item.",
     "inserted_other": "Inserted {{count}} items."
+  },
+  "focus": {
+    "open": "Focus mode",
+    "title": "Focus",
+    "what": "What will you focus on?",
+    "noTask": "Nothing in particular",
+    "timer": "Timer",
+    "preset": "{{work}} / {{rest}} min",
+    "workMinutes": "Focus (minutes)",
+    "breakMinutes": "Break (minutes)",
+    "muteNote": "Kairos goes full screen and holds its notifications until you finish.",
+    "start": "Start focusing",
+    "focusing": "Focusing",
+    "paused": "Paused",
+    "onBreak": "Break time. Stretch, breathe, have some water.",
+    "readyNext": "Ready for another round?",
+    "timeLeft": "{{time}} left",
+    "pause": "Pause",
+    "resume": "Resume",
+    "startNext": "Start next round",
+    "skipBreak": "Skip break",
+    "markDone": "Mark done",
+    "end": "End focus",
+    "today": "Focused today: {{time}}",
+    "focusOnThis": "Focus",
+    "logFailed": "Focus time could not be saved this time. The timer still runs."
+  },
+  "review": {
+    "week": "{{start}} – {{end}}",
+    "previous": "Previous week",
+    "next": "Next week",
+    "summary": "{{done}} done, {{slipped}} slipped.",
+    "focused": "You focused for {{time}}.",
+    "done": "What got done",
+    "doneEmpty": "Nothing marked done this week. That is okay.",
+    "slipped": "What slipped",
+    "slippedEmpty": "Nothing slipped. Nicely done.",
+    "timePerArea": "Time per life area",
+    "areaTime": "{{planned}} planned · {{focused}} focused",
+    "insights": "Balance",
+    "insightZero": "{{area}} got 0 hours this week.",
+    "insightMost": "{{area}} took most of your time ({{percent}}%).",
+    "insightEven": "Your time was spread across your life areas.",
+    "nudge": "It is review day. Take a minute to look back on your week.",
+    "open": "Open review"
   }
 }

@@ -7,6 +7,7 @@ use std::time::Duration as StdDuration;
 use chrono::{Local, Offset, Utc};
 use tauri::{AppHandle, Manager};
 
+use crate::commands::focus::FocusMute;
 use crate::commands::with_conn;
 use crate::db::Db;
 use crate::models::reminder::DueReminder;
@@ -60,6 +61,12 @@ fn tick(app: &AppHandle, last_offset: &mut i32) {
         if let Err(error) = result {
             eprintln!("Reminder recompute failed: {error}");
         }
+    }
+
+    // Focus mode holds notifications; whatever came due arrives once it ends (PRD R16).
+    if app.try_state::<FocusMute>().is_some_and(|m| m.is_on()) {
+        tray::refresh(app);
+        return;
     }
 
     let now = Utc::now();

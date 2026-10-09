@@ -1,13 +1,16 @@
-import { Plus } from "lucide-react";
+import { Plus, Timer } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { SearchButton } from "@/app/shell/SearchButton";
 import { ThemeToggle } from "@/app/theme/ThemeToggle";
 import { Button } from "@/components/ui/Button";
+import { IconButton } from "@/components/ui/IconButton";
 import { useCaptureStore } from "@/features/capture/captureStore";
+import { useFocusStore } from "@/features/focus/focusStore";
 
 export function TopBar() {
   const { t } = useTranslation();
   const openCapture = useCaptureStore((state) => state.openCapture);
+  const openFocus = useFocusStore((state) => state.openFocus);
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-4 border-b border-border bg-surface px-4">
@@ -20,6 +23,7 @@ export function TopBar() {
           <Plus aria-hidden="true" />
           {t("topbar.addTask")}
         </Button>
+        <IconButton icon={Timer} label={t("focus.open")} onClick={() => openFocus()} />
         <ThemeToggle />
       </div>
     </header>

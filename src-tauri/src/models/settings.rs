@@ -31,6 +31,21 @@ pub enum WeekStart {
     Sunday,
 }
 
+/// A day of the week, for the weekly review (PRD R17).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[serde(rename_all = "snake_case")]
+#[cfg_attr(test, derive(ts_rs::TS), ts(export))]
+pub enum Weekday {
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday,
+    #[default]
+    Sunday,
+}
+
 /// Basic settings (P1-T16). Every field has a sensible default (PRD R7: nothing is required).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -49,6 +64,8 @@ pub struct AppSettings {
     pub launch_at_login: bool,
     /// What Kairos calls you in the greeting ("Good morning, Zack."). Empty = no name.
     pub name: String,
+    /// PRD R17: the day the weekly review is offered (Sunday by default).
+    pub review_day: Weekday,
 }
 
 impl Default for AppSettings {
@@ -62,6 +79,7 @@ impl Default for AppSettings {
             daily_summary_time: "08:00".into(),
             launch_at_login: true,
             name: String::new(),
+            review_day: Weekday::default(),
         }
     }
 }
