@@ -33,12 +33,24 @@ describe("Kairos critical paths", () => {
 
   it("gives a slipped task a new moment", async () => {
     await quickAdd("Pay the electricity bill yesterday");
-    const slipped = await section("Slipped by");
+    // PRD R6: the caring card, with choices per task.
+    const card = $(`//section[.//h2[contains(normalize-space(.), "slipped by")]]`);
     await expect(
-      slipped.$(`.//*[normalize-space(text())="Pay the electricity bill"]`),
+      card.$(`.//*[normalize-space(text())="Pay the electricity bill"]`),
     ).toBeDisplayed();
+    await card
+      .$(`.//*[@role="group" and @aria-label="Choices for “Pay the electricity bill”"]`)
+      .$(`.//button[normalize-space(.)="Today"]`)
+      .click();
 
-    await $(`//button[.//*[normalize-space(text())="Pay the electricity bill"]]`).click();
+    await expect(
+      section("Today").$(`.//*[normalize-space(text())="Pay the electricity bill"]`),
+    ).toBeDisplayed();
+  });
+
+  it("edits a task's date in the editor", async () => {
+    await quickAdd("Return the library book tomorrow");
+    await $(`//button[.//*[normalize-space(text())="Return the library book"]]`).click();
     // The date pill's label depends on the real date, so find it by its "Date:" prefix.
     await $(`//button[.//span[normalize-space(.)="Date:"]]`).click();
     // "Today" also names a My Day section and the calendar button: pick it inside the date picker.
@@ -50,7 +62,7 @@ describe("Kairos critical paths", () => {
     await $(`//button[normalize-space(.)="Save changes"]`).waitForDisplayed({ reverse: true });
 
     await expect(
-      section("Today").$(`.//*[normalize-space(text())="Pay the electricity bill"]`),
+      section("Today").$(`.//*[normalize-space(text())="Return the library book"]`),
     ).toBeDisplayed();
   });
 

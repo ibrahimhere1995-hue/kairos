@@ -24,6 +24,12 @@ export const itemsApi = {
   uncomplete: (id: string) => invoke<Item>("uncomplete_item", { id }),
   reschedule: (id: string, schedule: ScheduleInput) =>
     invoke<Item>("reschedule_item", { id, schedule }),
+  rescheduleMany: (ids: string[], schedule: ScheduleInput) =>
+    invoke<Item[]>("reschedule_items", { ids, schedule }),
+  skip: (id: string) => invoke<Item>("skip_item", { id }),
+  unskip: (id: string) => invoke<Item>("unskip_item", { id }),
+  /** Inbox tasks (no date), newest first, for time-blocking. */
+  unscheduled: () => invoke<Item[]>("list_unscheduled"),
   list: (range: DateRange, filters?: ItemFilters) =>
     invoke<Item[]>("list_items", { range, filters: filters ?? null }),
   dashboard: (query: DashboardQuery) => invoke<Dashboard>("get_dashboard", { query }),

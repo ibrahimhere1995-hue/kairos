@@ -172,6 +172,22 @@ pub fn update(conn: &Connection, item: &Item) -> rusqlite::Result<usize> {
     )
 }
 
+/// Open tasks without a date (the Inbox), newest first, for time-blocking (P2-T07).
+/// Capped at `limit` so a huge Inbox never loads all at once.
+pub fn list_unscheduled(conn: &Connection, limit: i64) -> rusqlite::Result<Vec<Item>> {
+    query_items(
+        conn,
+        &format!(
+            "SELECT {COLUMNS} FROM items
+             WHERE {OPEN} AND kind = 'task'
+               AND start_at IS NULL AND due_date IS NULL
+             ORDER BY created_at DESC, id DESC
+             LIMIT :limit"
+        ),
+        named_params! { ":limit": limit },
+    )
+}
+
 /// Items overlapping a visible range (never "load all items" — PROJECT_RULES performance).
 /// Timed items overlap `[start, end)`; date-only items fall in `[start_date, end_date)`.
 pub fn list_in_range(

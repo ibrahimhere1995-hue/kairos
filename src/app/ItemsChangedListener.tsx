@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { itemKeys } from "@/features/items/queryKeys";
-import { onDataReloaded, onItemsChanged } from "@/lib/api/events";
+import { areaKeys, itemKeys } from "@/features/items/queryKeys";
+import { onAreasChanged, onDataReloaded, onItemsChanged } from "@/lib/api/events";
 
 /**
  * Keeps this window's data fresh: refreshes item views when another window changes items,
@@ -12,6 +12,7 @@ export function ItemsChangedListener() {
   useEffect(() => {
     const stops = [
       onItemsChanged(() => void queryClient.invalidateQueries({ queryKey: itemKeys.all })),
+      onAreasChanged(() => void queryClient.invalidateQueries({ queryKey: areaKeys.all })),
       onDataReloaded(() => void queryClient.invalidateQueries()),
     ];
     return () => {

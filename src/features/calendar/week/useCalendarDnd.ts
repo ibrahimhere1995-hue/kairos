@@ -9,9 +9,9 @@ import {
   type KeyboardCoordinateGetter,
 } from "@dnd-kit/core";
 import { useTranslation } from "react-i18next";
-import { scheduleAfterDrag } from "@/features/calendar/dragSchedule";
+import { scheduleAfterDrag, scheduleAtMinute } from "@/features/calendar/dragSchedule";
 import { SNAP_MINUTES } from "@/features/calendar/layout";
-import { dateFromDropId, type DragData } from "@/features/calendar/week/dragData";
+import { dateFromDropId, isColumnId, type DragData } from "@/features/calendar/week/dragData";
 import { pxPerMinute } from "@/features/calendar/week/gridMetrics";
 import { useRescheduleItem } from "@/features/items/api";
 import type { Item } from "@/types/Item";
@@ -70,12 +70,25 @@ export function useCalendarDnd(itemsById: Map<string, Item>) {
     const drag = active.data.current as DragData | undefined;
     const item = drag ? itemsById.get(drag.itemId) : undefined;
     if (!drag || !item) return;
-    const schedule = scheduleAfterDrag(
-      item,
-      drag,
-      dateFromDropId(over?.id),
-      delta.y / pxPerMinute(),
-    );
+    const date = dateFromDropId(over?.id);
+
+    // Time-blocking (PRD R12): a task without a time dropped on the hour grid gets that time.
+    if ((drag.kind === "unscheduled" || drag.kind === "allDay") && date && isColumnId(over?.id)) {
+      const top = active.rect.current.translated?.top;
+      const column = document.querySelector(`[data-drop-date="${date}"]`);
+      if (top === undefined || !column) return;
+      const minute = (top - column.getBoundingClientRect().top) / pxPerMinute();
+      reschedule.mutate({ item, schedule: scheduleAtMinute(item, date, minute) });
+      return;
+    }
+    // An Inbox task dropped on the all-day row gets that day.
+    if (drag.kind === "unscheduled") {
+      if (date)
+        reschedule.mutate({ item, schedule: { dueDate: date, startAt: null, endAt: null } });
+      return;
+    }
+
+    const schedule = scheduleAfterDrag(item, drag, date, delta.y / pxPerMinute());
     if (schedule) reschedule.mutate({ item, schedule });
   };
 

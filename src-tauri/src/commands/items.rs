@@ -85,3 +85,30 @@ pub fn set_checklist(
 pub fn get_dashboard(db: State<'_, Db>, query: DashboardQuery) -> AppResult<Dashboard> {
     with_conn(&db, |conn| items::dashboard(conn, &query))
 }
+
+#[tauri::command]
+pub fn reschedule_items(
+    app: AppHandle,
+    db: State<'_, Db>,
+    ids: Vec<String>,
+    schedule: ScheduleInput,
+) -> AppResult<Vec<Item>> {
+    write_items(&app, &db, |conn| {
+        items::reschedule_many(conn, &ids, &schedule)
+    })
+}
+
+#[tauri::command]
+pub fn skip_item(app: AppHandle, db: State<'_, Db>, id: String) -> AppResult<Item> {
+    write_items(&app, &db, |conn| items::skip(conn, &id))
+}
+
+#[tauri::command]
+pub fn unskip_item(app: AppHandle, db: State<'_, Db>, id: String) -> AppResult<Item> {
+    write_items(&app, &db, |conn| items::unskip(conn, &id))
+}
+
+#[tauri::command]
+pub fn list_unscheduled(db: State<'_, Db>) -> AppResult<Vec<Item>> {
+    with_conn(&db, |conn| items::unscheduled(conn))
+}

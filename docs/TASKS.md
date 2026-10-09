@@ -50,12 +50,12 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 - [x] **P2-T02 ⚙️ Native notifications + actions** — Done / Snooze (10 min, 1 h, tomorrow) / Open.
 - [x] **P2-T03 ⚙️ Tray / menu bar + autostart** — close-to-tray, tray menu (Open, Quick add, Today's next item, Quit), launch at login toggle.
 - [x] **P2-T04 ⚙️ Daily summary notification** at chosen time.
-- [ ] **P2-T05 🎨 Missed-task ("slipped") flow** — morning card, per-item and bulk actions, "break into smaller steps" after 3 reschedules.
+- [x] **P2-T05 🎨 Missed-task ("slipped") flow** — morning card, per-item and bulk actions, "break into smaller steps" after 3 reschedules.
 - [ ] **P2-T06 ⚙️ Recurrence** — rrule storage, range expansion, exceptions, "this one / all future" editing, Repeat picker in plain language; NLP "every Monday".
-- [ ] **P2-T07 🎨 Time-blocking** — drag unscheduled/Inbox tasks onto the Day/Week grid.
+- [x] **P2-T07 🎨 Time-blocking** — drag unscheduled/Inbox tasks onto the Day/Week grid.
 - [ ] **P2-T08 🎨 Onboarding** — 3-screen welcome (name, theme, areas), sample teaching tasks, skippable.
 - [ ] **P2-T09 🎨 Search & command palette** — `Ctrl/⌘+K`, FTS results grouped by status, commands (new task, go to date, switch theme).
-- [ ] **P2-T10 🎨 Area management** — add/rename/recolour/reorder/archive areas.
+- [x] **P2-T10 🎨 Area management** — add/rename/recolour/reorder/archive areas.
 - [ ] **P2-T11 🎨 Attachments & location** on items (stored in app-data, open with OS).
 - [ ] **P2-T12 ⚙️ Import/Export** — `.ics` import, JSON + `.ics` export.
 - [ ] **P2-T13 🧪 Accessibility pass** — keyboard audit, screen reader labels (NVDA + VoiceOver), automated contrast tests, text-size and reduce-motion checks.

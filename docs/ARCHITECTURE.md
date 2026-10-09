@@ -248,7 +248,10 @@ Frontend sends image path → Rust `ai_extract_from_image` → reads key from ke
 | `list_items(range, filters)` | Items + expanded occurrences in a date range |
 | `get_dashboard(today)` | Pre-grouped Now/Today/Missed/Week/Done |
 | `create_item`, `update_item`, `delete_item`, `restore_item`, `complete_item`, `uncomplete_item`, `reschedule_item` | Item CRUD |
-| `list_areas`, `upsert_area`, `archive_area` | Life areas |
+| `list_areas`, `create_area`, `update_area`, `archive_area(id, archived)`, `reorder_areas(ids)` | Life areas (P2-T10). `list_areas` includes archived areas (items keep showing them); pickers hide them. Names are unique (any case) because Quick Capture matches `#area` by name; colours are the area tokens. Changes emit `areas:changed`. |
+| `reschedule_items(ids, schedule)` | Several items, one new moment, one transaction ("Move all to today", PRD R6) |
+| `skip_item`, `unskip_item` | "Let it go" (sets `skipped_at`; Undo) |
+| `list_unscheduled` | Open Inbox tasks (newest 200) for the calendar's "To schedule" list (time-blocking, PRD R12) |
 | `search(query)` | FTS search |
 | `get_settings`, `set_setting` | Settings |
 | `backup_now`, `list_backups`, `restore_backup`, `set_backup_folder` | Backups |

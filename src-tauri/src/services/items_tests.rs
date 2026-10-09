@@ -508,3 +508,76 @@ fn skipped_and_completed_items_are_not_overdue() {
     let d = dashboard(&c, &dashboard_query()).unwrap();
     assert!(d.overdue.is_empty());
 }
+
+#[test]
+fn reschedule_many_moves_all_or_nothing() {
+    let mut c = conn();
+    let a = create(&mut c, &dated("A", "2026-10-01")).unwrap();
+    let b = create(&mut c, &timed("B", "2026-10-02T09:00:00Z")).unwrap();
+    let today = ScheduleInput {
+        due_date: Some("2026-10-08".into()),
+        ..ScheduleInput::default()
+    };
+    let moved = reschedule_many(&mut c, &[a.id.clone(), b.id.clone()], &today).unwrap();
+    assert_eq!(moved.len(), 2);
+    for item in &moved {
+        assert_eq!(item.due_date.as_deref(), Some("2026-10-08"));
+        assert_eq!(item.start_at, None);
+        assert_eq!(item.reschedule_count, 1);
+    }
+
+    // One unknown id: nothing moves.
+    let tomorrow = ScheduleInput {
+        due_date: Some("2026-10-09".into()),
+        ..ScheduleInput::default()
+    };
+    assert!(matches!(
+        reschedule_many(&mut c, &[a.id.clone(), "missing".into()], &tomorrow),
+        Err(AppError::NotFound)
+    ));
+    let a_now = repo::get(&c, &a.id).unwrap().unwrap();
+    assert_eq!(a_now.due_date.as_deref(), Some("2026-10-08"), "rolled back");
+
+    let too_many: Vec<String> = (0..=MAX_BULK).map(|i| i.to_string()).collect();
+    assert!(reschedule_many(&mut c, &too_many, &tomorrow).is_err());
+}
+
+#[test]
+fn skip_sets_a_task_aside_and_unskip_brings_it_back() {
+    let mut c = conn();
+    let item = create(&mut c, &dated("Old idea", "2026-10-01")).unwrap();
+    let skipped = skip(&mut c, &item.id).unwrap();
+    assert!(skipped.skipped_at.is_some());
+    assert!(skipped.deleted_at.is_none(), "letting go is not deleting");
+    let first = skipped.skipped_at.clone();
+    assert_eq!(
+        skip(&mut c, &item.id).unwrap().skipped_at,
+        first,
+        "skipping twice keeps the time"
+    );
+
+    let back = unskip(&mut c, &item.id).unwrap();
+    assert!(back.skipped_at.is_none());
+
+    // Completing clears a skip, and skipping clears a completion.
+    skip(&mut c, &item.id).unwrap();
+    assert!(complete(&mut c, &item.id).unwrap().skipped_at.is_none());
+    assert!(skip(&mut c, &item.id).unwrap().completed_at.is_none());
+}
+
+#[test]
+fn unscheduled_lists_open_inbox_tasks_newest_first() {
+    let mut c = conn();
+    create(&mut c, &task("Older idea")).unwrap();
+    create(&mut c, &task("Newer idea")).unwrap();
+    create(&mut c, &dated("Dated", "2026-10-08")).unwrap();
+    let done = create(&mut c, &task("Done idea")).unwrap();
+    complete(&mut c, &done.id).unwrap();
+    let trashed = create(&mut c, &task("Trashed idea")).unwrap();
+    delete(&mut c, &trashed.id).unwrap();
+
+    assert_eq!(
+        titles(&unscheduled(&c).unwrap()),
+        ["Newer idea", "Older idea"]
+    );
+}

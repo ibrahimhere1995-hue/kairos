@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { scheduleAfterDrag } from "@/features/calendar/dragSchedule";
+import { scheduleAfterDrag, scheduleAtMinute } from "@/features/calendar/dragSchedule";
 import type { Item } from "@/types/Item";
 
 const originalTZ = process.env.TZ;
@@ -90,5 +90,37 @@ describe("scheduleAfterDrag", () => {
       endAt: null,
     });
     expect(scheduleAfterDrag(allDay, drag, "2026-10-07", 0)).toBeNull();
+  });
+});
+
+describe("scheduleAtMinute (time-blocking)", () => {
+  const inbox: Item = { ...base, kind: "task", startAt: null, endAt: null };
+
+  it("gives an Inbox task a half-hour block at the snapped drop time", () => {
+    process.env.TZ = "Asia/Karachi"; // UTC+5
+    expect(scheduleAtMinute(inbox, "2026-10-09", 9 * 60 + 7)).toEqual({
+      startAt: "2026-10-09T04:00:00.000Z", // 09:00 local
+      endAt: "2026-10-09T04:30:00.000Z",
+      dueDate: null,
+    });
+  });
+
+  it("an all-day task dropped on the grid becomes timed", () => {
+    process.env.TZ = "UTC";
+    const dated: Item = { ...inbox, dueDate: "2026-10-09", allDay: true };
+    expect(scheduleAtMinute(dated, "2026-10-10", 14 * 60 + 25)).toEqual({
+      startAt: "2026-10-10T14:30:00.000Z",
+      endAt: "2026-10-10T15:00:00.000Z",
+      dueDate: null,
+    });
+  });
+
+  it("keeps a timed item's length and stays inside the day", () => {
+    process.env.TZ = "UTC";
+    expect(scheduleAtMinute(base, "2026-10-09", 30).endAt).toBe("2026-10-09T01:30:00.000Z");
+    expect(scheduleAtMinute(inbox, "2026-10-09", -40).startAt).toBe("2026-10-09T00:00:00.000Z");
+    expect(scheduleAtMinute(inbox, "2026-10-09", 24 * 60 + 90).startAt).toBe(
+      "2026-10-09T23:45:00.000Z",
+    );
   });
 });

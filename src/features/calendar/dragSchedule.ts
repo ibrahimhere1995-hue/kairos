@@ -1,5 +1,11 @@
 import { addDays, addMinutes, differenceInCalendarDays, parseISO } from "date-fns";
-import { POINT_TASK_MINUTES, SNAP_MINUTES, snapMinutes } from "@/features/calendar/layout";
+import { localMidnight } from "@/features/calendar/calendarView";
+import {
+  MINUTES_PER_DAY,
+  POINT_TASK_MINUTES,
+  SNAP_MINUTES,
+  snapMinutes,
+} from "@/features/calendar/layout";
 import type { DragData } from "@/features/calendar/week/dragData";
 import { toLocalDateString } from "@/lib/dates/dayContext";
 import type { Item } from "@/types/Item";
@@ -42,4 +48,24 @@ export function scheduleAfterDrag(
   const finalEnd = newEnd < earliest ? earliest : newEnd;
   if (end && finalEnd.getTime() === end.getTime()) return null;
   return { startAt: item.startAt, endAt: finalEnd.toISOString(), dueDate: null };
+}
+
+/**
+ * Time-blocking (PRD R12): a task without a time dropped on the hour grid of `date` at
+ * `minuteOfDay` (minutes after local midnight). It gets a block starting at the snapped time:
+ * its own length if it had one, otherwise half an hour (resize it afterwards).
+ */
+export function scheduleAtMinute(item: Item, date: string, minuteOfDay: number): ScheduleInput {
+  const latestStart = MINUTES_PER_DAY - SNAP_MINUTES;
+  const minutes = Math.min(latestStart, Math.max(0, snapMinutes(minuteOfDay)));
+  const start = addMinutes(localMidnight(date), minutes);
+  const length =
+    item.startAt && item.endAt
+      ? (parseISO(item.endAt).getTime() - parseISO(item.startAt).getTime()) / 60_000
+      : POINT_TASK_MINUTES;
+  return {
+    startAt: start.toISOString(),
+    endAt: addMinutes(start, length).toISOString(),
+    dueDate: null,
+  };
 }

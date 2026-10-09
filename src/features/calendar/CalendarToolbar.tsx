@@ -1,4 +1,5 @@
 import { CalendarDays, CalendarRange, ChevronLeft, ChevronRight, List, Square } from "lucide-react";
+import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import type { CalendarView } from "@/features/calendar/calendarView";
 import { Button } from "@/components/ui/Button";
@@ -11,12 +12,15 @@ export function CalendarToolbar({
   onViewChange,
   onStep,
   onToday,
+  extra,
 }: {
   title: string;
   view: CalendarView;
   onViewChange: (view: CalendarView) => void;
   onStep: (direction: 1 | -1) => void;
   onToday: () => void;
+  /** Extra controls before the view switcher (e.g. the "To schedule" toggle). */
+  extra?: ReactNode;
 }) {
   const { t } = useTranslation();
 
@@ -41,6 +45,7 @@ export function CalendarToolbar({
           onClick={() => onStep(1)}
         />
       </div>
+      {extra}
       <SegmentedControl
         name="calendar-view"
         legend={t("calendar.viewLabel")}

@@ -79,6 +79,7 @@ export function DayColumn({
   return (
     <div
       ref={setNodeRef}
+      data-drop-date={date}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}

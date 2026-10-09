@@ -39,11 +39,13 @@ const SERVER_FIELDS: Record<string, FieldPath<ItemFormValues>> = {
 export function ItemEditorForm({
   detail,
   prefill = null,
+  focusSteps = false,
   today,
   onClose,
 }: {
   detail: ItemDetail | null;
   prefill?: Partial<ItemFormValues> | null;
+  focusSteps?: boolean;
   today: string;
   onClose: () => void;
 }) {
@@ -140,7 +142,7 @@ export function ItemEditorForm({
               <FieldError message={t(dateError ?? durationError ?? "")} />
             )}
 
-            <ChecklistEditor />
+            <ChecklistEditor autoFocus={focusSteps} />
 
             <details className="group flex flex-col gap-2" open={Boolean(detail?.item.notes)}>
               <summary className="cursor-pointer text-small text-text-muted">
