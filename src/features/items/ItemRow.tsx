@@ -75,7 +75,7 @@ export function ItemRow({
         <span className={cn("max-w-full truncate text-body", done && "strike text-text-muted")}>
           {item.title}
         </span>
-        {(when ?? area ?? repeats) && (
+        {(when ?? area ?? item.location ?? repeats) && (
           <span className="inline-flex max-w-full items-center gap-1 truncate text-small text-text-muted">
             {repeats && (
               <>
@@ -83,7 +83,7 @@ export function ItemRow({
                 <span className="sr-only">{t("repeat.repeats")}</span>
               </>
             )}
-            {[when, area?.name].filter(Boolean).join(" · ")}
+            {[when, area?.name, item.location].filter(Boolean).join(" · ")}
           </span>
         )}
       </button>

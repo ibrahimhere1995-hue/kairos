@@ -56,8 +56,8 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 - [x] **P2-T08 🎨 Onboarding** — 3-screen welcome (name, theme, areas), sample teaching tasks, skippable.
 - [x] **P2-T09 🎨 Search & command palette** — `Ctrl/⌘+K`, FTS results grouped by status, commands (new task, go to date, switch theme).
 - [x] **P2-T10 🎨 Area management** — add/rename/recolour/reorder/archive areas.
-- [ ] **P2-T11 🎨 Attachments & location** on items (stored in app-data, open with OS).
-- [ ] **P2-T12 ⚙️ Import/Export** — `.ics` import, JSON + `.ics` export.
+- [x] **P2-T11 🎨 Attachments & location** on items (stored in app-data, open with OS).
+- [x] **P2-T12 ⚙️ Import/Export** — `.ics` import, JSON + `.ics` export.
 - [ ] **P2-T13 🧪 Accessibility pass** — keyboard audit, screen reader labels (NVDA + VoiceOver), automated contrast tests, text-size and reduce-motion checks.
 - [ ] **P2-T14 🎨 Visual polish** — apply notes from reviewing Sunsama/Fantastical; micro-interactions; skeletons; consistent empty states.
 

@@ -2,6 +2,7 @@
 //! into `src/types/` by ts-rs when `cargo test` runs (field names are camelCase).
 
 pub mod area;
+pub mod attachment;
 pub mod backup;
 pub mod checklist;
 pub mod dashboard;

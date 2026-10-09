@@ -142,6 +142,11 @@ pub fn purge_deleted(conn: &Connection, cutoff: Option<&str>) -> rusqlite::Resul
         &format!("DELETE FROM reminders WHERE item_id IN ({doomed})"),
         [cutoff],
     )?;
+    // The attachment files stay on disk (backups and restores may still need them).
+    conn.execute(
+        &format!("DELETE FROM attachments WHERE item_id IN ({doomed})"),
+        [cutoff],
+    )?;
     conn.execute(
         &format!(
             "UPDATE items SET recurrence_parent_id = NULL WHERE recurrence_parent_id IN ({doomed})"

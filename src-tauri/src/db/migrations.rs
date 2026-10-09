@@ -10,6 +10,7 @@ use crate::error::AppResult;
 const MIGRATION_LIST: &[M<'static>] = &[
     M::up(include_str!("migrations/0001_initial.sql")),
     M::up(include_str!("migrations/0002_checklist_search.sql")),
+    M::up(include_str!("migrations/0003_attachments.sql")),
 ];
 
 pub const MIGRATIONS: Migrations<'static> = Migrations::from_slice(MIGRATION_LIST);
@@ -62,6 +63,7 @@ mod tests {
             "backup_log",
             "items_fts",
             "checklist_fts",
+            "attachments",
         ] {
             let exists: bool = conn
                 .query_row(
@@ -159,6 +161,7 @@ mod tests {
         let future = [
             M::up(include_str!("migrations/0001_initial.sql")),
             M::up(include_str!("migrations/0002_checklist_search.sql")),
+            M::up(include_str!("migrations/0003_attachments.sql")),
             M::up("ALTER TABLE areas ADD COLUMN future_column TEXT;"),
         ];
         let dir = crate::db::test_support::scratch_path("mig");

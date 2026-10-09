@@ -86,6 +86,9 @@ Every library, crate or tool added after the original plan is listed here **in t
 | `tauri-plugin-autostart` (desktop) | 2.7 | P2-T03 | Planned above: "Open Kairos when you sign in" (default on), starting hidden in the tray (`--hidden`). Debug builds never register themselves. |
 | Tauri `tray-icon` feature | 2 | P2-T03 | Planned above (Tauri tray API): tray menu, close-to-tray. |
 | `rrule` | 0.14 | P2-T06 | Planned above ("rrule"): RFC 5545 repeat rules on the Rust side (calendar expansion, reminders, My Day). Pure Rust, MIT/Apache. Approved 2026-10-09 over a hand-written parser so `.ics` import (P2-T12) works later. Pulls in `chrono-tz` (time-zone database, roughly +1 MB); Kairos itself expands in local wall-clock time and doesn't use time-zone names. |
+| `tauri-plugin-opener` (desktop) | 2.7 | P2-T11 | Official Tauri plugin: opens an attachment with the system's usual app and "Show in folder". Approved 2026-10-09. Called only from Rust commands, which only open files inside Kairos' attachments folder, so the frontend gets no opener permission. |
+| `icalendar` (feature `parser` only) | 0.17 | P2-T12 | Reads `.ics` files from other calendar apps (folded lines, escaping, parameters). Approved 2026-10-09. Export is written by Kairos itself (`services/ics.rs`). |
+| `chrono-tz` | 0.10 | P2-T12 | Converts imported times with a named zone (`TZID=Europe/London`). Same version `rrule` already brings in, so one copy. Approved 2026-10-09. |
 | `ts-rs` (**dev-dependency only**) | 12.0 | P1-T05 | Generates TypeScript types in `src/types/` from Rust structs when `cargo test` runs. Chosen over specta/tauri-specta because the Tauri 2 version of tauri-specta is only a release candidate (`2.0.0-rc`), which this doc forbids. Approved 2026-10-07. Config: `.cargo/config.toml` (`TS_RS_EXPORT_DIR=src/types`, `TS_RS_LARGE_INT=number`). Not compiled into the shipped app. |
 
 ## Decisions explained

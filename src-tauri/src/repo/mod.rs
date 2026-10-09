@@ -1,8 +1,10 @@
 //! Repositories: the only place SQL lives (PROJECT_RULES). Parameterised queries only.
 
 pub mod areas;
+pub mod attachments;
 pub mod backup_log;
 pub mod checklist;
+pub mod export;
 pub mod items;
 pub mod reminders;
 pub mod search;

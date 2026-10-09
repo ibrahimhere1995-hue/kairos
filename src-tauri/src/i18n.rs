@@ -75,6 +75,7 @@ mod tests {
             "onboarding.samples.tick",
             "onboarding.samples.capture",
             "onboarding.samples.open",
+            "portability.untitled",
             "tray.tooltip",
             "tray.open",
             "tray.quickAdd",

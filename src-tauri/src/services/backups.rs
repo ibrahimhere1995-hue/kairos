@@ -14,6 +14,7 @@ use crate::error::{AppError, AppResult};
 use crate::models::backup::{BackupInfo, BackupKind, BackupLocation, BackupSettings};
 use crate::paths::AppPaths;
 use crate::repo::{backup_log, settings};
+use crate::services::attachments;
 use crate::util::{new_id, now_utc};
 
 const FOLDER_KEY: &str = "backup.folder";
@@ -125,6 +126,7 @@ pub fn apply_retention(dir: &Path) {
         naming::LABEL_PRE_RESTORE,
         naming::LABEL_PRE_MIGRATION,
         naming::LABEL_PRE_PURGE,
+        naming::LABEL_PRE_IMPORT,
     ] {
         doomed.extend(retention::safety_to_delete(&as_pairs(label)));
     }
@@ -172,6 +174,12 @@ pub fn backup_now(db: &Db, paths: &AppPaths, label: &str) -> AppResult<BackupInf
             .err()
             .map(|_| "folder_copy_failed")
     });
+    // Attachment files go with the backups (copied once; they never change).
+    let attachments_error = std::iter::once(paths.backups_dir.as_path())
+        .chain(folder.as_deref())
+        .any(|dir| attachments::mirror_to(&paths.attachments_dir, dir).is_err())
+        .then_some("attachments_copy_failed");
+    let copy_error = copy_error.or(attachments_error);
     let size = std::fs::metadata(&path)
         .ok()
         .and_then(|m| i64::try_from(m.len()).ok());
@@ -247,6 +255,10 @@ pub fn restore(
     let source = backup::open_read_only(&source_path)?;
     Backup::new(&source, &mut live)?.run_to_completion(256, Duration::from_millis(0), None)?;
     migrations::migrate(&mut live, &paths.backups_dir)?;
+    // Bring back attachment files the restored data refers to, if this computer lost them.
+    let mut dirs = vec![paths.backups_dir.clone()];
+    dirs.extend(folder(&live)?);
+    attachments::restore_missing(&live, &paths.attachments_dir, &dirs)?;
     Ok(())
 }
 

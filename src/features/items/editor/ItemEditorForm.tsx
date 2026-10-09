@@ -7,6 +7,7 @@ import { AreaPill } from "@/features/items/editor/AreaPill";
 import { ChecklistEditor } from "@/features/items/editor/ChecklistEditor";
 import { DatePill } from "@/features/items/editor/DatePill";
 import { EditorFooter } from "@/features/items/editor/EditorFooter";
+import { MoreDetails } from "@/features/items/editor/MoreDetails";
 import { PriorityPill } from "@/features/items/editor/PriorityPill";
 import { RepeatPill } from "@/features/items/editor/RepeatPill";
 import { ReminderPill } from "@/features/items/editor/ReminderPill";
@@ -158,19 +159,10 @@ export function ItemEditorForm({
 
             <ChecklistEditor autoFocus={focusSteps} />
 
-            <details className="group flex flex-col gap-2" open={Boolean(detail?.item.notes)}>
-              <summary className="cursor-pointer text-small text-text-muted">
-                {t("editor.moreDetails")}
-              </summary>
-              <label className="mt-2 flex flex-col gap-1 text-small text-text-muted">
-                {t("editor.notes")}
-                <textarea
-                  rows={5}
-                  className="rounded-sm border border-border bg-surface-2 p-2 text-body text-text"
-                  {...register("notes")}
-                />
-              </label>
-            </details>
+            <MoreDetails
+              itemId={detail?.item.id ?? null}
+              startOpen={Boolean(detail?.item.notes ?? detail?.item.location)}
+            />
           </div>
 
           <EditorFooter

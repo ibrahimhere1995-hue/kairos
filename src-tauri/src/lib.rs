@@ -133,7 +133,10 @@ pub fn run() {
 
     let builder = tauri::Builder::default().plugin(tauri_plugin_dialog::init());
     #[cfg(desktop)]
-    let builder = builder.plugin(autostart::plugin());
+    let builder = builder
+        .plugin(autostart::plugin())
+        // Opens attachment files with the system's usual app (only from Rust commands).
+        .plugin(tauri_plugin_opener::init());
     // Windows notifications use tauri-winrt-notification directly (buttons); see notify.rs.
     #[cfg(not(windows))]
     let builder = builder.plugin(tauri_plugin_notification::init());
@@ -206,6 +209,14 @@ pub fn run() {
             commands::items::get_dashboard,
             commands::items::get_item_detail,
             commands::items::set_checklist,
+            commands::attachments::list_attachments,
+            commands::attachments::add_attachments,
+            commands::attachments::remove_attachment,
+            commands::attachments::open_attachment,
+            commands::attachments::reveal_attachment,
+            commands::data::export_json,
+            commands::data::export_ics,
+            commands::data::import_ics,
             commands::areas::list_areas,
             commands::areas::create_area,
             commands::areas::update_area,
