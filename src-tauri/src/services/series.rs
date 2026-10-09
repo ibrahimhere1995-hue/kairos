@@ -187,6 +187,25 @@ pub fn latest_missed<Tz: TimeZone>(
     Ok(missed)
 }
 
+/// How a series is shown on its own (e.g. a search result): its next occurrence from now,
+/// or its first one if it has ended.
+pub fn upcoming_or_first<Tz: TimeZone>(
+    conn: &Connection,
+    tz: &Tz,
+    series_item: &Item,
+    now: DateTime<Utc>,
+) -> AppResult<Item> {
+    let Some(series) = Series::load(conn, tz, series_item.clone())? else {
+        return Ok(series_item.clone());
+    };
+    let from = local(tz, now).max(series.start);
+    let next = series
+        .occurrences(tz, from, from + Duration::days(800))
+        .into_iter()
+        .next();
+    Ok(next.unwrap_or_else(|| rule::occurrence_item(tz, &series.item, series.start)))
+}
+
 /// The first occurrence of each series between two moments (inclusive), e.g. "This week".
 pub fn next_between<Tz: TimeZone>(
     conn: &Connection,

@@ -1,12 +1,37 @@
 import { $, browser, expect } from "@wdio/globals";
-import { byName, byText, click, goTo, quickAdd, section, waitForText } from "../helpers";
+import {
+  byName,
+  byText,
+  click,
+  goTo,
+  quickAdd,
+  section,
+  skipOnboarding,
+  waitForText,
+} from "../helpers";
 
 // PROJECT_RULES: critical paths have E2E tests — create task, complete + undo,
 // reschedule missed, backup + restore. One app session, fresh data folder.
 
 describe("Kairos critical paths", () => {
   before(async () => {
+    await skipOnboarding();
     await byName("Main").waitForDisplayed({ timeout: 60_000 }); // the sidebar
+  });
+
+  it("finds a task with the search palette (Ctrl+K)", async () => {
+    await quickAdd("Renew the passport next week");
+    await browser.keys(["Control", "k"]);
+    const input = $(`//*[@role="combobox"]`);
+    await input.waitForDisplayed();
+    await input.setValue("passport");
+    const result = $(`//*[@role="option"][.//*[normalize-space(text())="Renew the passport"]]`);
+    await result.waitForDisplayed();
+    await result.click();
+    // The editor opened on that task (its panel and title are both named "Edit item").
+    await $(`//button[normalize-space(.)="Save changes"]`).waitForDisplayed();
+    await browser.keys("Escape");
+    await $(`//button[normalize-space(.)="Save changes"]`).waitForDisplayed({ reverse: true });
   });
 
   it("creates a task with Quick Capture", async () => {

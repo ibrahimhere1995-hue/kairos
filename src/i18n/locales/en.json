@@ -40,7 +40,8 @@
     "letGo": "Let “{{title}}” go.",
     "movedToday_one": "Moved {{count}} item to today.",
     "movedToday_other": "Moved {{count}} items to today.",
-    "skippedOnce": "Skipped “{{title}}” this time."
+    "skippedOnce": "Skipped “{{title}}” this time.",
+    "samplesRemoved": "Sample tasks moved to the Trash."
   },
   "items": {
     "markDone": "Mark “{{title}}” as done",
@@ -99,7 +100,9 @@
     "archiveArea": "Archive {{name}}",
     "unarchiveArea": "Bring back {{name}}",
     "archive": "Archive",
-    "unarchive": "Bring back"
+    "unarchive": "Bring back",
+    "name": "Your name",
+    "nameHelp": "Used in the greeting on My Day. Leave it empty if you prefer."
   },
   "trash": {
     "title": "Trash",
@@ -236,7 +239,10 @@
     "doneToday": "Done today",
     "emptyDay": "A clear day. Perfect moment to plan something that matters.",
     "addFirst": "Add your first task",
-    "emptyFiltered": "Nothing in this area right now."
+    "emptyFiltered": "Nothing in this area right now.",
+    "goodMorningName": "Good morning, {{name}}.",
+    "goodAfternoonName": "Good afternoon, {{name}}.",
+    "goodEveningName": "Good evening, {{name}}."
   },
   "dates": {
     "today": "Today",
@@ -314,7 +320,6 @@
   },
   "topbar": {
     "search": "Search or type a command…",
-    "searchSoon": "Search is coming in a later update",
     "addTask": "Add task"
   },
   "pages": {
@@ -488,5 +493,72 @@
     "skip": "Skip this time",
     "doToday": "Do it today",
     "choicesFor": "Choices for “{{title}}”"
+  },
+  "onboarding": {
+    "title": "Welcome to Kairos",
+    "step": "Step {{current}} of {{total}}",
+    "welcomeTitle": "Welcome to Kairos",
+    "tagline": "The perfect moment to act.",
+    "welcomeBody": "A calm place for your tasks and events. Everything stays on this computer.",
+    "nameLabel": "What should Kairos call you?",
+    "namePlaceholder": "Your name (optional)",
+    "themeTitle": "How should Kairos look?",
+    "themeBody": "You can change this any time in Settings.",
+    "areasTitle": "Which parts of life do you plan?",
+    "areasBody": "Untick any you don't need. You can add, rename or bring them back later in Settings.",
+    "next": "Next",
+    "back": "Back",
+    "start": "Start planning",
+    "skip": "Skip setup",
+    "samples": {
+      "tick": "Tick me when you've read this ✓",
+      "capture": "Press Ctrl/⌘+Shift+Space to add a task from anywhere",
+      "open": "Open me, then tap a pill to set a time, a reminder or a repeat"
+    },
+    "samplesNote": "These are sample tasks to show you around.",
+    "removeSamples": "Remove sample tasks"
+  },
+  "palette": {
+    "title": "Search and commands",
+    "inputLabel": "Search tasks and events, or type a command",
+    "commands": "Commands",
+    "groups": {
+      "today": "Today",
+      "slipped": "Slipped",
+      "upcoming": "Upcoming",
+      "noDate": "No date",
+      "done": "Done",
+      "past": "Past"
+    },
+    "matchedIn": {
+      "title": "",
+      "notes": "Found in notes",
+      "step": "Found in a step",
+      "area": "In this area"
+    },
+    "searching": "Searching…",
+    "noResults": "Nothing found for “{{query}}”. Create it as a new task?",
+    "create": "Create",
+    "hint": "↑↓ to move · Enter to open · Esc to close",
+    "cmd": {
+      "newTask": "New task",
+      "goMyDay": "Go to My Day",
+      "goDay": "Go to calendar: day view",
+      "goWeek": "Go to calendar: week view",
+      "goMonth": "Go to calendar: month view",
+      "goAgenda": "Go to calendar: agenda",
+      "goInbox": "Go to Inbox",
+      "goTrash": "Go to Trash",
+      "goSettings": "Go to Settings",
+      "themeLight": "Switch to light theme",
+      "themeDark": "Switch to dark theme",
+      "themeSystem": "Match the system theme",
+      "goDate": "Show {{date}} in the calendar"
+    },
+    "keywords": {
+      "newTask": "add create capture task event",
+      "nav": "open show view",
+      "theme": "theme appearance mode colour color"
+    }
   }
 }

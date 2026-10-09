@@ -7,6 +7,7 @@ use crate::models::checklist::{ChecklistEntryInput, ChecklistItem, ItemDetail};
 use crate::models::dashboard::{Dashboard, DashboardQuery};
 use crate::models::inputs::{DateRange, ItemFilters, ItemInput, ScheduleInput};
 use crate::models::item::Item;
+use crate::services::search::{self, SearchHit};
 use crate::services::series::EditScope;
 use crate::services::{checklist, items};
 
@@ -123,4 +124,10 @@ pub fn unskip_item(app: AppHandle, db: State<'_, Db>, id: String) -> AppResult<I
 #[tauri::command]
 pub fn list_unscheduled(db: State<'_, Db>) -> AppResult<Vec<Item>> {
     with_conn(&db, |conn| items::unscheduled(conn))
+}
+
+/// Global search (Ctrl/⌘+K): titles, notes, steps, area names.
+#[tauri::command]
+pub fn search(db: State<'_, Db>, query: String) -> AppResult<Vec<SearchHit>> {
+    with_conn(&db, |conn| search::search(conn, &query))
 }

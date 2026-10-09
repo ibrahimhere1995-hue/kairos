@@ -262,7 +262,8 @@ Frontend sends image path → Rust `ai_extract_from_image` → reads key from ke
 | `reschedule_items(ids, schedule)` | Several items, one new moment, one transaction ("Move all to today", PRD R6) |
 | `skip_item`, `unskip_item` | "Let it go" (sets `skipped_at`; Undo) |
 | `list_unscheduled` | Open Inbox tasks (newest 200) for the calendar's "To schedule" list (time-blocking, PRD R12) |
-| `search(query)` | FTS search |
+| `search(query)` | Search (P2-T09): titles and notes (`items_fts`), checklist steps (`checklist_fts`, migration 0002) and area names; each word is a quoted prefix term (no FTS syntax from the user); Trash excluded; a series appears as its next occurrence; at most 50 hits. The frontend groups them by status. |
+| `get_onboarding`, `finish_onboarding`, `skip_onboarding`, `remove_sample_tasks` | First launch (P2-T08): name, theme, areas to keep (others archived); 3 sample tasks only into an empty planner, removable to the Trash in one step |
 | `get_settings`, `set_setting` | Settings |
 | `backup_now`, `list_backups`, `restore_backup`, `set_backup_folder` | Backups |
 | `export_json`, `export_ics`, `import_ics` | Portability |

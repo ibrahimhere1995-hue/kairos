@@ -7,6 +7,7 @@
 import { spawn, spawnSync, type ChildProcess } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import path from "node:path";
+import { browser } from "@wdio/globals";
 
 const root = path.resolve(import.meta.dirname, "../..");
 const targetDir = path.join(root, "src-tauri", "target-e2e");
@@ -60,6 +61,15 @@ export const config: WebdriverIO.Config = {
       },
     });
     await new Promise((resolve) => setTimeout(resolve, 1500)); // let the driver start listening
+  },
+
+  /** A failing test leaves a screenshot of the app window in .devdata/e2e/failures. */
+  async afterTest(test, _context, { passed }) {
+    if (passed) return;
+    const dir = path.join(root, ".devdata", "e2e", "failures");
+    mkdirSync(dir, { recursive: true });
+    const name = test.title.replace(/[^a-z0-9]+/gi, "-").slice(0, 60);
+    await browser.saveScreenshot(path.join(dir, `${name}.png`));
   },
 
   afterSession() {

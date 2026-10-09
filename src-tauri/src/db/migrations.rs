@@ -7,7 +7,10 @@ use crate::backup;
 use crate::error::AppResult;
 
 /// Ordered list of schema migrations. Append only; never edit one that has shipped.
-const MIGRATION_LIST: &[M<'static>] = &[M::up(include_str!("migrations/0001_initial.sql"))];
+const MIGRATION_LIST: &[M<'static>] = &[
+    M::up(include_str!("migrations/0001_initial.sql")),
+    M::up(include_str!("migrations/0002_checklist_search.sql")),
+];
 
 pub const MIGRATIONS: Migrations<'static> = Migrations::from_slice(MIGRATION_LIST);
 
@@ -58,6 +61,7 @@ mod tests {
             "settings",
             "backup_log",
             "items_fts",
+            "checklist_fts",
         ] {
             let exists: bool = conn
                 .query_row(
@@ -151,9 +155,10 @@ mod tests {
         )
         .unwrap();
 
-        // Simulate a future release that adds migration 0002.
+        // Simulate a future release that adds one more migration.
         let future = [
             M::up(include_str!("migrations/0001_initial.sql")),
+            M::up(include_str!("migrations/0002_checklist_search.sql")),
             M::up("ALTER TABLE areas ADD COLUMN future_column TEXT;"),
         ];
         let dir = crate::db::test_support::scratch_path("mig");

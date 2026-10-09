@@ -47,6 +47,8 @@ pub struct AppSettings {
     pub daily_summary_time: String,
     /// PRD R3: start Kairos (in the tray) when you sign in. On by default.
     pub launch_at_login: bool,
+    /// What Kairos calls you in the greeting ("Good morning, Zack."). Empty = no name.
+    pub name: String,
 }
 
 impl Default for AppSettings {
@@ -59,6 +61,7 @@ impl Default for AppSettings {
             daily_summary_enabled: true,
             daily_summary_time: "08:00".into(),
             launch_at_login: true,
+            name: String::new(),
         }
     }
 }

@@ -52,7 +52,17 @@ fn map_row(row: &Row) -> rusqlite::Result<Item> {
     })
 }
 
-fn query_items(
+/// `COLUMNS` qualified with a table alias, for joins (e.g. with `items_fts`, which also has
+/// `title` and `notes`).
+pub(crate) fn columns_of(alias: &str) -> String {
+    COLUMNS
+        .split(", ")
+        .map(|c| format!("{alias}.{}", c.trim()))
+        .collect::<Vec<_>>()
+        .join(", ")
+}
+
+pub(crate) fn query_items(
     conn: &Connection,
     sql: &str,
     params: &[(&str, &dyn rusqlite::ToSql)],

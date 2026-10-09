@@ -20,6 +20,14 @@ export async function goTo(page: "My Day" | "Calendar" | "Trash" | "Settings") {
   await click(page);
 }
 
+/** A fresh test profile starts with the welcome screens (P2-T08): skip them. */
+export async function skipOnboarding() {
+  const skip = $(`//button[normalize-space(.)="Skip setup"]`);
+  await skip.waitForDisplayed({ timeout: 60_000 });
+  await skip.click();
+  await skip.waitForDisplayed({ reverse: true });
+}
+
 /** Uses Quick Capture ("+ Add task"): type the line and press Enter. */
 export async function quickAdd(line: string) {
   await click("Add task");

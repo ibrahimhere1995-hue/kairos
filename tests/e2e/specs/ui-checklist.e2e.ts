@@ -1,7 +1,7 @@
 import path from "node:path";
 import { mkdirSync } from "node:fs";
 import { $, browser } from "@wdio/globals";
-import { byName, click, goTo, quickAdd } from "../helpers";
+import { byName, click, goTo, quickAdd, skipOnboarding } from "../helpers";
 
 // P1-T17 UI checklist evidence: every screen in light/dark, at default and extra-large text,
 // at the 960 px minimum width. Screenshots are of the app's own web view only (WebDriver),
@@ -24,6 +24,9 @@ async function shoot(name: string) {
 describe("UI checklist screenshots", () => {
   before(async () => {
     mkdirSync(outDir, { recursive: true });
+    await $(`//button[normalize-space(.)="Skip setup"]`).waitForDisplayed({ timeout: 60_000 });
+    await shoot("Onboarding");
+    await skipOnboarding();
     await byName("Main").waitForDisplayed({ timeout: 60_000 });
     await browser.setWindowSize(960, 760).catch(() => {
       // Some drivers can't resize; the app's own minimum width is 960 px anyway.
@@ -53,6 +56,20 @@ describe("UI checklist screenshots", () => {
         await $(`//button[normalize-space(.)="Discard"]`)
           .click()
           .catch(() => undefined);
+        await $(
+          `//button[normalize-space(.)="Save changes" or normalize-space(.)="Add task" and ancestor::form]`,
+        )
+          .waitForDisplayed({ reverse: true })
+          .catch(() => undefined);
+
+        // The search and command palette.
+        await browser.keys(["Control", "k"]);
+        const palette = $(`//*[@role="combobox"]`);
+        await palette.waitForDisplayed();
+        await palette.setValue("team");
+        await shoot(`${theme}-${size.replace(" ", "")}-Palette`);
+        await browser.keys("Escape");
+        await palette.waitForDisplayed({ reverse: true });
       });
     }
   }

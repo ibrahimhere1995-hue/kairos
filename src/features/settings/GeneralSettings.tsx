@@ -4,6 +4,7 @@ import { TEXT_SIZES } from "@/app/theme/textSize";
 import { useThemeStore } from "@/app/theme/themeStore";
 import { useAppSettings, useUpdateSettings } from "@/features/settings/api";
 import { SettingRow } from "@/features/settings/SettingRow";
+import { NameInput } from "@/features/settings/NameInput";
 import { ReminderTimeInput } from "@/features/settings/ReminderTimeInput";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { Switch } from "@/components/ui/Switch";
@@ -25,6 +26,14 @@ export function GeneralSettings() {
         <h2 id="appearance-heading" className="text-h2">
           {t("settings.appearance")}
         </h2>
+        <SettingRow label={t("settings.name")} description={t("settings.nameHelp")}>
+          <NameInput
+            key={settings.name}
+            saved={settings.name}
+            label={t("settings.name")}
+            onSave={(name) => update.mutate({ name })}
+          />
+        </SettingRow>
         <SettingRow label={t("theme.label")} description={t("settings.themeHelp")}>
           <SegmentedControl<ThemePreference>
             name="settings-theme"
