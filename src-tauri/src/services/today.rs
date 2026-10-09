@@ -56,8 +56,8 @@ pub fn overview<Tz: TimeZone>(
     open.extend(series::in_range(
         conn, tz, start_utc, end_utc, today, tomorrow,
     )?);
-    let slipped = items::overdue_tasks(conn, &day_start, &today_text)?.len()
-        + series::latest_missed(conn, tz, start_utc)?.len();
+    // Missed routines (repeating tasks) have their own calm card and aren't counted here.
+    let slipped = items::overdue_tasks(conn, &day_start, &today_text)?.len();
 
     let upcoming = open
         .iter()

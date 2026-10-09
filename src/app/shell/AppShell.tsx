@@ -5,6 +5,8 @@ import { StartupNoticeBanner } from "@/app/shell/StartupNoticeBanner";
 import { TopBar } from "@/app/shell/TopBar";
 import { QuickCaptureDialog } from "@/features/capture/QuickCaptureDialog";
 import { ItemEditor } from "@/features/items/editor/ItemEditor";
+import { OnboardingDialog } from "@/features/onboarding/OnboardingDialog";
+import { CommandPalette } from "@/features/search/CommandPalette";
 
 const MAIN_ID = "main-content";
 
@@ -33,6 +35,8 @@ export function AppShell() {
       </div>
       <ItemEditor />
       <QuickCaptureDialog />
+      <OnboardingDialog />
+      <CommandPalette />
     </div>
   );
 }

@@ -230,7 +230,7 @@ CREATE VIRTUAL TABLE items_fts USING fts5(title, notes, content='items', content
 - Acting on one occurrence (done, skip, move, edit "only this one", delete "only this one") first **stores it as an exception** row: `recurrence_parent_id` = series, `original_start_at` = key, a copy of the series' fields and reminders. A stored key hides the computed one. Every item command accepts `series@key` ids.
 - **"This and following"** (`update_item`/`delete_item` with `scope: "following"`): from the first occurrence it changes or deletes the whole series; otherwise the series gets `UNTIL` just before the occurrence and (for edits) a new series starts there, taking over the later stored occurrences. When timing changes, unfinished stored occurrences are dropped (soft-deleted); finished ones stay as history.
 - Steps (checklist) belong to the series and are shared by its occurrences.
-- **Slipping (decision 2026-10-09):** only the most recent past occurrence of a repeating task can slip (and only if after the series was created); earlier days' computed occurrences show as *past*. "This week" on My Day lists only each series' next occurrence.
+- **Slipping (decisions 2026-10-09):** only the most recent past occurrence of a repeating task counts as missed (and only if after the series was created); earlier days' computed occurrences show as *past*. `get_dashboard` returns it in `overdue`; the frontend puts computed occurrences there into the **"Routines you missed"** card instead of Slipped, and they are not counted as slipped in the summary. "This week" lists only each series' next occurrence.
 - Reminders sit on the series and always point at its next not-yet-handled occurrence; after firing they move on.
 - Deleting a whole series soft-deletes its stored occurrences with the same timestamp; restoring the series restores them. The Trash lists the series once.
 
@@ -262,7 +262,8 @@ Frontend sends image path → Rust `ai_extract_from_image` → reads key from ke
 | `reschedule_items(ids, schedule)` | Several items, one new moment, one transaction ("Move all to today", PRD R6) |
 | `skip_item`, `unskip_item` | "Let it go" (sets `skipped_at`; Undo) |
 | `list_unscheduled` | Open Inbox tasks (newest 200) for the calendar's "To schedule" list (time-blocking, PRD R12) |
-| `search(query)` | FTS search |
+| `search(query)` | Search (P2-T09): titles and notes (`items_fts`), checklist steps (`checklist_fts`, migration 0002) and area names; each word is a quoted prefix term (no FTS syntax from the user); Trash excluded; a series appears as its next occurrence; at most 50 hits. The frontend groups them by status. |
+| `get_onboarding`, `finish_onboarding`, `skip_onboarding`, `remove_sample_tasks` | First launch (P2-T08): name, theme, areas to keep (others archived); 3 sample tasks only into an empty planner, removable to the Trash in one step |
 | `get_settings`, `set_setting` | Settings |
 | `backup_now`, `list_backups`, `restore_backup`, `set_backup_folder` | Backups |
 | `export_json`, `export_ics`, `import_ics` | Portability |

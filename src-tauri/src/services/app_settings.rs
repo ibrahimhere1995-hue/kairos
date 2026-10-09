@@ -16,6 +16,8 @@ const REMINDER_TIME: &str = "reminders.defaultTime";
 const SUMMARY_ENABLED: &str = "reminders.dailySummary";
 const SUMMARY_TIME: &str = "reminders.dailySummaryTime";
 const LAUNCH_AT_LOGIN: &str = "system.launchAtLogin";
+const NAME: &str = "profile.name";
+pub const NAME_MAX_CHARS: usize = 40;
 /// Internal: the local date the last daily summary was sent for.
 const SUMMARY_LAST_SENT: &str = "reminders.dailySummaryLastSent";
 /// Internal: whether the "still running in the tray" hint has been shown.
@@ -64,6 +66,7 @@ pub fn get(conn: &Connection) -> AppResult<AppSettings> {
         daily_summary_enabled: read(conn, SUMMARY_ENABLED, defaults.daily_summary_enabled)?,
         daily_summary_time: read_time(conn, SUMMARY_TIME, defaults.daily_summary_time)?,
         launch_at_login: read(conn, LAUNCH_AT_LOGIN, defaults.launch_at_login)?,
+        name: read(conn, NAME, defaults.name)?,
     })
 }
 
@@ -75,7 +78,9 @@ pub fn update(conn: &mut Connection, next: &AppSettings) -> AppResult<AppSetting
     if !is_valid_time(&next.daily_summary_time) {
         return Err(AppError::invalid("dailySummaryTime", "invalidDateTime"));
     }
+    let name = valid_name(&next.name)?;
     let tx = conn.transaction()?;
+    write(&tx, NAME, &name)?;
     write(&tx, THEME, &next.theme)?;
     write(&tx, TEXT_SIZE, &next.text_size)?;
     write(&tx, WEEK_START, &next.week_starts_on)?;
@@ -85,6 +90,15 @@ pub fn update(conn: &mut Connection, next: &AppSettings) -> AppResult<AppSetting
     write(&tx, LAUNCH_AT_LOGIN, &next.launch_at_login)?;
     tx.commit()?;
     get(conn)
+}
+
+/// Trimmed; at most `NAME_MAX_CHARS` characters.
+pub fn valid_name(name: &str) -> AppResult<String> {
+    let name = name.trim();
+    if name.chars().count() > NAME_MAX_CHARS {
+        return Err(AppError::invalid("name", "tooLong"));
+    }
+    Ok(name.to_owned())
 }
 
 pub fn summary_last_sent(conn: &Connection) -> AppResult<Option<NaiveDate>> {
@@ -137,6 +151,7 @@ mod tests {
             daily_summary_enabled: false,
             daily_summary_time: "06:45".into(),
             launch_at_login: false,
+            name: "Zack".into(),
         };
         assert_eq!(update(&mut c, &next).unwrap(), next);
         assert_eq!(get(&c).unwrap(), next);

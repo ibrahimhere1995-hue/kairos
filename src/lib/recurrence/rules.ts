@@ -137,3 +137,15 @@ export function phraseToRule(phrase: string): string | null {
   const code = WEEKDAY_CODES[unit.slice(0, 3)];
   return code ? `FREQ=WEEKLY${interval};BYDAY=${code}` : null;
 }
+
+/**
+ * True when a rule comes round more than once a week (daily, weekdays, several weekdays):
+ * a missed one isn't worth moving, because the next one is about to come.
+ */
+export function repeatsOftenerThanWeekly(rule: string | null): boolean {
+  if (!rule) return false;
+  const upper = rule.toUpperCase();
+  if (/(?:^|;)FREQ=DAILY/.test(upper)) return true;
+  const byDay = /(?:^|;)BYDAY=([^;]+)/.exec(upper)?.[1];
+  return /(?:^|;)FREQ=WEEKLY/.test(upper) && (byDay?.split(",").length ?? 1) > 1;
+}

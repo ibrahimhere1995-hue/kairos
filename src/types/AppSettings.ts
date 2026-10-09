@@ -22,4 +22,8 @@ dailySummaryTime: string,
 /**
  * PRD R3: start Kairos (in the tray) when you sign in. On by default.
  */
-launchAtLogin: boolean, };
+launchAtLogin: boolean, 
+/**
+ * What Kairos calls you in the greeting ("Good morning, Zack."). Empty = no name.
+ */
+name: string, };

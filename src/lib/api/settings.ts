@@ -15,4 +15,5 @@ export const DEFAULT_SETTINGS: AppSettings = {
   dailySummaryEnabled: true,
   dailySummaryTime: "08:00",
   launchAtLogin: true,
+  name: "",
 };

@@ -73,7 +73,7 @@ Implemented in `src/lib/status/status.ts` (P1-T06). "Today" always means the use
 4. **Date-only** item: due today → `dueToday`; due after today → `upcoming`; due before today: task → `missed`, event → `past`.
 5. No date → lives in **Inbox** (status `unscheduled`).
 
-**Repeating tasks:** only the most recent past occurrence can be missed ("Slipped"); earlier occurrences are simply past, so a skipped daily habit never floods the Slipped card. *(Decision 2026-10-09.)*
+**Repeating tasks (routines):** only the most recent past occurrence counts as missed, and it appears in its own calm **"Routines you missed"** card (Done already / Skip this time, plus "Do it today" for weekly or rarer routines), not in the Slipped card: the next one is already coming. Earlier occurrences are simply past. *(Decisions 2026-10-09.)*
 
 **Only tasks can be missed.** An event whose time has passed is `past`: shown muted, never "Slipped", never in the missed-items card. *(Decision 2026-10-07.)*
 

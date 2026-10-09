@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { SearchPlaceholder } from "@/app/shell/SearchPlaceholder";
+import { SearchButton } from "@/app/shell/SearchButton";
 import { ThemeToggle } from "@/app/theme/ThemeToggle";
 import { Button } from "@/components/ui/Button";
 import { useCaptureStore } from "@/features/capture/captureStore";
@@ -14,7 +14,7 @@ export function TopBar() {
       <span className="w-(--sidebar-width) shrink-0 pl-2 font-display text-h1 text-text">
         {t("app.name")}
       </span>
-      <SearchPlaceholder />
+      <SearchButton />
       <div className="ml-auto flex shrink-0 items-center gap-2">
         <Button size="lg" onClick={openCapture} aria-keyshortcuts="Control+Shift+Space">
           <Plus aria-hidden="true" />

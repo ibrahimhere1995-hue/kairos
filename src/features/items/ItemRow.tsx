@@ -33,8 +33,10 @@ export function ItemRow({
   const complete = useCompleteItem();
   const uncomplete = useUncompleteItem();
   // Show the tick immediately; the list re-sorts once the animation has played.
-  const [optimisticDone, setOptimisticDone] = useState<boolean | null>(null);
-  const done = optimisticDone ?? item.completedAt !== null;
+  // The tick shows at once, but only until fresh data for this item arrives (e.g. after Undo):
+  // it is tied to the version of the item it was made on.
+  const [optimistic, setOptimistic] = useState<{ done: boolean; version: string } | null>(null);
+  const done = optimistic?.version === item.updatedAt ? optimistic.done : item.completedAt !== null;
   const when = itemWhen(item, today, t);
   const repeats = item.rrule !== null || item.recurrenceParentId !== null;
 
@@ -55,9 +57,9 @@ export function ItemRow({
           checked={done}
           label={t(done ? "items.markNotDone" : "items.markDone", { title: item.title })}
           onChange={(next) => {
-            setOptimisticDone(next);
+            setOptimistic({ done: next, version: item.updatedAt });
             const action = next ? complete : uncomplete;
-            action.mutate(item, { onError: () => setOptimisticDone(null) });
+            action.mutate(item, { onError: () => setOptimistic(null) });
           }}
         />
       ) : (

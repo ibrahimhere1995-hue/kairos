@@ -4,6 +4,7 @@ pub mod app;
 pub mod areas;
 pub mod backups;
 pub mod items;
+pub mod onboarding;
 pub mod settings;
 pub mod trash;
 

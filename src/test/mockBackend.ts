@@ -42,6 +42,8 @@ export function mockBackend(overrides: Record<string, Handler> = {}): Call[] {
     list_unscheduled: () => [],
     get_settings: () => ({ ...DEFAULT_SETTINGS }),
     main_window_ready: () => null,
+    get_onboarding: () => ({ needed: false, samplesLeft: 0 }),
+    search: () => [],
     list_backups: () => [],
     get_backup_settings: () => ({ folder: null, lastBackupAt: null, lastFailureAt: null }),
   };

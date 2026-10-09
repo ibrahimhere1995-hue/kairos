@@ -97,10 +97,18 @@ describe("My Day", () => {
   });
 
   it("completes a task with one click and offers Undo", async () => {
+    let day = fullDay;
     calls = mockBackend({
-      get_dashboard: () => fullDay,
+      get_dashboard: () => day,
       complete_item: () => ({ ...callBank, completedAt: new Date().toISOString() }),
-      uncomplete_item: () => callBank,
+      uncomplete_item: () => {
+        // Saved again (new version), still in Today: the row must show it as not done.
+        day = {
+          ...fullDay,
+          today: [meeting, { ...callBank, updatedAt: new Date().toISOString() }],
+        };
+        return callBank;
+      },
     });
     const user = userEvent.setup();
     renderApp();
@@ -112,6 +120,12 @@ describe("My Day", () => {
 
     await user.click(await screen.findByRole("button", { name: "Undo" }));
     await waitFor(() => expect(callsTo("uncomplete_item")[0]?.args).toEqual({ id: callBank.id }));
+    await waitFor(() =>
+      expect(screen.getByRole("checkbox", { name: "Mark “Call bank” as done" })).toHaveAttribute(
+        "aria-checked",
+        "false",
+      ),
+    );
   });
 
   it("filters by life area with one click", async () => {

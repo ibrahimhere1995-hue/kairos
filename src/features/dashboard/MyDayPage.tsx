@@ -7,11 +7,13 @@ import { weeklyBalance } from "@/features/dashboard/balance";
 import { buildDashboardQuery, currentWeekRange } from "@/features/dashboard/dashboardQuery";
 import { DashboardSection } from "@/features/dashboard/DashboardSection";
 import { Greeting } from "@/features/dashboard/Greeting";
+import { RoutinesCard } from "@/features/dashboard/RoutinesCard";
 import { SlippedCard } from "@/features/dashboard/SlippedCard";
 import { groupDashboard, isEmpty, summarize } from "@/features/dashboard/groupDashboard";
 import { useNow } from "@/features/dashboard/useNow";
 import { useAreas, useDashboard, useItemsInRange } from "@/features/items/api";
 import { useEditorStore } from "@/features/items/editorStore";
+import { SamplesNote } from "@/features/onboarding/SamplesNote";
 import { useWeekStartsOn } from "@/features/settings/api";
 import { EmptyState } from "@/components/EmptyState";
 import { Button } from "@/components/ui/Button";
@@ -59,6 +61,7 @@ export function MyDayPage() {
   return (
     <div className="flex flex-col gap-8">
       <Greeting now={now} summary={summarize(groupDashboard(dashboard.data, ctx))} />
+      <SamplesNote />
 
       {allEmpty ? (
         <EmptyState
@@ -87,6 +90,7 @@ export function MyDayPage() {
           />
           {/* DESIGN_SYSTEM §6: the slipped card comes right after Now. */}
           <SlippedCard entries={sections.slipped} areas={areas} today={ctx.today} />
+          <RoutinesCard entries={sections.routines} areas={areas} today={ctx.today} />
           <DashboardSection
             title={t("myDay.today")}
             icon={Sun}

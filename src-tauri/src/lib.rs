@@ -201,6 +201,7 @@ pub fn run() {
             commands::items::skip_item,
             commands::items::unskip_item,
             commands::items::list_unscheduled,
+            commands::items::search,
             commands::items::list_items,
             commands::items::get_dashboard,
             commands::items::get_item_detail,
@@ -218,6 +219,10 @@ pub fn run() {
             commands::backups::get_backup_settings,
             commands::backups::set_backup_folder,
             commands::backups::take_startup_notice,
+            commands::onboarding::get_onboarding,
+            commands::onboarding::finish_onboarding,
+            commands::onboarding::skip_onboarding,
+            commands::onboarding::remove_sample_tasks,
             commands::settings::get_settings,
             commands::settings::update_settings,
         ])
