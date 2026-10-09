@@ -72,8 +72,8 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 - [x] **P3-T02 🗄🎨 Habits & streaks** — habit CRUD, daily ticks, streak, heatmap, gentle "streak paused" copy.
 - [x] **P3-T03 🗄🎨 Goals → milestones → tasks** with progress.
 - [x] **P3-T04 🗄🎨 Templates** — save selection as template, insert relative to a date.
-- [ ] **P3-T05 🎨 Focus mode** — timer, full-screen calm view, notification mute, focus logs.
-- [ ] **P3-T06 🎨 Weekly review** — done/slipped, time per area, balance insights.
+- [x] **P3-T05 🎨 Focus mode** — timer, full-screen calm view, notification mute, focus logs.
+- [x] **P3-T06 🎨 Weekly review** — done/slipped, time per area, balance insights. *(Review day setting, Sunday by default; My Day shows an invitation on that day.)*
 - [ ] **P3-T07 🎨 Feedback loop** — "Suggest a feature" button, wishlist board, behaviour-based suggestions.
 - [ ] **P3-T08 ⚙️ AI foundation** — `AiProvider` trait, Gemini provider, keychain key storage, consent screen, Settings › Smart features, error handling and timeouts.
 - [ ] **P3-T09 ⚙️🎨 A1 Screenshot/image → task** (drag, paste, pick) with confirm form.

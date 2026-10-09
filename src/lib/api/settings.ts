@@ -16,4 +16,5 @@ export const DEFAULT_SETTINGS: AppSettings = {
   dailySummaryTime: "08:00",
   launchAtLogin: true,
   name: "",
+  reviewDay: "sunday",
 };

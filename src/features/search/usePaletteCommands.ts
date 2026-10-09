@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { useThemeStore } from "@/app/theme/themeStore";
 import { useCaptureStore } from "@/features/capture/captureStore";
+import { useFocusStore } from "@/features/focus/focusStore";
 import { matchCommands, type PaletteCommand } from "@/features/search/paletteEntries";
 import { toLocalDateString } from "@/lib/dates/dayContext";
 
@@ -17,6 +18,7 @@ export function usePaletteCommands(query: string): PaletteCommand[] {
   const navigate = useNavigate();
   const openCapture = useCaptureStore((s) => s.openCapture);
   const setPreference = useThemeStore((s) => s.setPreference);
+  const openFocus = useFocusStore((s) => s.openFocus);
 
   const all = useMemo<PaletteCommand[]>(() => {
     const nav = t("palette.keywords.nav");
@@ -67,6 +69,18 @@ export function usePaletteCommands(query: string): PaletteCommand[] {
         keywords: `${nav} streak routine`,
         run: go("/habits"),
       },
+      {
+        id: "start-focus",
+        label: t("palette.cmd.startFocus"),
+        keywords: "pomodoro timer deep work concentrate",
+        run: () => openFocus(),
+      },
+      {
+        id: "go-review",
+        label: t("palette.cmd.goReview"),
+        keywords: `${nav} weekly week reflect`,
+        run: go("/review"),
+      },
       { id: "go-goals", label: t("palette.cmd.goGoals"), keywords: nav, run: go("/goals") },
       {
         id: "go-templates",
@@ -105,7 +119,7 @@ export function usePaletteCommands(query: string): PaletteCommand[] {
         run: () => setPreference("system"),
       },
     ];
-  }, [t, navigate, openCapture, setPreference]);
+  }, [t, navigate, openCapture, setPreference, openFocus]);
 
   return useMemo(() => {
     const matched = matchCommands(all, query);

@@ -65,6 +65,7 @@ describe("Accessibility (axe-core)", () => {
         "Habits",
         "Goals",
         "Templates",
+        "Weekly review",
         "Trash",
         "Settings",
       ]) {
@@ -95,6 +96,12 @@ describe("Accessibility (axe-core)", () => {
       await scan(`${theme} · Search palette`);
       await browser.keys("Escape");
       await palette.waitForDisplayed({ reverse: true });
+
+      await click("Focus mode");
+      await (await byName("Start focusing")).waitForDisplayed();
+      await scan(`${theme} · Focus mode`);
+      await browser.keys("Escape");
+      await (await byName("Start focusing")).waitForDisplayed({ reverse: true });
     });
   }
 

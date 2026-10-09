@@ -147,10 +147,17 @@ pub fn run() {
         .setup(|app| {
             let data_dir = paths::data_dir(app.handle())?;
             let (db, notice) = startup::open_database(&data_dir)?;
+            // Focus sessions left open by a closed app count up to their planned length.
+            if let Err(error) = commands::with_conn(&db, |conn| {
+                services::focus::close_stale(conn, chrono::Utc::now())
+            }) {
+                eprintln!("Focus log tidy-up failed: {error}");
+            }
             app.manage(db);
             app.manage(AppPaths::new(data_dir));
             app.manage(StartupNoticeState(Mutex::new(notice)));
             app.manage(StartHidden::from_args());
+            app.manage(commands::focus::FocusMute::default());
 
             #[cfg(desktop)]
             {
@@ -239,6 +246,10 @@ pub fn run() {
             commands::goals_templates::delete_template,
             commands::goals_templates::apply_template,
             commands::goals_templates::delete_items,
+            commands::focus::set_focus_mode,
+            commands::focus::start_focus,
+            commands::focus::stop_focus,
+            commands::focus::focus_totals,
             commands::data::export_json,
             commands::data::export_ics,
             commands::data::import_ics,

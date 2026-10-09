@@ -13,6 +13,7 @@ import { groupDashboard, isEmpty, summarize } from "@/features/dashboard/groupDa
 import { useNow } from "@/features/dashboard/useNow";
 import { useAreas, useDashboard, useItemsInRange } from "@/features/items/api";
 import { useEditorStore } from "@/features/items/editorStore";
+import { ReviewNudge } from "@/features/review/ReviewNudge";
 import { SamplesNote } from "@/features/onboarding/SamplesNote";
 import { useWeekStartsOn } from "@/features/settings/api";
 import { EmptyState } from "@/components/EmptyState";
@@ -62,6 +63,7 @@ export function MyDayPage() {
     <div className="flex flex-col gap-8">
       <Greeting now={now} summary={summarize(groupDashboard(dashboard.data, ctx))} />
       <SamplesNote />
+      <ReviewNudge now={now} />
 
       {allEmpty ? (
         <EmptyState

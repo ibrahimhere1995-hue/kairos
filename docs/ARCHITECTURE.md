@@ -174,7 +174,7 @@ CREATE TABLE templates (
 CREATE TABLE focus_sessions (
   id TEXT PRIMARY KEY, item_id TEXT REFERENCES items(id),
   started_at TEXT NOT NULL, ended_at TEXT, planned_minutes INTEGER NOT NULL,
-  created_at TEXT NOT NULL
+  created_at TEXT NOT NULL, updated_at TEXT NOT NULL, deleted_at TEXT  -- 0006 adds the standard columns
 );
 
 CREATE TABLE feedback (
@@ -274,6 +274,7 @@ Frontend sends image path → Rust `ai_extract_from_image` → reads key from ke
 | `list_habits(today)`, `create_habit`, `update_habit`, `delete_habit(id, deleted)`, `set_habit_done(id, date, today, done)` | Habits (P3-T02): `daily` or `weekly:N`; streaks in `services/habit_logic.rs` (today/this week in progress never breaks a streak; a gap pauses it). |
 | `list_goals`, `create_goal`, `update_goal`, `achieve_goal`, `delete_goal(id, deleted)`, `add_milestone`, `rename_milestone`, `delete_milestone(id, deleted)` | Goals (P3-T03). Tasks link to a milestone via `ItemInput.milestoneId` (validated; omitted = none). Progress = done / all linked tasks (not trashed, skipped or repeating series). |
 | `list_templates`, `create_template(name, itemIds)`, `delete_template(id, deleted)`, `apply_template(id, startDate)`, `delete_items(ids)` | Templates (P3-T04, migration 0005). Payload: entries with `dayOffset` from the earliest item, local `time`, `durationMinutes`, steps. Insert creates them from the chosen day (local wall-clock); Undo = `delete_items`. |
+| `set_focus_mode(active)`, `start_focus(itemId?, plannedMinutes)`, `stop_focus(id)`, `focus_totals(start, end)` | Focus mode (P3-T05, migration 0006). One session per running work stretch (pausing ends it, resuming starts another; breaks are not logged). Focus mode makes the window full screen and the reminder loop holds notifications until it ends; they then arrive (several as "While you were away"). Sessions left open by a closed app end at their planned length. Totals are seconds per life area of the task. |
 | `snooze_reminder`, `dismiss_reminder` | Reminder actions (planned; notification buttons currently act in Rust directly) |
 | `main_window_ready` | Frontend painted its first frame: show the main window (unless started hidden at sign-in) |
 | `ai_set_key`, `ai_clear_key`, `ai_extract_from_image`, `ai_parse_text`, `ai_plan_range` | AI (Phase 3) |

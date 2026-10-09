@@ -6,6 +6,7 @@ import { useDeleteItem, useSaveItem } from "@/features/items/api";
 import { AreaPill } from "@/features/items/editor/AreaPill";
 import { ChecklistEditor } from "@/features/items/editor/ChecklistEditor";
 import { DatePill } from "@/features/items/editor/DatePill";
+import { useFocusStore } from "@/features/focus/focusStore";
 import { EditorFooter } from "@/features/items/editor/EditorFooter";
 import { MoreDetails } from "@/features/items/editor/MoreDetails";
 import { GoalPill } from "@/features/items/editor/GoalPill";
@@ -26,6 +27,7 @@ import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { SidePanel } from "@/components/ui/SidePanel";
 import { toErrorPayload } from "@/lib/api/errors";
 import type { EditScope } from "@/types/EditScope";
+import type { Item } from "@/types/Item";
 import type { ItemDetail } from "@/types/ItemDetail";
 
 /** Backend field name → editor field that shows the message. */
@@ -68,6 +70,11 @@ export function ItemEditorForm({
   // Read during render: react-hook-form only tracks formState fields that are subscribed here.
   const { isDirty, dirtyFields } = formState;
 
+  const openFocus = useFocusStore((s) => s.openFocus);
+  const startFocus = (item: Item) => {
+    onClose();
+    openFocus(item);
+  };
   const requestClose = () => (isDirty ? setConfirmDiscard(true) : onClose());
 
   // A repeating item asks "only this one or this and following?" before saving or trashing.
@@ -184,6 +191,11 @@ export function ItemEditorForm({
               if (action === "delete") void trash(scope);
               else void handleSubmit((values) => saveWith(values, scope))();
             }}
+            onFocus={
+              detail && kind === "task" && !detail.item.completedAt
+                ? () => (isDirty ? setConfirmDiscard(true) : startFocus(detail.item))
+                : undefined
+            }
             onCancelScope={() => setScopeFor(null)}
           />
         </form>

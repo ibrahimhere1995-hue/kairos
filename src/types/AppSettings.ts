@@ -2,6 +2,7 @@
 import type { TextSize } from "./TextSize";
 import type { ThemePreference } from "./ThemePreference";
 import type { WeekStart } from "./WeekStart";
+import type { Weekday } from "./Weekday";
 
 /**
  * Basic settings (P1-T16). Every field has a sensible default (PRD R7: nothing is required).
@@ -26,4 +27,8 @@ launchAtLogin: boolean,
 /**
  * What Kairos calls you in the greeting ("Good morning, Zack."). Empty = no name.
  */
-name: string, };
+name: string, 
+/**
+ * PRD R17: the day the weekly review is offered (Sunday by default).
+ */
+reviewDay: Weekday, };
