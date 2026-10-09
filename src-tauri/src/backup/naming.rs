@@ -12,6 +12,8 @@ pub const LABEL_MANUAL: &str = "manual";
 pub const LABEL_PRE_RESTORE: &str = "pre-restore";
 pub const LABEL_PRE_MIGRATION: &str = "pre-migration";
 pub const LABEL_PRE_PURGE: &str = "pre-purge";
+/// Before importing a calendar file (P2-T12): many items arrive at once.
+pub const LABEL_PRE_IMPORT: &str = "pre-import";
 
 pub fn file_name(label: &str, at: DateTime<Utc>) -> String {
     format!("{PREFIX}{label}-{}{EXT}", at.format(STAMP_FORMAT))

@@ -42,6 +42,8 @@ pub struct AppPaths {
     pub data_dir: PathBuf,
     pub db_path: PathBuf,
     pub backups_dir: PathBuf,
+    /// Files attached to items (P2-T11), one file per attachment, never changed.
+    pub attachments_dir: PathBuf,
 }
 
 impl AppPaths {
@@ -49,6 +51,7 @@ impl AppPaths {
         Self {
             db_path: data_dir.join(crate::db::DB_FILE_NAME),
             backups_dir: backups_dir(&data_dir),
+            attachments_dir: data_dir.join("attachments"),
             data_dir,
         }
     }

@@ -104,10 +104,15 @@ describe("toItemInput", () => {
     });
   });
 
-  it("keeps fields the editor doesn't show yet", () => {
-    const input = toItemInput(form({}), storedItem);
-    expect(input.location).toBe("Room 4");
-    expect(input.source).toBe("quick");
+  it("keeps fields the editor doesn't show (source)", () => {
+    expect(toItemInput(form({}), storedItem).source).toBe("quick");
+  });
+
+  it("saves the location from the form, trimmed; empty means none", () => {
+    expect(toItemInput(form({ location: "  Room 4 " }), storedItem).location).toBe("Room 4");
+    expect(toItemInput(form({ location: "   " }), storedItem).location).toBeNull();
+    const values = formFromDetail({ item: storedItem, checklist: [], reminders: [] }, "2026-10-07");
+    expect(values.location).toBe("Room 4");
   });
 });
 

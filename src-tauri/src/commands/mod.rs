@@ -2,7 +2,9 @@
 
 pub mod app;
 pub mod areas;
+pub mod attachments;
 pub mod backups;
+pub mod data;
 pub mod items;
 pub mod onboarding;
 pub mod settings;

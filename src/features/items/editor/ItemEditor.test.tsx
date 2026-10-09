@@ -262,4 +262,52 @@ describe("Item editor", () => {
       expect(callsTo("delete_item")[0]?.args).toEqual({ id: occurrence.id, scope: "this" }),
     );
   });
+
+  it("saves a location, and lists and opens attachments", async () => {
+    const file = {
+      id: "f1",
+      itemId: "i1",
+      fileName: "Statement.pdf",
+      mime: "application/pdf",
+      sizeBytes: 250_000,
+      createdAt: "2026-10-01T00:00:00.000Z",
+    };
+    calls = mockBackend({
+      update_item: () => savedItem,
+      get_item_detail: () => ({ item: savedItem, checklist: [], reminders: [] }),
+      list_attachments: () => [file],
+      open_attachment: () => null,
+      remove_attachment: () => null,
+    });
+    const user = userEvent.setup();
+    renderApp();
+    await screen.findByRole("main");
+    act(() => useEditorStore.getState().openItem("i1"));
+    // "High Street branch" is already set, so More details starts open.
+    const location = await screen.findByRole("textbox", { name: "Location" });
+    expect(location).toHaveValue("High Street branch");
+    await user.clear(location);
+    await user.type(location, "Main Street branch");
+
+    expect(await screen.findByText("244 KB")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Open Statement.pdf" }));
+    await waitFor(() => expect(callsTo("open_attachment")[0]?.args).toEqual({ id: "f1" }));
+    await user.click(screen.getByRole("button", { name: "Remove Statement.pdf" }));
+    await waitFor(() => expect(callsTo("remove_attachment")[0]?.args).toEqual({ id: "f1" }));
+
+    await user.click(screen.getByRole("button", { name: "Save changes" }));
+    await waitFor(() =>
+      expect(callsTo("update_item")[0]?.args.input).toMatchObject({
+        location: "Main Street branch",
+      }),
+    );
+  });
+
+  it("explains that files can be attached after saving a new item", async () => {
+    const { user, dialog } = await openNewEditor();
+    await user.click(within(dialog).getByText("More details"));
+    expect(
+      within(dialog).getByText("Save the item first, then you can attach files."),
+    ).toBeInTheDocument();
+  });
 });

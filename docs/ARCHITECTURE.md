@@ -235,7 +235,7 @@ CREATE VIRTUAL TABLE items_fts USING fts5(title, notes, content='items', content
 - Deleting a whole series soft-deletes its stored occurrences with the same timestamp; restoring the series restores them. The Trash lists the series once.
 
 ### 6.3 Backups
-- Use SQLite **Online Backup API** (safe while running) through a **separate read-only connection**, so the app's connection is never blocked → write `kairos-<label>-YYYYMMDD-HHMMSS.mmm.db` (UTC). Labels: `auto`, `manual`, `pre-restore`, `pre-migration`, `pre-purge`. Attachments folder copy: added with attachments (P2-T11).
+- Use SQLite **Online Backup API** (safe while running) through a **separate read-only connection**, so the app's connection is never blocked → write `kairos-<label>-YYYYMMDD-HHMMSS.mmm.db` (UTC). Labels: `auto`, `manual`, `pre-restore`, `pre-migration`, `pre-purge`, `pre-import`. Attachments (P2-T11): the files in `{appDataDir}/attachments/` are named by id and never changed, so every backup copies only new ones into `backups/attachments/` (and the extra folder); a restore copies back any file the restored data refers to but this computer no longer has. Kairos never deletes attachment files (removing one, or purging its item, only removes the record).
 - When: every 24 h (background check every 30 min) and on every app close; "Back up now"; automatically before a migration, a restore, or a Trash purge.
 - Retention: automatic → newest per day for the last 14 backup days, then newest per ISO week for 8 more weeks; safety copies (`pre-*`) → newest 10 of each; manual backups are never removed. Applied to the app folder and the extra folder.
 - Verify each backup by opening it read-only (`PRAGMA quick_check` + item count); record successes and failures in `backup_log` (failures are shown in Settings › Backups).
@@ -267,6 +267,8 @@ Frontend sends image path → Rust `ai_extract_from_image` → reads key from ke
 | `get_settings`, `set_setting` | Settings |
 | `backup_now`, `list_backups`, `restore_backup`, `set_backup_folder` | Backups |
 | `export_json`, `export_ics`, `import_ics` | Portability |
+| `list_attachments`, `add_attachments(itemId, files)`, `remove_attachment`, `open_attachment`, `reveal_attachment` | Attachments (P2-T11; migration 0003). Files are copied in (≤ 100 MB each, ≤ 20 per item); a repeating item's occurrences share the series' files. Open / show in folder go through `tauri-plugin-opener` from Rust only. |
+| `export_json(path)`, `export_ics(path)`, `import_ics(path)` | Your data (P2-T12). JSON: everything except the Trash and secrets. `.ics`: dated items as VEVENT (events) / VTODO (tasks); a series as floating local time + RRULE + EXDATE for its stored occurrences. Import: VEVENT/VTODO, named zones via `chrono-tz`, floating times as local, events without an end get an hour, cancelled entries and changed single occurrences skipped, unsupported repeats imported once, same title at the same moment skipped as a duplicate, no reminders; a `pre-import` backup is made first. |
 | `snooze_reminder`, `dismiss_reminder` | Reminder actions (planned; notification buttons currently act in Rust directly) |
 | `main_window_ready` | Frontend painted its first frame: show the main window (unless started hidden at sign-in) |
 | `ai_set_key`, `ai_clear_key`, `ai_extract_from_image`, `ai_parse_text`, `ai_plan_range` | AI (Phase 3) |

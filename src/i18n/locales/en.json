@@ -23,7 +23,12 @@
       "folderNotWritable": "Kairos can't save files in that folder. Please choose another one.",
       "duplicateName": "Another area already has this name.",
       "invalidRepeat": "Kairos can't repeat it that way. Please pick one of the repeat options.",
-      "repeatNeedsDate": "Give it a date first, then it can repeat."
+      "repeatNeedsDate": "Give it a date first, then it can repeat.",
+      "fileNotFound": "Kairos couldn't find that file. It may have been moved or deleted.",
+      "fileTooLarge": "That file is too big. Files up to 100 MB can be added.",
+      "copyFailed": "Kairos couldn't copy that file. Please try again.",
+      "openFailed": "Kairos couldn't open that file.",
+      "notACalendar": "That doesn't look like a calendar file (.ics)."
     }
   },
   "common": {
@@ -301,7 +306,17 @@
     "noReminder": "No reminder",
     "reminderCount_one": "{{count}} reminder",
     "reminderCount_other": "{{count}} reminders",
-    "reminderChoices": "Choose one or more reminders"
+    "reminderChoices": "Choose one or more reminders",
+    "location": "Location",
+    "locationPlaceholder": "Where? (optional)",
+    "attachments": "Attachments",
+    "addFiles": "Add files…",
+    "attachAfterSave": "Save the item first, then you can attach files.",
+    "noAttachments": "No files yet.",
+    "openFile": "Open {{name}}",
+    "showFile": "Show {{name}} in its folder",
+    "removeFile": "Remove {{name}}",
+    "chooseFiles": "Choose files to attach"
   },
   "app": {
     "name": "Kairos",
@@ -560,5 +575,29 @@
       "nav": "open show view",
       "theme": "theme appearance mode colour color"
     }
+  },
+  "portability": {
+    "untitled": "(No title)"
+  },
+  "data": {
+    "title": "Your data",
+    "help": "Your planner is yours: take a copy any time, or bring in a calendar from another app.",
+    "exportJson": "Export everything (JSON)",
+    "exportJsonHelp": "All your tasks, events, steps, areas and settings in one readable file.",
+    "exportIcs": "Export calendar (.ics)",
+    "exportIcsHelp": "Every task and event with a date, for Google, Outlook or Apple Calendar.",
+    "importIcs": "Import a calendar (.ics)…",
+    "importIcsHelp": "Adds the events from a calendar file. A safety backup is made first.",
+    "saveJsonTitle": "Save your Kairos data",
+    "saveIcsTitle": "Save your calendar",
+    "openIcsTitle": "Choose a calendar file",
+    "exported": "Saved to {{path}}",
+    "exportedIcs_one": "Saved {{count}} item to {{path}}",
+    "exportedIcs_other": "Saved {{count}} items to {{path}}",
+    "imported_one": "Imported {{count}} item.",
+    "imported_other": "Imported {{count}} items.",
+    "importedNone": "Nothing new to import.",
+    "importDetails": "{{duplicates}} already here, {{skipped}} skipped, {{simplified}} without their repeat.",
+    "failed": "That didn't work. Your data is unchanged."
   }
 }

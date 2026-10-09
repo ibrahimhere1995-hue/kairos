@@ -32,6 +32,7 @@ export const itemFormSchema = z
     areaId: z.string().nullable(),
     priority: z.number().int().min(0).max(3),
     notes: z.string().max(100_000, { error: "errors.validation.tooLong" }),
+    location: z.string().max(500, { error: "errors.validation.tooLong" }),
     reminders: z.array(z.number().int().min(0).max(MAX_OFFSET_MINUTES)).max(MAX_REMINDERS),
     /** Repeat rule (RRULE without DTSTART), or null for "Does not repeat". */
     rrule: z.string().nullable(),
@@ -94,6 +95,7 @@ export function emptyItemForm(today: string): ItemFormValues {
     areaId: null,
     priority: 0,
     notes: "",
+    location: "",
     reminders: DEFAULT_REMINDERS,
     rrule: null,
     checklist: [],
@@ -116,6 +118,7 @@ export function formFromDetail(
     areaId: item.areaId,
     priority: item.priority,
     notes: item.notes ?? "",
+    location: item.location ?? "",
     reminders,
     rrule: item.rrule,
     checklist: checklist.map((step) => ({ stepId: step.id, text: step.text, done: step.done })),
@@ -123,8 +126,8 @@ export function formFromDetail(
 }
 
 /**
- * Converts editor values to the backend input. Fields the editor doesn't show yet
- * (location, source) are carried over from the existing item so saving never erases them.
+ * Converts editor values to the backend input. Fields the editor doesn't show (source) are
+ * carried over from the existing item so saving never erases them.
  */
 export function toItemInput(
   values: ItemFormValues,
@@ -151,7 +154,7 @@ export function toItemInput(
     startAt,
     endAt,
     dueDate,
-    location: existing?.location ?? null,
+    location: values.location.trim() === "" ? null : values.location.trim(),
     source: existing?.source ?? "manual",
     reminders: values.reminders,
     // Without a date nothing can repeat.
