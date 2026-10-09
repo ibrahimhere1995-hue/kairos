@@ -70,8 +70,8 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 
 - [x] **P3-T01 🗄🎨 Inbox** — text/image/voice entries, process into task. (Text and pictures done; voice notes come with P3-T14.)
 - [x] **P3-T02 🗄🎨 Habits & streaks** — habit CRUD, daily ticks, streak, heatmap, gentle "streak paused" copy.
-- [ ] **P3-T03 🗄🎨 Goals → milestones → tasks** with progress.
-- [ ] **P3-T04 🗄🎨 Templates** — save selection as template, insert relative to a date.
+- [x] **P3-T03 🗄🎨 Goals → milestones → tasks** with progress.
+- [x] **P3-T04 🗄🎨 Templates** — save selection as template, insert relative to a date.
 - [ ] **P3-T05 🎨 Focus mode** — timer, full-screen calm view, notification mute, focus logs.
 - [ ] **P3-T06 🎨 Weekly review** — done/slipped, time per area, balance insights.
 - [ ] **P3-T07 🎨 Feedback loop** — "Suggest a feature" button, wishlist board, behaviour-based suggestions.

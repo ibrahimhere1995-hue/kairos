@@ -37,6 +37,7 @@ pub struct ValidItem {
     pub priority: i32,
     pub location: Option<String>,
     pub schedule: Schedule,
+    pub milestone_id: Option<String>,
 }
 
 pub fn normalize_instant(field: &'static str, value: &str) -> AppResult<String> {
@@ -125,6 +126,13 @@ pub fn validate_item(conn: &Connection, input: &ItemInput) -> AppResult<ValidIte
         return Err(AppError::invalid("areaId", "unknownArea"));
     }
 
+    let milestone_id = clean(input.milestone_id.as_deref());
+    if let Some(id) = &milestone_id
+        && !crate::repo::goals::milestone_active(conn, id)?
+    {
+        return Err(AppError::invalid("milestoneId", "unknownMilestone"));
+    }
+
     let schedule = validate_schedule(
         input.kind,
         &ScheduleInput {
@@ -142,6 +150,7 @@ pub fn validate_item(conn: &Connection, input: &ItemInput) -> AppResult<ValidIte
         priority: input.priority,
         location,
         schedule,
+        milestone_id,
     })
 }
 

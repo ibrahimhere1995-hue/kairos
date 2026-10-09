@@ -139,6 +139,7 @@ pub fn import_ics(conn: &mut Connection, path: &Path) -> AppResult<ImportSummary
             source: Some(ItemSource::Import),
             reminders: Some(vec![]),
             rrule: entry.rrule,
+            milestone_id: None,
         };
         match items::create(conn, &input) {
             Ok(created) => {
@@ -175,6 +176,7 @@ mod tests {
             source: None,
             reminders: None,
             rrule: None,
+            milestone_id: None,
         }
     }
 

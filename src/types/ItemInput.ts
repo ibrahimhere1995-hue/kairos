@@ -32,4 +32,8 @@ reminders?: Array<number>,
  * Repeat rule (RFC 5545 RRULE without DTSTART, e.g. `FREQ=WEEKLY;BYDAY=MO`); null = once.
  * Ignored when editing a single occurrence of a repeating item.
  */
-rrule: string | null, };
+rrule: string | null, 
+/**
+ * The goal milestone this task counts towards (P3-T03). Omitted / null: none.
+ */
+milestoneId?: string, };

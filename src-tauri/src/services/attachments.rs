@@ -211,6 +211,7 @@ mod tests {
                 source: None,
                 reminders: Some(vec![]),
                 rrule: rrule.map(Into::into),
+                milestone_id: None,
             },
         )
         .unwrap()

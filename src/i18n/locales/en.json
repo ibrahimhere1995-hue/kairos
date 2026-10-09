@@ -28,7 +28,8 @@
       "fileTooLarge": "That file is too big. Files up to 100 MB can be added.",
       "copyFailed": "Kairos couldn't copy that file. Please try again.",
       "openFailed": "Kairos couldn't open that file.",
-      "notACalendar": "That doesn't look like a calendar file (.ics)."
+      "notACalendar": "That doesn't look like a calendar file (.ics).",
+      "unknownMilestone": "That goal step no longer exists. Please pick another."
     }
   },
   "common": {
@@ -333,7 +334,9 @@
     "styleguide": "Styleguide",
     "collapse": "Collapse sidebar",
     "expand": "Expand sidebar",
-    "habits": "Habits"
+    "habits": "Habits",
+    "goals": "Goals",
+    "templates": "Templates"
   },
   "topbar": {
     "search": "Search or type a command…",
@@ -570,7 +573,9 @@
       "themeDark": "Switch to dark theme",
       "themeSystem": "Match the system theme",
       "goDate": "Show {{date}} in the calendar",
-      "goHabits": "Go to Habits"
+      "goHabits": "Go to Habits",
+      "goGoals": "Go to Goals",
+      "goTemplates": "Go to Templates"
     },
     "keywords": {
       "newTask": "add create capture task event",
@@ -647,5 +652,51 @@
     "delete": "Delete {{title}}",
     "deleted": "“{{title}}” deleted.",
     "empty": "No habits yet. Start with something small you'd like to do often."
+  },
+  "goals": {
+    "intro": "Bigger things, step by step. Link tasks to a step and watch the progress grow.",
+    "title": "Goal",
+    "titlePlaceholder": "A goal, e.g. Run a 10k",
+    "targetDate": "By",
+    "add": "Add goal",
+    "empty": "No goals yet. What would you like to achieve?",
+    "by": "by {{date}}",
+    "achieved": "Achieved",
+    "progress": "{{done}} of {{total}} tasks done",
+    "progressOf": "Progress of {{title}}",
+    "markAchieved": "Achieved",
+    "reopen": "Not yet",
+    "delete": "Delete {{title}}",
+    "deleted": "“{{title}}” deleted.",
+    "milestonesOf": "Steps of {{title}}",
+    "newMilestone": "A step towards it",
+    "addMilestone": "Add step",
+    "addTask": "Add task",
+    "removeMilestone": "Remove step {{title}}",
+    "pill": "Goal",
+    "none": "No goal"
+  },
+  "templates": {
+    "intro": "Plans you repeat, like a Monday kickoff or monthly bills. Save them once, insert them on any day.",
+    "new": "New template from your calendar",
+    "from": "From",
+    "days": "For",
+    "dayCount_one": "{{count}} day",
+    "dayCount_other": "{{count}} days",
+    "nothingThere": "Nothing planned on those days yet.",
+    "choose": "Items to include",
+    "name": "Template name",
+    "namePlaceholder": "Name, e.g. Monday kickoff",
+    "save_one": "Save {{count}} item as a template",
+    "save_other": "Save {{count}} items as a template",
+    "items_one": "{{count}} item",
+    "items_other": "{{count}} items",
+    "startOn": "Start on",
+    "insert": "Insert",
+    "delete": "Delete template {{name}}",
+    "deleted": "Template “{{name}}” deleted.",
+    "empty": "No templates yet.",
+    "inserted_one": "Inserted {{count}} item.",
+    "inserted_other": "Inserted {{count}} items."
   }
 }

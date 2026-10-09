@@ -148,6 +148,7 @@ mod tests {
                 source: None,
                 reminders: Some(vec![]),
                 rrule: None,
+                milestone_id: None,
             },
         )
         .unwrap()
@@ -220,6 +221,7 @@ mod tests {
                     source: None,
                     reminders: Some(vec![]),
                     rrule: None,
+                    milestone_id: None,
                 }
             },
         )
@@ -248,6 +250,7 @@ mod tests {
             &mut c,
             &ItemInput {
                 rrule: Some("FREQ=WEEKLY".into()),
+                milestone_id: None,
                 kind: ItemKind::Task,
                 title: "Bins".into(),
                 notes: None,

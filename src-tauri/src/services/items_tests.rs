@@ -32,6 +32,7 @@ fn task(title: &str) -> ItemInput {
         source: None,
         reminders: None,
         rrule: None,
+        milestone_id: None,
     }
 }
 

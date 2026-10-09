@@ -12,6 +12,7 @@ const MIGRATION_LIST: &[M<'static>] = &[
     M::up(include_str!("migrations/0002_checklist_search.sql")),
     M::up(include_str!("migrations/0003_attachments.sql")),
     M::up(include_str!("migrations/0004_inbox_habits.sql")),
+    M::up(include_str!("migrations/0005_templates.sql")),
 ];
 
 pub const MIGRATIONS: Migrations<'static> = Migrations::from_slice(MIGRATION_LIST);
@@ -164,6 +165,7 @@ mod tests {
             M::up(include_str!("migrations/0002_checklist_search.sql")),
             M::up(include_str!("migrations/0003_attachments.sql")),
             M::up(include_str!("migrations/0004_inbox_habits.sql")),
+            M::up(include_str!("migrations/0005_templates.sql")),
             M::up("ALTER TABLE areas ADD COLUMN future_column TEXT;"),
         ];
         let dir = crate::db::test_support::scratch_path("mig");

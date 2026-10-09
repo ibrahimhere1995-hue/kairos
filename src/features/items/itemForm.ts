@@ -36,6 +36,8 @@ export const itemFormSchema = z
     reminders: z.array(z.number().int().min(0).max(MAX_OFFSET_MINUTES)).max(MAX_REMINDERS),
     /** Repeat rule (RRULE without DTSTART), or null for "Does not repeat". */
     rrule: z.string().nullable(),
+    /** The goal milestone this task counts towards (P3-T03). */
+    milestoneId: z.string().nullable(),
     checklist: z.array(
       z.object({
         stepId: z.string().nullable(),
@@ -98,6 +100,7 @@ export function emptyItemForm(today: string): ItemFormValues {
     location: "",
     reminders: DEFAULT_REMINDERS,
     rrule: null,
+    milestoneId: null,
     checklist: [],
   };
 }
@@ -121,6 +124,7 @@ export function formFromDetail(
     location: item.location ?? "",
     reminders,
     rrule: item.rrule,
+    milestoneId: item.milestoneId,
     checklist: checklist.map((step) => ({ stepId: step.id, text: step.text, done: step.done })),
   };
 }
@@ -159,6 +163,8 @@ export function toItemInput(
     reminders: values.reminders,
     // Without a date nothing can repeat.
     rrule: values.schedule === "none" ? null : values.rrule,
+    // Omitted = no goal (the backend clears it).
+    milestoneId: (values.kind === "task" && values.milestoneId) || undefined,
   };
 }
 

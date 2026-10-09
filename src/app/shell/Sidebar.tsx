@@ -1,12 +1,14 @@
 import {
   CalendarDays,
   Inbox,
+  LayoutTemplate,
   Palette,
   PanelLeftClose,
   PanelLeftOpen,
   Settings,
   Sprout,
   Sunrise,
+  Target,
   Trash2,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -41,6 +43,13 @@ export function Sidebar() {
         />
         <NavItem to="/inbox" icon={Inbox} label={t("nav.inbox")} collapsed={collapsed} />
         <NavItem to="/habits" icon={Sprout} label={t("nav.habits")} collapsed={collapsed} />
+        <NavItem to="/goals" icon={Target} label={t("nav.goals")} collapsed={collapsed} />
+        <NavItem
+          to="/templates"
+          icon={LayoutTemplate}
+          label={t("nav.templates")}
+          collapsed={collapsed}
+        />
       </ul>
 
       <ul className="mt-auto flex flex-col gap-1">
