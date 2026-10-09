@@ -332,7 +332,8 @@
     "trash": "Trash",
     "styleguide": "Styleguide",
     "collapse": "Collapse sidebar",
-    "expand": "Expand sidebar"
+    "expand": "Expand sidebar",
+    "habits": "Habits"
   },
   "topbar": {
     "search": "Search or type a command…",
@@ -568,7 +569,8 @@
       "themeLight": "Switch to light theme",
       "themeDark": "Switch to dark theme",
       "themeSystem": "Match the system theme",
-      "goDate": "Show {{date}} in the calendar"
+      "goDate": "Show {{date}} in the calendar",
+      "goHabits": "Go to Habits"
     },
     "keywords": {
       "newTask": "add create capture task event",
@@ -601,9 +603,49 @@
     "failed": "That didn't work. Your data is unchanged."
   },
   "inbox": {
-    "intro": "Tasks without a date. Open one to give it a moment, or drag it onto the calendar from “To schedule”.",
+    "intro": "Jot things down before they slip away. Turn a note into a task with one click. Tasks without a date wait here too.",
     "add": "Add a task without a date",
     "loading": "Loading your Inbox",
-    "empty": "Nothing waiting here. Tasks without a date show up in the Inbox."
+    "empty": "Nothing waiting here. Tasks without a date show up in the Inbox.",
+    "pictureTitle": "Picture",
+    "notes": "Notes and pictures",
+    "tasks": "Tasks without a date",
+    "noteLabel": "Jot something down",
+    "notePlaceholder": "Jot something down… (Enter adds it)",
+    "addNote": "Add note",
+    "addPicture": "Add a picture…",
+    "pickPicture": "Choose a picture",
+    "pasteHint": "Tip: paste a screenshot here with Ctrl+V.",
+    "pictureAlt": "Pasted picture",
+    "added": "Added {{date}}",
+    "makeTask": "Make it a task",
+    "delete": "Delete note",
+    "madeTask": "“{{title}}” is now a task.",
+    "deleted": "Note deleted."
+  },
+  "habits": {
+    "intro": "Small things, done often. Tick them off; if you miss a day, just start again.",
+    "title": "Habit",
+    "titlePlaceholder": "A new habit, e.g. Read 10 pages",
+    "howOften": "How often",
+    "add": "Add habit",
+    "daily": "Every day",
+    "weekly_one": "{{count}} time a week",
+    "weekly_other": "{{count}} times a week",
+    "streakDays_one": "{{count}} day in a row",
+    "streakDays_other": "{{count}} days in a row",
+    "streakWeeks_one": "{{count}} week in a row",
+    "streakWeeks_other": "{{count}} weeks in a row",
+    "paused": "Streak paused — start again today",
+    "weekDaily": "{{done}} of 7 this week",
+    "weekTarget": "{{done}} of {{target}} this week",
+    "heatmap_one": "Done on {{count}} day in the last 12 weeks",
+    "heatmap_other": "Done on {{count}} days in the last 12 weeks",
+    "tick": "Mark “{{title}}” as done today",
+    "untick": "Mark “{{title}}” as not done today",
+    "edit": "Edit {{title}}",
+    "delete": "Delete {{title}}",
+    "deleted": "“{{title}}” deleted.",
+    "empty": "No habits yet. Start with something small you'd like to do often."
   }
 }

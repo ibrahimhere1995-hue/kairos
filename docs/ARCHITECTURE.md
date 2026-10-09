@@ -137,6 +137,7 @@ CREATE TABLE attachments (
 CREATE TABLE inbox_entries (
   id TEXT PRIMARY KEY, kind TEXT NOT NULL CHECK (kind IN ('text','image','voice')),
   text TEXT, attachment_id TEXT REFERENCES attachments(id),
+  image_path TEXT,              -- picture file until processed (attachments need an item); then attachment_id
   processed_item_id TEXT REFERENCES items(id),
   created_at TEXT NOT NULL, updated_at TEXT NOT NULL, deleted_at TEXT
 );
@@ -269,6 +270,8 @@ Frontend sends image path → Rust `ai_extract_from_image` → reads key from ke
 | `export_json`, `export_ics`, `import_ics` | Portability |
 | `list_attachments`, `add_attachments(itemId, files)`, `remove_attachment`, `open_attachment`, `reveal_attachment` | Attachments (P2-T11; migration 0003). Files are copied in (≤ 100 MB each, ≤ 20 per item); a repeating item's occurrences share the series' files. Open / show in folder go through `tauri-plugin-opener` from Rust only. |
 | `export_json(path)`, `export_ics(path)`, `import_ics(path)` | Your data (P2-T12). JSON: everything except the Trash and secrets. `.ics`: dated items as VEVENT (events) / VTODO (tasks); a series as floating local time + RRULE + EXDATE for its stored occurrences. Import: VEVENT/VTODO, named zones via `chrono-tz`, floating times as local, events without an end get an hour, cancelled entries and changed single occurrences skipped, unsupported repeats imported once, same title at the same moment skipped as a duplicate, no reminders; a `pre-import` backup is made first. |
+| `list_inbox`, `add_inbox_text`, `add_inbox_image` (raw bytes + `x-image-type` header), `add_inbox_image_file`, `inbox_image` (data URL preview), `process_inbox_entry`, `delete_inbox_entry(id, deleted)` | Inbox (P3-T01, migration 0004). "Make it a task": a task without a date (first line = title, rest = notes) with the picture attached. |
+| `list_habits(today)`, `create_habit`, `update_habit`, `delete_habit(id, deleted)`, `set_habit_done(id, date, today, done)` | Habits (P3-T02): `daily` or `weekly:N`; streaks in `services/habit_logic.rs` (today/this week in progress never breaks a streak; a gap pauses it). |
 | `snooze_reminder`, `dismiss_reminder` | Reminder actions (planned; notification buttons currently act in Rust directly) |
 | `main_window_ready` | Frontend painted its first frame: show the main window (unless started hidden at sign-in) |
 | `ai_set_key`, `ai_clear_key`, `ai_extract_from_image`, `ai_parse_text`, `ai_plan_range` | AI (Phase 3) |

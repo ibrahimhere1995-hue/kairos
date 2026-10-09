@@ -33,6 +33,7 @@ describe("Accessibility of every screen (axe-core)", () => {
     ["My Day", "/", "main"],
     ["Calendar", "/calendar?view=week&date=2026-10-07", "main"],
     ["Inbox", "/inbox", "main"],
+    ["Habits", "/habits", "main"],
     ["Trash", "/trash", "main"],
     ["Settings", "/settings", "main"],
   ] as const) {

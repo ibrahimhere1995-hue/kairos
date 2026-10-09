@@ -6,6 +6,7 @@ pub mod attachment;
 pub mod backup;
 pub mod checklist;
 pub mod dashboard;
+pub mod habit;
 pub mod inputs;
 pub mod item;
 pub mod reminder;

@@ -76,6 +76,7 @@ mod tests {
             "onboarding.samples.capture",
             "onboarding.samples.open",
             "portability.untitled",
+            "inbox.pictureTitle",
             "tray.tooltip",
             "tray.open",
             "tray.quickAdd",

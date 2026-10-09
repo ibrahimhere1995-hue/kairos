@@ -41,7 +41,7 @@ export function useDataActions() {
 
   const importIcs = useMutation({
     mutationFn: async () => {
-      const path = await pickFile(t("data.openIcsTitle"), "ics");
+      const path = await pickFile(t("data.openIcsTitle"), ["ics"]);
       return path ? dataApi.importIcs(path) : null;
     },
     onSuccess: (summary) => {

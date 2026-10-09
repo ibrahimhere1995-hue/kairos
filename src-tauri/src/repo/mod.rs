@@ -5,6 +5,8 @@ pub mod attachments;
 pub mod backup_log;
 pub mod checklist;
 pub mod export;
+pub mod habits;
+pub mod inbox;
 pub mod items;
 pub mod reminders;
 pub mod search;
