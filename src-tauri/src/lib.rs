@@ -1,4 +1,5 @@
 #[cfg(desktop)]
+pub mod ai;
 pub mod autostart;
 pub mod backup;
 pub mod capture;
@@ -257,6 +258,12 @@ pub fn run() {
             commands::feedback::delete_feedback,
             commands::feedback::export_feedback,
             commands::feedback::email_feedback,
+            commands::ai::ai_status,
+            commands::ai::ai_consent,
+            commands::ai::ai_set_key,
+            commands::ai::ai_clear_key,
+            commands::ai::ai_parse_text,
+            commands::ai::ai_open_key_page,
             commands::data::export_json,
             commands::data::export_ics,
             commands::data::import_ics,

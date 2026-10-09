@@ -3,7 +3,9 @@ import { Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { captureToItemInput } from "@/features/capture/captureInput";
 import { CaptureChip } from "@/features/capture/CaptureChip";
+import { useAiCapture } from "@/features/capture/useAiCapture";
 import { chipLabel } from "@/features/capture/chipLabel";
+import { reminderLabel } from "@/features/items/editor/reminderLabels";
 import { useActiveAreas, useCreateItem } from "@/features/items/api";
 import { FieldError } from "@/components/ui/FieldError";
 import { toErrorPayload } from "@/lib/api/errors";
@@ -33,17 +35,21 @@ export function QuickCapture({
   const create = useCreateItem();
 
   const today = getDayContext().today;
-  const parsed = useMemo(
+  const offline = useMemo(
     () => parseCapture(text, { now: new Date(), areas, ignore: ignored }),
     [text, areas, ignored],
   );
+  const ai = useAiCapture(text, offline);
+  const { parsed, draft } = ai;
   const canSave = text.trim() !== "" && !create.isPending;
 
   const save = () => {
     if (!canSave) return;
     setError(null);
-    create.mutate(captureToItemInput(parsed, today), {
+    const reminders = draft?.reminderMinutes != null ? [draft.reminderMinutes] : undefined;
+    create.mutate(captureToItemInput(parsed, today, reminders), {
       onSuccess: () => {
+        ai.clear();
         setText("");
         setIgnored(new Set());
         onSaved();
@@ -84,7 +90,9 @@ export function QuickCapture({
               index={index}
               label={chipLabel(kind, parsed, today, areas, t)}
               onRemove={() => {
-                setIgnored((prev) => new Set(prev).add(kind));
+                // An AI reading is dropped as a whole; offline parts one by one.
+                if (draft) ai.clear();
+                else setIgnored((prev) => new Set(prev).add(kind));
                 // The chip (and its button) disappears; keep typing where you were.
                 ownInput.current?.focus();
               }}
@@ -92,11 +100,37 @@ export function QuickCapture({
           ))}
         </ul>
       )}
+      {draft && (
+        <p className="inline-flex items-center gap-1 text-small text-text-muted">
+          <Sparkles aria-hidden="true" className="size-4 text-accent-text" />
+          {t("ai.aiRead")}
+          {draft.reminderMinutes != null &&
+            ` · ${reminderLabel(draft.reminderMinutes, !draft.time, "09:00", t)}`}
+        </p>
+      )}
       {error && <FieldError message={t(error)} />}
       <div className="flex items-center gap-3 text-small text-text-muted">
         <p id="capture-hint" className="flex-1">
           {t("capture.hint", { title: parsed.title || "…" })}
         </p>
+        {ai.canRead && (
+          <button
+            type="button"
+            disabled={ai.read.isPending}
+            onClick={() => {
+              setError(null);
+              ai.read.mutate(text, {
+                onError: (e) => setError(toErrorPayload(e).message),
+                // Back to typing: Enter saves the checked draft.
+                onSettled: () => ownInput.current?.focus(),
+              });
+            }}
+            className="inline-flex items-center gap-1 rounded-sm px-2 py-1 font-semibold text-accent-text hover:bg-surface-3 disabled:opacity-60"
+          >
+            <Sparkles aria-hidden="true" className="size-4" />
+            {t(ai.read.isPending ? "ai.reading" : "ai.readWithAi")}
+          </button>
+        )}
         {onMoreDetails && (
           <button
             type="button"

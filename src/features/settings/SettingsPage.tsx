@@ -1,10 +1,11 @@
 import { useTranslation } from "react-i18next";
+import { SmartFeaturesSection } from "@/features/settings/ai/SmartFeaturesSection";
 import { AreasSettings } from "@/features/settings/areas/AreasSettings";
 import { BackupsSection } from "@/features/settings/backups/BackupsSection";
 import { DataSection } from "@/features/settings/data/DataSection";
 import { GeneralSettings } from "@/features/settings/GeneralSettings";
 
-/** Settings: appearance, calendar, reminders, startup, life areas, backups, your data. Everything saves as you change it. */
+/** Settings: appearance, calendar, reminders, startup, life areas, smart features, backups, your data. Everything saves as you change it. */
 export function SettingsPage() {
   const { t } = useTranslation();
   return (
@@ -15,6 +16,7 @@ export function SettingsPage() {
       </header>
       <GeneralSettings />
       <AreasSettings />
+      <SmartFeaturesSection />
       <BackupsSection />
       <DataSection />
     </div>

@@ -23,6 +23,8 @@ pub const NAME_MAX_CHARS: usize = 40;
 const SUMMARY_LAST_SENT: &str = "reminders.dailySummaryLastSent";
 /// Internal: whether the "still running in the tray" hint has been shown.
 const TRAY_HINT_SHOWN: &str = "ui.trayHintShown";
+/// Internal: when smart features were agreed to (not part of AppSettings: changed only there).
+const AI_CONSENT: &str = "ai.consentAt";
 
 /// Missing or unreadable values fall back to the default, so a bad value never blocks the app.
 fn read<T: DeserializeOwned>(conn: &Connection, key: &str, default: T) -> AppResult<T> {
@@ -117,6 +119,15 @@ pub fn set_summary_last_sent(conn: &Connection, date: NaiveDate) -> AppResult<()
     )
 }
 
+/// When the user agreed to the smart features consent screen (PRD §7.3); None = not yet.
+pub fn ai_consented_at(conn: &Connection) -> AppResult<Option<String>> {
+    read(conn, AI_CONSENT, None)
+}
+
+pub fn set_ai_consent(conn: &Connection, given: bool) -> AppResult<()> {
+    write(conn, AI_CONSENT, &given.then(crate::util::now_utc))
+}
+
 /// True only the first time it is called: the tray hint is shown once.
 pub fn take_tray_hint(conn: &Connection) -> AppResult<bool> {
     let shown: bool = read(conn, TRAY_HINT_SHOWN, false)?;
@@ -141,6 +152,16 @@ mod tests {
         assert_eq!(s.daily_summary_time, "08:00");
         assert!(s.daily_summary_enabled);
         assert!(s.launch_at_login, "PRD R3: on by default");
+    }
+
+    #[test]
+    fn remembers_ai_consent() {
+        let c = migrated_conn();
+        assert_eq!(ai_consented_at(&c).unwrap(), None);
+        set_ai_consent(&c, true).unwrap();
+        assert!(ai_consented_at(&c).unwrap().is_some());
+        set_ai_consent(&c, false).unwrap();
+        assert_eq!(ai_consented_at(&c).unwrap(), None);
     }
 
     #[test]
