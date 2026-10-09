@@ -52,6 +52,7 @@ Windows does not let these move:
 - Windows SDK (~1.7 GB) in `C:\Program Files (x86)\Windows Kits`
 - Visual Studio Installer (~125 MB) and its settings in `C:\ProgramData\Microsoft\VisualStudio`
 - Tiny config files: `%USERPROFILE%\.npmrc` and pnpm's `rc` file
+- Tauri's NSIS installer-builder tools (~8 MB) in `%LOCALAPPDATA%\tauri\NSIS`, used only when building an installer (approved 2026-10-09)
 
 ## 4. Everyday commands (run in the project folder)
 
@@ -63,6 +64,9 @@ Windows does not let these move:
 | `pnpm lint` / `pnpm typecheck` / `pnpm format` | Code quality |
 | `pnpm test:rust` / `pnpm lint:rust` / `pnpm fmt:rust` | Rust tests, clippy, rustfmt |
 | `pnpm build` | Production frontend build |
+| `pnpm tauri build --bundles nsis` | Release installer. Output: `src-tauri\target\release\bundle\nsis\Kairos_<version>_x64-setup.exe`, unsigned (see TASKS P4-T07a). Tauri downloads its NSIS tools (~8 MB) into `C:\Users\<you>\AppData\Local\tauri\NSIS`; it ignores a changed `LOCALAPPDATA` (it asks Windows for the folder directly). |
+| `$env:LOCALAPPDATA="I:DevToolsocalappdata"; pnpm tauri build --bundles nsis` | Release installer (PowerShell). Tauri downloads its NSIS tools into `%LOCALAPPDATA%	auri`; the variable keeps them on I:. Output: `src-tauri	argeteleasebundle
+sisKairos_<version>_x64-setup.exe` (unsigned, see TASKS P4-T07a). |
 | `pnpm test:e2e` | End-to-end tests on the real app (Windows): builds a debug app into `src-tauri\target-e2e`, opens it, and runs `tests/e2e/specs`. Uses a fresh data folder under `.devdata\e2e` each run. Set `E2E_SKIP_BUILD=1` to reuse the last build. |
 
 **End-to-end tests:** a second Kairos window opens and clicks through the critical paths by itself, through WebDriver (only inside that window, never system-wide keystrokes). If they suddenly fail after a Windows update, WebView2 probably updated: download the matching `msedgedriver` (see §2; check the version in the registry key `HKLM\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}` → `pv`). CI doesn't run them yet (driver version matching on CI machines is fragile; tracked for Phase 4 QA). Old `.devdata\e2e\run-*` folders and `src-tauri\target-e2e` are safe to delete to free space. UI-checklist screenshots land in `.devdata\e2e\screens`; a failing test leaves a screenshot in `.devdata\e2e\failures`. Each fresh test profile starts on the welcome screens, which the tests skip. `accessibility.e2e.ts` runs axe-core on every screen in both themes and fails on any WCAG 2.2 A/AA violation (the findings are printed in the log).

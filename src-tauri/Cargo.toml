@@ -1,6 +1,6 @@
 [package]
 name = "kairos"
-version = "0.1.0"
+version = "0.2.0"
 description = "Kairos — the perfect moment to act. A local-first personal planner."
 authors = ["Zack"]
 edition = "2024"

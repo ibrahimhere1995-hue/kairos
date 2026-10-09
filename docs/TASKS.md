@@ -95,6 +95,7 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 - [ ] **P4-T05 🚀 Auto-update** — signed updates via `tauri-plugin-updater`, toggle in settings.
 - [ ] **P4-T06 🚀 Opt-in crash reporting** (step 18) — anonymised, off by default.
 - [ ] **P4-T07 🚀 Signed installers** (step 17) — Windows (MSI/NSIS, code-signed) and macOS (DMG, Developer ID, notarised) via GitHub Actions.
+- [ ] **P4-T07a 📝 TODO (decide later): how to publish on Windows** — Microsoft Store (Microsoft signs it; no SmartScreen warning) vs Azure Trusted Signing (~$10/month, some countries only) vs a bought certificate (~$100–400/year), or stay unsigned. Beta 0.2.0 ships unsigned (decision 2026-10-09).
 - [ ] **P4-T08 🎨 Logo, app icons, tray icons** in all required sizes.
 - [ ] **P4-T09 🚀 Landing page** — tagline, screenshots in both themes, privacy promise, download + buy.
 - [ ] **P4-T10 🧪 QA testing** (step 16) on clean Windows 10, Windows 11, macOS Intel, macOS Apple Silicon.
