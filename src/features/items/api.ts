@@ -4,6 +4,7 @@ import { areasApi } from "@/lib/api/areas";
 import { itemsApi } from "@/lib/api/items";
 import { useToastStore } from "@/lib/toastStore";
 import { areaKeys, itemKeys } from "@/features/items/queryKeys";
+import type { Area } from "@/types/Area";
 import type { ChecklistEntryInput } from "@/types/ChecklistEntryInput";
 import type { DashboardQuery } from "@/types/DashboardQuery";
 import type { DateRange } from "@/types/DateRange";
@@ -11,8 +12,21 @@ import type { Item } from "@/types/Item";
 import type { ItemInput } from "@/types/ItemInput";
 import type { ScheduleInput } from "@/types/ScheduleInput";
 
+/** Every area, archived ones included: use for showing an item's area. */
 export function useAreas() {
   return useQuery({ queryKey: areaKeys.all, queryFn: areasApi.list, staleTime: Infinity });
+}
+
+const notArchived = (areas: Area[]) => areas.filter((a) => !a.isArchived);
+
+/** Areas you can choose (pickers, filters, Quick Capture `#area`): archived ones are hidden. */
+export function useActiveAreas() {
+  return useQuery({
+    queryKey: areaKeys.all,
+    queryFn: areasApi.list,
+    staleTime: Infinity,
+    select: notArchived,
+  });
 }
 
 export function useItemDetail(id: string | null) {
@@ -94,6 +108,44 @@ export function useCompleteItem() {
   });
 }
 
+/** "Let it go" (PRD R6): sets a task aside as skipped, with Undo. */
+export function useSkipItem() {
+  const queryClient = useQueryClient();
+  const { t } = useTranslation();
+  const showToast = useToastStore((state) => state.show);
+  const refresh = () => queryClient.invalidateQueries({ queryKey: itemKeys.all });
+  return useMutation({
+    mutationFn: (item: Item) => itemsApi.skip(item.id),
+    onSuccess: (_, item) => {
+      showToast({
+        message: t("toast.letGo", { title: item.title }),
+        actionLabel: t("toast.undo"),
+        onAction: () => void itemsApi.unskip(item.id).then(refresh),
+      });
+    },
+    onSettled: refresh,
+  });
+}
+
+/** Gives several items one new moment in a single save ("Move all to today"). */
+export function useMoveItems() {
+  const queryClient = useQueryClient();
+  const { t } = useTranslation();
+  const showToast = useToastStore((state) => state.show);
+  return useMutation({
+    mutationFn: ({ ids, schedule }: { ids: string[]; schedule: ScheduleInput }) =>
+      itemsApi.rescheduleMany(ids, schedule),
+    onSuccess: (moved) => showToast({ message: t("toast.movedToday", { count: moved.length }) }),
+    onError: () => showToast({ message: t("calendar.moveFailed") }),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: itemKeys.all }),
+  });
+}
+
+/** Inbox tasks without a date, for the calendar's "To schedule" list. */
+export function useUnscheduledItems() {
+  return useQuery({ queryKey: itemKeys.unscheduled, queryFn: itemsApi.unscheduled });
+}
+
 export function useUncompleteItem() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -123,7 +175,12 @@ export function useRescheduleItem() {
           i.id === item.id ? { ...i, ...schedule, allDay: schedule.dueDate !== null } : i,
         ),
       );
-      return { previous };
+      // Time-blocking: a task that gets a date leaves the "To schedule" list at once.
+      const unscheduled = queryClient.getQueryData<Item[]>(itemKeys.unscheduled);
+      queryClient.setQueryData<Item[]>(itemKeys.unscheduled, (items) =>
+        items?.filter((i) => i.id !== item.id),
+      );
+      return { previous: [...previous, [itemKeys.unscheduled, unscheduled] as const] };
     },
     onError: (_error, _vars, context) => {
       for (const [key, data] of context?.previous ?? []) queryClient.setQueryData(key, data);

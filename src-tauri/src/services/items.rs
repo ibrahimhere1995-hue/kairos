@@ -42,25 +42,40 @@ fn load_active(tx: &Transaction, id: &str) -> AppResult<Item> {
     }
 }
 
-/// Runs `change` on an active item inside one transaction and saves the result.
+/// Runs `change` on an active item and saves the result, inside the caller's transaction.
 /// If the item's date or time changed, its reminders start over from the new moment.
+fn modify_in(
+    tx: &Transaction,
+    id: &str,
+    change: impl FnOnce(&Transaction, &mut Item) -> AppResult<()>,
+) -> AppResult<Item> {
+    let mut item = load_active(tx, id)?;
+    let before = schedule_of(&item);
+    change(tx, &mut item)?;
+    item.updated_at = now_utc();
+    repo::update(tx, &item)?;
+    if schedule_of(&item) != before {
+        reminders::reschedule_item(tx, &item, &Clock::current(tx)?)?;
+    }
+    Ok(item)
+}
+
+/// `modify_in` for one item, in its own transaction.
 fn modify(
     conn: &mut Connection,
     id: &str,
     change: impl FnOnce(&Transaction, &mut Item) -> AppResult<()>,
 ) -> AppResult<Item> {
     let tx = conn.transaction()?;
-    let mut item = load_active(&tx, id)?;
-    let before = schedule_of(&item);
-    change(&tx, &mut item)?;
-    item.updated_at = now_utc();
-    repo::update(&tx, &item)?;
-    if schedule_of(&item) != before {
-        reminders::reschedule_item(&tx, &item, &Clock::current(&tx)?)?;
-    }
+    let item = modify_in(&tx, id, change)?;
     tx.commit()?;
     Ok(item)
 }
+
+/// Most items `reschedule_many` moves at once ("Move all to today").
+pub const MAX_BULK: usize = 500;
+/// Most Inbox tasks listed for time-blocking.
+pub const UNSCHEDULED_LIMIT: i64 = 200;
 
 pub fn create(conn: &mut Connection, input: &ItemInput) -> AppResult<Item> {
     let tx = conn.transaction()?;
@@ -121,6 +136,51 @@ pub fn reschedule(conn: &mut Connection, id: &str, input: &ScheduleInput) -> App
         apply_schedule(item, schedule);
         Ok(())
     })
+}
+
+/// Gives several items the same new moment, all or nothing ("Move all to today", PRD R6).
+pub fn reschedule_many(
+    conn: &mut Connection,
+    ids: &[String],
+    input: &ScheduleInput,
+) -> AppResult<Vec<Item>> {
+    if ids.len() > MAX_BULK {
+        return Err(AppError::invalid("ids", "tooMany"));
+    }
+    let tx = conn.transaction()?;
+    let mut moved = Vec::with_capacity(ids.len());
+    for id in ids {
+        moved.push(modify_in(&tx, id, |_, item| {
+            let schedule = validate_schedule(item.kind, input)?;
+            apply_schedule(item, schedule);
+            Ok(())
+        })?);
+    }
+    tx.commit()?;
+    Ok(moved)
+}
+
+/// "Let it go" (PRD R6): the task is set aside as skipped, not deleted. Undo with `unskip`.
+pub fn skip(conn: &mut Connection, id: &str) -> AppResult<Item> {
+    modify(conn, id, |_, item| {
+        if item.skipped_at.is_none() {
+            item.skipped_at = Some(now_utc());
+        }
+        item.completed_at = None;
+        Ok(())
+    })
+}
+
+pub fn unskip(conn: &mut Connection, id: &str) -> AppResult<Item> {
+    modify(conn, id, |_, item| {
+        item.skipped_at = None;
+        Ok(())
+    })
+}
+
+/// Inbox tasks for the calendar's "To schedule" list (time-blocking, PRD R12).
+pub fn unscheduled(conn: &Connection) -> AppResult<Vec<Item>> {
+    Ok(repo::list_unscheduled(conn, UNSCHEDULED_LIMIT)?)
 }
 
 /// Completing twice keeps the original completion time.

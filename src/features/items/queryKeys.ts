@@ -5,6 +5,7 @@ export const itemKeys = {
   dashboard: (today: string, weekEndDate: string) =>
     ["items", "dashboard", today, weekEndDate] as const,
   range: (start: string, end: string) => ["items", "range", start, end] as const,
+  unscheduled: ["items", "unscheduled"] as const,
 };
 
 export const areaKeys = {

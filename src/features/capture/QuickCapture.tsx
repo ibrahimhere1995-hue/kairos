@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { captureToItemInput } from "@/features/capture/captureInput";
 import { CaptureChip } from "@/features/capture/CaptureChip";
 import { chipLabel } from "@/features/capture/chipLabel";
-import { useAreas, useCreateItem } from "@/features/items/api";
+import { useActiveAreas, useCreateItem } from "@/features/items/api";
 import { FieldError } from "@/components/ui/FieldError";
 import { toErrorPayload } from "@/lib/api/errors";
 import { getDayContext } from "@/lib/dates/dayContext";
@@ -29,7 +29,7 @@ export function QuickCapture({
   const [ignored, setIgnored] = useState<ReadonlySet<ChipKind>>(new Set());
   const [error, setError] = useState<string | null>(null);
   const ownInput = useRef<HTMLInputElement>(null);
-  const { data: areas = [] } = useAreas();
+  const { data: areas = [] } = useActiveAreas();
   const create = useCreateItem();
 
   const today = getDayContext().today;

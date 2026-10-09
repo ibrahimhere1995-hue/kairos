@@ -92,9 +92,8 @@ describe("My Day", () => {
     expect(await screen.findByText("1 task today, 1 meeting, 1 slipped by.")).toBeInTheDocument();
     expect(within(section("Now")).getByText("Team sync")).toBeInTheDocument();
     expect(within(section("Today")).getByText("Call bank")).toBeInTheDocument();
-    expect(within(section("Slipped by")).getByText("Gym")).toBeInTheDocument();
-    // Status is shown with words, not colour alone.
-    expect(within(section("Slipped by")).getByText("Slipped")).toBeInTheDocument();
+    // Slipped tasks get the caring card (PRD R6), worded, never just a colour.
+    expect(within(section("1 thing slipped by")).getByText("Gym")).toBeInTheDocument();
   });
 
   it("completes a task with one click and offers Undo", async () => {

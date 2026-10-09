@@ -1,6 +1,7 @@
 //! Services: business logic. Call repositories; never contain SQL.
 
 pub mod app_settings;
+pub mod areas;
 pub mod backups;
 pub mod checklist;
 pub mod item_rules;

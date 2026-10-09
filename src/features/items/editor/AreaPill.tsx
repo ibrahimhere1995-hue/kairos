@@ -17,6 +17,8 @@ export function AreaPill() {
   const areaId = useWatch({ control, name: "areaId" });
   const { data: areas = [] } = useAreas();
   const current = areas.find((a) => a.id === areaId) ?? null;
+  // Archived areas aren't offered, but an item already in one keeps showing it.
+  const choices = areas.filter((a) => !a.isArchived || a.id === areaId);
 
   const choose = (id: string | null) => {
     setValue("areaId", id, { shouldDirty: true });
@@ -42,7 +44,7 @@ export function AreaPill() {
         <AreaDot color={null} />
         {t("editor.noArea")}
       </OptionButton>
-      {areas.map((area) => (
+      {choices.map((area) => (
         <OptionButton key={area.id} selected={area.id === areaId} onClick={() => choose(area.id)}>
           <AreaDot color={area.color} />
           <span className="truncate">{area.name}</span>

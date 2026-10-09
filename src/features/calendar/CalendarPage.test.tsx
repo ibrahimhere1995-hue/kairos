@@ -8,6 +8,7 @@ import { useEditorStore } from "@/features/items/editorStore";
 import i18n from "@/i18n";
 import { toLocalDateString } from "@/lib/dates/dayContext";
 import { mockBackend, type Call } from "@/test/mockBackend";
+import { useUiStore } from "@/app/uiStore";
 import { renderApp } from "@/test/renderWithProviders";
 import type { Item } from "@/types/Item";
 
@@ -153,5 +154,32 @@ describe("Calendar", () => {
     const dialog = await screen.findByRole("dialog", { name: "New item" });
     expect(within(dialog).getByRole("radio", { name: "Event" })).toBeChecked();
     expect(within(dialog).getByText("2:00 PM · 1 h")).toBeInTheDocument();
+  });
+
+  it("lists Inbox tasks to drag onto the grid (time-blocking)", async () => {
+    useUiStore.setState({ toScheduleOpen: false });
+    const idea = item({ title: "Plan the trip", kind: "task" });
+    calls = mockBackend({ list_items: () => items, list_unscheduled: () => [idea] });
+    const user = userEvent.setup();
+    renderApp("/calendar?view=week&date=2026-10-07");
+
+    const toggle = await screen.findByRole("button", { name: /^To schedule/ });
+    expect(toggle).toHaveAttribute("aria-pressed", "false");
+    await user.click(toggle);
+    expect(toggle).toHaveAttribute("aria-pressed", "true");
+    const panel = await screen.findByRole("complementary", { name: "To schedule" });
+    expect(
+      within(panel).getByText("Drag a task onto the calendar to give it a time."),
+    ).toBeInTheDocument();
+
+    // Clicking a task opens it (keyboard users can give it a time there).
+    await user.click(within(panel).getByRole("button", { name: /Plan the trip/ }));
+    expect(useEditorStore.getState()).toMatchObject({ open: true, itemId: idea.id });
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(useEditorStore.getState().open).toBe(false));
+
+    // Month view has no hour grid, so no list.
+    await user.click(screen.getByRole("radio", { name: "Month" }));
+    expect(screen.queryByRole("complementary", { name: "To schedule" })).not.toBeInTheDocument();
   });
 });

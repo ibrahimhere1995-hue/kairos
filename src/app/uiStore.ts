@@ -5,6 +5,9 @@ import { createJSONStorage, persist } from "zustand/middleware";
 interface UiState {
   sidebarCollapsed: boolean;
   toggleSidebar: () => void;
+  /** Calendar Day/Week: the "To schedule" list of Inbox tasks (time-blocking). */
+  toScheduleOpen: boolean;
+  toggleToSchedule: () => void;
 }
 
 export const useUiStore = create<UiState>()(
@@ -12,6 +15,8 @@ export const useUiStore = create<UiState>()(
     (set) => ({
       sidebarCollapsed: false,
       toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
+      toScheduleOpen: false,
+      toggleToSchedule: () => set((state) => ({ toScheduleOpen: !state.toScheduleOpen })),
     }),
     { name: "kairos.ui", storage: createJSONStorage(() => localStorage) },
   ),

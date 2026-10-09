@@ -20,7 +20,8 @@
       "eventNeedsEnd": "Events need an end time.",
       "tooMany": "That's a lot of steps. Try splitting this into a few items.",
       "folderNotAbsolute": "Please choose a full folder location.",
-      "folderNotWritable": "Kairos can't save files in that folder. Please choose another one."
+      "folderNotWritable": "Kairos can't save files in that folder. Please choose another one.",
+      "duplicateName": "Another area already has this name."
     }
   },
   "common": {
@@ -33,7 +34,10 @@
   "toast": {
     "undo": "Undo",
     "done": "Done: {{title}}",
-    "movedToTrash": "Moved to Trash: {{title}}"
+    "movedToTrash": "Moved to Trash: {{title}}",
+    "letGo": "Let “{{title}}” go.",
+    "movedToday_one": "Moved {{count}} item to today.",
+    "movedToday_other": "Moved {{count}} items to today."
   },
   "items": {
     "markDone": "Mark “{{title}}” as done",
@@ -69,7 +73,27 @@
     "launchAtLogin": "Open Kairos when you sign in",
     "launchAtLoginHelp": "Kairos starts quietly in the tray, so reminders reach you even before you open it.",
     "on": "On",
-    "off": "Off"
+    "off": "Off",
+    "areas": "Life areas",
+    "areasHelp": "Group your tasks and events. Archived areas leave the pickers; their items keep them.",
+    "addArea": "Add area",
+    "newAreaName": "New area name",
+    "areaName": "Name of {{name}}",
+    "colorFor": "Colour for {{name}}",
+    "colors": {
+      "work": "Blue",
+      "home": "Green",
+      "personal": "Pink",
+      "learning": "Purple",
+      "health": "Teal"
+    },
+    "moveUp": "Move {{name}} up",
+    "moveDown": "Move {{name}} down",
+    "archived": "Archived",
+    "archiveArea": "Archive {{name}}",
+    "unarchiveArea": "Bring back {{name}}",
+    "archive": "Archive",
+    "unarchive": "Bring back"
   },
   "trash": {
     "title": "Trash",
@@ -179,7 +203,10 @@
       "over": "Moving {{title}}.",
       "end": "Dropped {{title}}.",
       "cancel": "Stopped moving {{title}}. It stays where it was."
-    }
+    },
+    "toSchedule": "To schedule",
+    "toScheduleHelp": "Drag a task onto the calendar to give it a time.",
+    "toScheduleEmpty": "Nothing waiting. Tasks without a date show up here."
   },
   "myDay": {
     "goodMorning": "Good morning.",
@@ -405,5 +432,22 @@
     "nothingNext": "Nothing else today",
     "nextAt": "Next: {{title}} · {{time}}",
     "nextToday": "Next: {{title}}"
+  },
+  "slipped": {
+    "title_one": "{{count}} thing slipped by.",
+    "title_other": "{{count}} things slipped by.",
+    "prompt_one": "Want to give it a new moment?",
+    "prompt_other": "Want to give them a new moment?",
+    "moveAllToday": "Move all to today",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "pickDate": "Pick a date",
+    "newDate": "New date",
+    "doneAlready": "Done already",
+    "letGo": "Let it go",
+    "choicesFor": "Choices for “{{title}}”",
+    "keepsMoving": "This one keeps moving. Break it into smaller steps?",
+    "breakDown": "Break it down",
+    "allCaughtUp": "All caught up. Nice work."
   }
 }

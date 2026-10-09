@@ -39,6 +39,7 @@ export function mockBackend(overrides: Record<string, Handler> = {}): Call[] {
     list_items: () => [],
     set_checklist: () => [],
     list_trash: () => [],
+    list_unscheduled: () => [],
     get_settings: () => ({ ...DEFAULT_SETTINGS }),
     main_window_ready: () => null,
     list_backups: () => [],

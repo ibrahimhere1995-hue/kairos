@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Plus, X } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -7,11 +7,19 @@ import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
 
 /** Sub-steps: tick, edit, remove, add. Saved with the item. */
-export function ChecklistEditor() {
+export function ChecklistEditor({ autoFocus = false }: { autoFocus?: boolean }) {
   const { t } = useTranslation();
   const { control, register } = useFormContext<ItemFormValues>();
   const { fields, append, remove } = useFieldArray({ control, name: "checklist" });
   const listRef = useRef<HTMLUListElement>(null);
+  const addRef = useRef<HTMLButtonElement>(null);
+
+  // "Break it into smaller steps": start on "Add a step" (after the panel's own autofocus).
+  useEffect(() => {
+    if (!autoFocus) return;
+    const timer = setTimeout(() => addRef.current?.focus(), 0);
+    return () => clearTimeout(timer);
+  }, [autoFocus]);
 
   const addStep = () => {
     append({ stepId: null, text: "", done: false });
@@ -51,7 +59,7 @@ export function ChecklistEditor() {
           </li>
         ))}
       </ul>
-      <Button variant="ghost" size="sm" className="self-start" onClick={addStep}>
+      <Button ref={addRef} variant="ghost" size="sm" className="self-start" onClick={addStep}>
         <Plus aria-hidden="true" />
         {t("editor.addStep")}
       </Button>

@@ -1,8 +1,9 @@
 import { useTranslation } from "react-i18next";
+import { AreasSettings } from "@/features/settings/areas/AreasSettings";
 import { BackupsSection } from "@/features/settings/backups/BackupsSection";
 import { GeneralSettings } from "@/features/settings/GeneralSettings";
 
-/** Settings (P1-T16): appearance, calendar, reminders, backups. Everything saves as you change it. */
+/** Settings: appearance, calendar, reminders, startup, life areas, backups. Everything saves as you change it. */
 export function SettingsPage() {
   const { t } = useTranslation();
   return (
@@ -12,6 +13,7 @@ export function SettingsPage() {
         <p className="text-text-muted">{t("settings.intro")}</p>
       </header>
       <GeneralSettings />
+      <AreasSettings />
       <BackupsSection />
     </div>
   );

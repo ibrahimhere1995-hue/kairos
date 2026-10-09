@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { useNavigate, useSearch } from "@tanstack/react-router";
-import { RotateCcw } from "lucide-react";
+import { Inbox, RotateCcw } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { AgendaView } from "@/features/calendar/agenda/AgendaView";
@@ -16,7 +16,8 @@ import { MonthView } from "@/features/calendar/month/MonthView";
 import { useTodayShortcut } from "@/features/calendar/useTodayShortcut";
 import { TimeGrid } from "@/features/calendar/week/TimeGrid";
 import { useNow } from "@/features/dashboard/useNow";
-import { useAreas, useItemsInRange } from "@/features/items/api";
+import { useAreas, useItemsInRange, useUnscheduledItems } from "@/features/items/api";
+import { useUiStore } from "@/app/uiStore";
 import { useWeekStartsOn } from "@/features/settings/api";
 import { EmptyState } from "@/components/EmptyState";
 import { Button } from "@/components/ui/Button";
@@ -48,6 +49,13 @@ export function CalendarPage() {
   useTodayShortcut(goToToday);
 
   const grid = useMemo(() => items.data ?? [], [items.data]);
+  const hasGrid = view === "day" || view === "week";
+  const { toScheduleOpen, toggleToSchedule } = useUiStore();
+  const unscheduled = useUnscheduledItems();
+  const toSchedule =
+    hasGrid && toScheduleOpen
+      ? { items: unscheduled.data ?? [], loading: unscheduled.isPending }
+      : null;
 
   return (
     <div className="flex h-[calc(100vh-10rem)] min-h-[32rem] flex-col gap-4">
@@ -57,6 +65,19 @@ export function CalendarPage() {
         onViewChange={(v) => go({ view: v })}
         onStep={(direction) => go({ date: stepAnchor(view, anchor, direction) })}
         onToday={goToToday}
+        extra={
+          hasGrid && (
+            <Button variant="secondary" aria-pressed={toScheduleOpen} onClick={toggleToSchedule}>
+              <Inbox aria-hidden="true" />
+              {t("calendar.toSchedule")}
+              {unscheduled.data && unscheduled.data.length > 0 && (
+                <span className="text-small font-normal text-text-muted">
+                  {unscheduled.data.length}
+                </span>
+              )}
+            </Button>
+          )
+        }
       />
 
       {items.isError ? (
@@ -74,8 +95,8 @@ export function CalendarPage() {
           aria-busy={items.isPending}
           className="flex min-h-0 flex-1 flex-col overflow-y-auto"
         >
-          {(view === "day" || view === "week") && (
-            <TimeGrid days={days} items={grid} areas={areas} ctx={ctx} />
+          {hasGrid && (
+            <TimeGrid days={days} items={grid} areas={areas} ctx={ctx} toSchedule={toSchedule} />
           )}
           {view === "month" && (
             <MonthView

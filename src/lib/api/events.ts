@@ -12,6 +12,15 @@ export async function onItemsChanged(onChange: () => void): Promise<UnlistenFn> 
   return listen(ITEMS_CHANGED, onChange);
 }
 
+/** Must match `AREAS_CHANGED` in src-tauri/src/commands/areas.rs. */
+export const AREAS_CHANGED = "areas:changed";
+
+/** Calls `onChange` whenever any window changes life areas. */
+export async function onAreasChanged(onChange: () => void): Promise<UnlistenFn> {
+  if (!isTauri()) return () => {};
+  return listen(AREAS_CHANGED, onChange);
+}
+
 /** Calls `onReload` after a backup has been restored: every piece of data may have changed. */
 export async function onDataReloaded(onReload: () => void): Promise<UnlistenFn> {
   if (!isTauri()) return () => {};

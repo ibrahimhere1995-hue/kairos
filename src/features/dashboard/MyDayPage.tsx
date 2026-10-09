@@ -7,6 +7,7 @@ import { weeklyBalance } from "@/features/dashboard/balance";
 import { buildDashboardQuery, currentWeekRange } from "@/features/dashboard/dashboardQuery";
 import { DashboardSection } from "@/features/dashboard/DashboardSection";
 import { Greeting } from "@/features/dashboard/Greeting";
+import { SlippedCard } from "@/features/dashboard/SlippedCard";
 import { groupDashboard, isEmpty, summarize } from "@/features/dashboard/groupDashboard";
 import { useNow } from "@/features/dashboard/useNow";
 import { useAreas, useDashboard, useItemsInRange } from "@/features/items/api";
@@ -29,6 +30,7 @@ export function MyDayPage() {
   const week = useItemsInRange(currentWeekRange(ctx, weekStartsOn));
   const { data: areaList = [] } = useAreas();
   const areas = useMemo(() => new Map(areaList.map((a) => [a.id, a])), [areaList]);
+  const activeAreas = useMemo(() => areaList.filter((a) => !a.isArchived), [areaList]);
 
   if (dashboard.isPending) {
     return (
@@ -71,8 +73,8 @@ export function MyDayPage() {
         />
       ) : (
         <>
-          <AreaFilter areas={areaList} value={areaId} onChange={setAreaId} />
-          {week.data && <BalanceStrip balance={weeklyBalance(week.data, areaList)} />}
+          <AreaFilter areas={activeAreas} value={areaId} onChange={setAreaId} />
+          {week.data && <BalanceStrip balance={weeklyBalance(week.data, activeAreas)} />}
           {isEmpty(sections) && (
             <p className="text-body text-text-muted">{t("myDay.emptyFiltered")}</p>
           )}
@@ -83,18 +85,13 @@ export function MyDayPage() {
             entries={sections.now}
             {...common}
           />
+          {/* DESIGN_SYSTEM §6: the slipped card comes right after Now. */}
+          <SlippedCard entries={sections.slipped} areas={areas} today={ctx.today} />
           <DashboardSection
             title={t("myDay.today")}
             icon={Sun}
             iconClassName="text-status-today"
             entries={sections.today}
-            {...common}
-          />
-          <DashboardSection
-            title={t("myDay.slipped")}
-            icon={RotateCcw}
-            iconClassName="text-status-slipped"
-            entries={sections.slipped}
             {...common}
           />
           <DashboardSection
