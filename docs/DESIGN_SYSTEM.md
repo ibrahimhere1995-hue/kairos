@@ -210,6 +210,7 @@ Motion in Kairos should feel **calm, quick, and purposeful**: it explains what c
 - Fraunces greeting: "Good morning, Priya." + date + one-line summary.
 - A slim **day timeline** across the top with a gold "now" line.
 - Columns (≥1200 px) or stacked sections: **Now**, **Today**, **Slipped**, **This week**; **Done today** collapsed at bottom.
+- Missed repeating tasks get their own calm **Routines you missed** card under Slipped (neutral repeat icon, no amber): Done already · Skip this time · Do it today (weekly or rarer only).
 - Right rail (optional, ≥1400 px): mini-month, habits for today, area balance ring.
 
 ### Calendar

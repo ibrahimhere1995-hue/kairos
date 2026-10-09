@@ -6,6 +6,7 @@ import {
   phraseToRule,
   presetOf,
   presetRule,
+  repeatsOftenerThanWeekly,
   withEnd,
 } from "@/lib/recurrence/rules";
 
@@ -62,5 +63,14 @@ describe("repeat rules", () => {
     expect(phraseToRule("monthly")).toBe("FREQ=MONTHLY");
     expect(phraseToRule("every year")).toBe("FREQ=YEARLY");
     expect(phraseToRule("every blue moon")).toBeNull();
+  });
+
+  it("knows which routines come round more than weekly", () => {
+    expect(repeatsOftenerThanWeekly("FREQ=DAILY")).toBe(true);
+    expect(repeatsOftenerThanWeekly("FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR")).toBe(true);
+    expect(repeatsOftenerThanWeekly("FREQ=WEEKLY;BYDAY=MO")).toBe(false);
+    expect(repeatsOftenerThanWeekly("FREQ=WEEKLY")).toBe(false);
+    expect(repeatsOftenerThanWeekly("FREQ=MONTHLY")).toBe(false);
+    expect(repeatsOftenerThanWeekly(null)).toBe(false);
   });
 });

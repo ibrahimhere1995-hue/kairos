@@ -113,8 +113,8 @@ export function useCompleteItem() {
   });
 }
 
-/** "Let it go" (PRD R6): sets a task aside as skipped, with Undo. */
-export function useSkipItem() {
+/** "Let it go" (PRD R6): sets a task aside as skipped, with Undo. `messageKey` words the toast. */
+export function useSkipItem(messageKey = "toast.letGo") {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const showToast = useToastStore((state) => state.show);
@@ -123,7 +123,7 @@ export function useSkipItem() {
     mutationFn: (item: Item) => itemsApi.skip(item.id),
     onSuccess: (_, item) => {
       showToast({
-        message: t("toast.letGo", { title: item.title }),
+        message: t(messageKey, { title: item.title }),
         actionLabel: t("toast.undo"),
         onAction: () => void itemsApi.unskip(item.id).then(refresh),
       });

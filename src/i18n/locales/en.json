@@ -39,7 +39,8 @@
     "movedToTrash": "Moved to Trash: {{title}}",
     "letGo": "Let “{{title}}” go.",
     "movedToday_one": "Moved {{count}} item to today.",
-    "movedToday_other": "Moved {{count}} items to today."
+    "movedToday_other": "Moved {{count}} items to today.",
+    "skippedOnce": "Skipped “{{title}}” this time."
   },
   "items": {
     "markDone": "Mark “{{title}}” as done",
@@ -479,5 +480,13 @@
     "deleteQuestion": "This repeats. Which ones should go to the Trash?",
     "this": "Only this one",
     "following": "This and following"
+  },
+  "routines": {
+    "title": "Routines you missed",
+    "prompt": "No pressure: close them out. The next one is already on its way.",
+    "doneAlready": "Done already",
+    "skip": "Skip this time",
+    "doToday": "Do it today",
+    "choicesFor": "Choices for “{{title}}”"
   }
 }

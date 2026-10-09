@@ -1,5 +1,5 @@
 import type { DayContext } from "@/lib/dates/dayContext";
-import { getItemStatus, type ItemStatus } from "@/lib/status/status";
+import { getItemStatus, isComputedOccurrence, type ItemStatus } from "@/lib/status/status";
 import type { Dashboard } from "@/types/Dashboard";
 import type { Item } from "@/types/Item";
 
@@ -12,6 +12,8 @@ export interface DashboardSections {
   now: DashboardItem[];
   today: DashboardItem[];
   slipped: DashboardItem[];
+  /** Repeating tasks whose latest occurrence was missed (their own calm card). */
+  routines: DashboardItem[];
   thisWeek: DashboardItem[];
   doneToday: DashboardItem[];
 }
@@ -40,6 +42,7 @@ export function groupDashboard(
     now: [],
     today: [],
     slipped: [],
+    routines: [],
     thisWeek: [],
     doneToday: [],
   };
@@ -48,8 +51,15 @@ export function groupDashboard(
     else if (entry.status === "dueToday") sections.today.push(entry);
     else if (entry.status === "missed") sections.slipped.push(entry);
   }
-  // Earlier days first, then anything that slipped earlier today.
-  sections.slipped = [...withStatus(data.overdue), ...sections.slipped];
+  // Earlier days first, then anything that slipped earlier today. A routine's missed occurrence
+  // (computed, from an earlier day) goes to the routines card instead: its next one is already
+  // coming, so it only needs closing, not a new moment.
+  const overdue = withStatus(data.overdue);
+  sections.routines = overdue.filter(({ item }) => isComputedOccurrence(item));
+  sections.slipped = [
+    ...overdue.filter(({ item }) => !isComputedOccurrence(item)),
+    ...sections.slipped,
+  ];
   sections.thisWeek = withStatus(data.thisWeek);
   sections.doneToday = withStatus(data.doneToday);
   return sections;
