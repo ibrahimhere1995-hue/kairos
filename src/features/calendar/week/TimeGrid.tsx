@@ -112,7 +112,14 @@ export function TimeGrid({
             ))}
           </div>
 
-          <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-scroll">
+          {/* Focusable so keyboard users can scroll the hours even on an empty day. */}
+          <div
+            ref={scrollRef}
+            tabIndex={0}
+            role="region"
+            aria-label={t("calendar.hourGrid")}
+            className="min-h-0 flex-1 overflow-y-scroll"
+          >
             <div className="flex">
               <HourGutter />
               {columns.map(({ date, dayStart, positioned }) => (

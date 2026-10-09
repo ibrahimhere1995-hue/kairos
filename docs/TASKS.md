@@ -58,8 +58,8 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 - [x] **P2-T10 🎨 Area management** — add/rename/recolour/reorder/archive areas.
 - [x] **P2-T11 🎨 Attachments & location** on items (stored in app-data, open with OS).
 - [x] **P2-T12 ⚙️ Import/Export** — `.ics` import, JSON + `.ics` export.
-- [ ] **P2-T13 🧪 Accessibility pass** — keyboard audit, screen reader labels (NVDA + VoiceOver), automated contrast tests, text-size and reduce-motion checks.
-- [ ] **P2-T14 🎨 Visual polish** — apply notes from reviewing Sunsama/Fantastical; micro-interactions; skeletons; consistent empty states.
+- [x] **P2-T13 🧪 Accessibility pass** — keyboard audit, screen reader labels (NVDA + VoiceOver), automated contrast tests, text-size and reduce-motion checks. Results and the by-hand NVDA checklist: `docs/qa/ACCESSIBILITY.md`.
+- [x] **P2-T14 🎨 Visual polish** — apply notes from reviewing Sunsama/Fantastical; micro-interactions; skeletons; consistent empty states.
 
 **🛑 Checkpoint:** give a beta build to 3–5 people (including one non-technical person). Watch them use it without help.
 

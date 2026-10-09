@@ -108,6 +108,13 @@ export function CalendarPage() {
               onOpenDay={(date) => go({ view: "day", date })}
             />
           )}
+          {view === "agenda" && items.isPending && (
+            <div className="flex flex-col gap-3">
+              <div className="skeleton h-6 w-40 rounded-sm" />
+              <div className="skeleton h-14 rounded-md" />
+              <div className="skeleton h-14 rounded-md" />
+            </div>
+          )}
           {view === "agenda" && !items.isPending && (
             <AgendaView days={days} items={grid} areas={areas} ctx={ctx} />
           )}

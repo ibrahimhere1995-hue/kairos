@@ -14,7 +14,8 @@ export function MonthChip({ item, area }: { item: Item; area: Area | undefined }
       type="button"
       onClick={() => openItem(item.id)}
       className={cn(
-        "flex w-full min-w-0 items-center gap-1.5 rounded-sm px-1 py-0.5 text-left text-caption hover:bg-surface-3",
+        // min-h-6: 24 px targets (WCAG 2.2 target size).
+        "flex min-h-6 w-full min-w-0 items-center gap-1.5 rounded-sm px-1 py-0.5 text-left text-caption hover:bg-surface-3",
         done && "text-text-muted line-through",
       )}
     >

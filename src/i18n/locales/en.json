@@ -219,7 +219,8 @@
     },
     "toSchedule": "To schedule",
     "toScheduleHelp": "Drag a task onto the calendar to give it a time.",
-    "toScheduleEmpty": "Nothing waiting. Tasks without a date show up here."
+    "toScheduleEmpty": "Nothing waiting. Tasks without a date show up here.",
+    "hourGrid": "Hours of the day"
   },
   "myDay": {
     "goodMorning": "Good morning.",
@@ -340,7 +341,6 @@
   "pages": {
     "myDay": "Your day at a glance will live here: what's happening now, what's left today, and what slipped by.",
     "calendar": "Your day, week, and month views will live here.",
-    "inbox": "A holding place for quick notes, screenshots, and voice notes that don't have a date yet.",
     "settings": "Theme, text size, reminders, and backups will be set here.",
     "errorTitle": "Something went wrong",
     "notFoundTitle": "Nothing here",
@@ -599,5 +599,11 @@
     "importedNone": "Nothing new to import.",
     "importDetails": "{{duplicates}} already here, {{skipped}} skipped, {{simplified}} without their repeat.",
     "failed": "That didn't work. Your data is unchanged."
+  },
+  "inbox": {
+    "intro": "Tasks without a date. Open one to give it a moment, or drag it onto the calendar from “To schedule”.",
+    "add": "Add a task without a date",
+    "loading": "Loading your Inbox",
+    "empty": "Nothing waiting here. Tasks without a date show up in the Inbox."
   }
 }
