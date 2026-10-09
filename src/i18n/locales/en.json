@@ -31,6 +31,16 @@
       "notACalendar": "That doesn't look like a calendar file (.ics).",
       "unknownMilestone": "That goal step no longer exists. Please pick another.",
       "emailFailed": "Kairos couldn’t open your email app. Try “Export to file” instead."
+    },
+    "ai": {
+      "off": "Smart features are off. Turn them on in Settings › Smart features.",
+      "offline": "Kairos couldn’t reach Gemini. Check your internet connection and try again. Everything else still works offline.",
+      "timeout": "Gemini took too long to answer. Please try again in a moment.",
+      "badKey": "That key didn’t work. Please check it and paste it again.",
+      "busy": "Gemini is busy or your free daily limit is used up. Please try again later.",
+      "unreadable": "Gemini’s answer couldn’t be read this time. Please try again.",
+      "failed": "Something went wrong with the smart feature. Please try again.",
+      "keychain": "Kairos couldn’t reach your computer’s password storage for the key."
     }
   },
   "common": {
@@ -799,5 +809,34 @@
     "delete": "Delete “{{text}}”",
     "deleted": "Removed from your wishlist.",
     "helpful": "Missing something in your review? Suggest an improvement."
+  },
+  "ai": {
+    "mark": "Smart feature",
+    "title": "Smart features",
+    "intro": "Optional extras powered by Google Gemini, using your own free key. Everything else in Kairos works without them.",
+    "consentTitle": "Before you turn them on",
+    "consentAgree": "I understand, turn them on",
+    "status": {
+      "off": "Off",
+      "needsKey": "On, waiting for your key",
+      "on": "On"
+    },
+    "keyLabel": "Gemini API key",
+    "keyHelp": "Free from Google AI Studio. Paste it here; Kairos checks it before saving.",
+    "getKey": "Get a free key",
+    "saveKey": "Check and save key",
+    "checking": "Checking…",
+    "keySaved": "Key saved. Smart features are ready.",
+    "keyOnFile": "A key is saved.",
+    "removeKey": "Remove key",
+    "keyRemoved": "Key removed.",
+    "turnOff": "Turn smart features off",
+    "turnedOff": "Smart features are off.",
+    "readWithAi": "Read with AI",
+    "reading": "Reading…",
+    "aiRead": "Read by AI. Check it before saving.",
+    "consentData": "Smart features need the internet. Each time you use one, only what that request needs is sent to Google Gemini: for example the sentence you typed. Never your notes or attachments unless you include them.",
+    "consentKey": "Your key is kept in your computer’s password storage (Windows Credential Manager or macOS Keychain), never in Kairos’ data, backups or exports.",
+    "consentConfirm": "Nothing is ever saved without your OK: you always check the result first."
   }
 }

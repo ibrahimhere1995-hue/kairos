@@ -278,7 +278,9 @@ Frontend sends image path → Rust `ai_extract_from_image` → reads key from ke
 | `list_feedback`, `create_feedback(input)`, `update_feedback(id, input)`, `set_feedback_status(id, status)`, `delete_feedback(id, deleted)`, `export_feedback(path)`, `email_feedback` | Wishlist (P3-T07, migration 0007). Kept locally. Export writes a plain-text file; email opens the user's mail app with a `mailto:` link of entries not yet done (shortened past ~1500 characters). Kairos itself sends nothing. |
 | `snooze_reminder`, `dismiss_reminder` | Reminder actions (planned; notification buttons currently act in Rust directly) |
 | `main_window_ready` | Frontend painted its first frame: show the main window (unless started hidden at sign-in) |
-| `ai_set_key`, `ai_clear_key`, `ai_extract_from_image`, `ai_parse_text`, `ai_plan_range` | AI (Phase 3) |
+| `ai_status`, `ai_consent(given)`, `ai_set_key(key)`, `ai_clear_key`, `ai_open_key_page` | Smart features setup (P3-T08). Off until the consent screen is accepted (settings key `ai.consentAt`) **and** a key is saved. `ai_set_key` checks the key with Google (`GET models?pageSize=1`) before keeping it in the OS keychain (`ai/secrets.rs`); withdrawing consent also removes the key. `src-tauri/src/ai/`: `AiProvider` trait, `gemini.rs` (model `gemini-2.5-flash`, JSON schema output, 20 s timeout), errors as `AppError::Ai(reason)` → `errors.ai.<reason>` (`off`, `offline`, `timeout`, `badKey`, `busy`, `unreadable`, `failed`, `keychain`). The database lock is never held while waiting on the network. |
+| `ai_parse_text(text, now)` | A2 (P3-T10). Only the sentence and the local date/time are sent. Returns a draft (`title`, `date`, `time`, `durationMinutes`, `reminderMinutes`); malformed parts are dropped. Quick Capture offers "Read with AI" only when smart features are on and the offline parser looks unsure (`features/capture/looksUnsure.ts`); the draft shows as chips and saves only on Enter. |
+| `ai_extract_from_image`, `ai_plan_range` | AI (P3-T09, P3-T11) |
 
 All commands return `Result<T, AppError>`; `AppError` has a `code` and a user-safe `message` key for i18n.
 

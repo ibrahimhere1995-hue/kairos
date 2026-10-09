@@ -28,6 +28,8 @@ rrule = "0.14"
 # .ics import (P2-T12, approved 2026-10-09). chrono-tz: same version rrule uses (one copy).
 icalendar = { version = "0.17", default-features = false, features = ["parser"] }
 chrono-tz = "0.10"
+reqwest = { version = "0.13.5", default-features = false, features = ["json", "native-tls"] }
+keyring = "4.2.0"
 
 [lints.clippy]
 # PROJECT_RULES: no unwrap()/expect() outside tests and startup-fatal paths.

@@ -23,6 +23,9 @@ pub enum AppError {
     Lock,
     #[error("the backup file is damaged or not a Kairos backup")]
     InvalidBackup,
+    /// A smart (AI) feature failed; the reason is a short i18n key under `errors.ai`.
+    #[error("smart feature failed: {0}")]
+    Ai(&'static str),
 }
 
 impl AppError {
@@ -40,6 +43,7 @@ impl AppError {
             AppError::NotFound => "not_found",
             AppError::Lock => "lock",
             AppError::InvalidBackup => "invalid_backup",
+            AppError::Ai(_) => "ai",
         }
     }
 
@@ -54,6 +58,7 @@ impl AppError {
             AppError::Validation { reason, .. } => format!("errors.validation.{reason}"),
             AppError::NotFound => "errors.notFound".into(),
             AppError::InvalidBackup => "errors.invalidBackup".into(),
+            AppError::Ai(reason) => format!("errors.ai.{reason}"),
         }
     }
 
