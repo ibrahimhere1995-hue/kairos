@@ -8,6 +8,7 @@ import { ChecklistEditor } from "@/features/items/editor/ChecklistEditor";
 import { DatePill } from "@/features/items/editor/DatePill";
 import { EditorFooter } from "@/features/items/editor/EditorFooter";
 import { MoreDetails } from "@/features/items/editor/MoreDetails";
+import { GoalPill } from "@/features/items/editor/GoalPill";
 import { PriorityPill } from "@/features/items/editor/PriorityPill";
 import { RepeatPill } from "@/features/items/editor/RepeatPill";
 import { ReminderPill } from "@/features/items/editor/ReminderPill";
@@ -152,6 +153,7 @@ export function ItemEditorForm({
               <RepeatPill />
               <AreaPill />
               <PriorityPill />
+              <GoalPill />
             </div>
             {(dateError ?? durationError) && (
               <FieldError message={t(dateError ?? durationError ?? "")} />

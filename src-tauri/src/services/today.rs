@@ -117,6 +117,7 @@ mod tests {
                 source: None,
                 reminders: Some(vec![]),
                 rrule: None,
+                milestone_id: None,
             },
         )
         .unwrap()

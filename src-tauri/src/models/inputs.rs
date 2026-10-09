@@ -30,6 +30,10 @@ pub struct ItemInput {
     /// Repeat rule (RFC 5545 RRULE without DTSTART, e.g. `FREQ=WEEKLY;BYDAY=MO`); null = once.
     /// Ignored when editing a single occurrence of a repeating item.
     pub rrule: Option<String>,
+    /// The goal milestone this task counts towards (P3-T03). Omitted / null: none.
+    #[serde(default)]
+    #[cfg_attr(test, ts(optional))]
+    pub milestone_id: Option<String>,
 }
 
 /// New schedule for `reschedule_item` (drag on the calendar, the slipped-items card).

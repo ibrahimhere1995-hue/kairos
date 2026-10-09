@@ -104,7 +104,7 @@ pub fn create(conn: &mut Connection, input: &ItemInput) -> AppResult<Item> {
         rrule: repeat,
         recurrence_parent_id: None,
         original_start_at: None,
-        milestone_id: None,
+        milestone_id: valid.milestone_id,
         reschedule_count: 0,
         source: input.source.unwrap_or(ItemSource::Manual),
         created_at: now.clone(),
@@ -162,6 +162,7 @@ pub fn update_scoped(
         item.area_id = valid.area_id;
         item.priority = valid.priority;
         item.location = valid.location;
+        item.milestone_id = valid.milestone_id;
         apply_schedule(item, valid.schedule);
         if let Some(offsets) = &input.reminders {
             reminders::set_for_item(tx, item, offsets, &Clock::current(tx)?)?;

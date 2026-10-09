@@ -95,6 +95,7 @@ fn add_samples(conn: &mut Connection) -> AppResult<()> {
                 // Samples never send notifications.
                 reminders: Some(vec![]),
                 rrule: None,
+                milestone_id: None,
             },
         )?;
         ids.push(item.id);
@@ -221,6 +222,7 @@ mod tests {
                 source: None,
                 reminders: None,
                 rrule: None,
+                milestone_id: None,
             },
         )
         .unwrap();

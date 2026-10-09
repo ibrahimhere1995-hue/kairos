@@ -156,6 +156,7 @@ mod tests {
                 source: None,
                 reminders: None,
                 rrule: None,
+                milestone_id: None,
             },
         )
         .unwrap();

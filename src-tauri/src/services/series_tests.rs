@@ -31,6 +31,7 @@ fn weekly(title: &str) -> ItemInput {
         source: None,
         reminders: Some(vec![]),
         rrule: Some("FREQ=WEEKLY".into()),
+        milestone_id: None,
     }
 }
 

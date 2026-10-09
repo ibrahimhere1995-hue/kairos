@@ -146,6 +146,7 @@ pub fn process(conn: &mut Connection, dir: &Path, id: &str) -> AppResult<Item> {
             source: Some(ItemSource::Quick),
             reminders: None,
             rrule: None,
+            milestone_id: None,
         },
     )?;
     let tx = conn.transaction()?;

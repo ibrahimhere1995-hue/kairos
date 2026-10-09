@@ -67,6 +67,13 @@ export function usePaletteCommands(query: string): PaletteCommand[] {
         keywords: `${nav} streak routine`,
         run: go("/habits"),
       },
+      { id: "go-goals", label: t("palette.cmd.goGoals"), keywords: nav, run: go("/goals") },
+      {
+        id: "go-templates",
+        label: t("palette.cmd.goTemplates"),
+        keywords: `${nav} routine plan`,
+        run: go("/templates"),
+      },
       {
         id: "go-trash",
         label: t("palette.cmd.goTrash"),
