@@ -45,6 +45,12 @@
       "imageType": "Kairos can read PNG, JPEG and WebP pictures.",
       "imageSize": "That picture is too big to send. Try a smaller screenshot.",
       "nothingToPlan": "There are no open tasks without a time to plan. Add some, or give tasks a date first."
+    },
+    "voice": {
+      "privacy": "Windows speech recognition is turned off. Turn on “Online speech recognition” in Windows privacy settings to use your voice.",
+      "microphone": "Kairos can't use the microphone. Allow microphone access for apps in Windows privacy settings.",
+      "failed": "Voice capture didn't work this time. Please try again, or type instead.",
+      "unsupported": "Voice capture isn't available on this computer yet."
     }
   },
   "common": {
@@ -879,5 +885,10 @@
     "offer": "Kairos can suggest what to move.",
     "hint": "You could move a few to another day.",
     "suggest": "Suggest what to move"
+  },
+  "voice": {
+    "hold": "Hold to speak",
+    "listening": "Listening… release when done",
+    "openSettings": "Open Windows settings"
   }
 }

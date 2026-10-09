@@ -2,6 +2,7 @@ import { useState, type ClipboardEvent, type KeyboardEvent } from "react";
 import { ImagePlus, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useInboxActions } from "@/features/inbox/api";
+import { VoiceButton } from "@/features/voice/VoiceButton";
 import { Button } from "@/components/ui/Button";
 import { FieldError } from "@/components/ui/FieldError";
 import { toErrorPayload } from "@/lib/api/errors";
@@ -59,6 +60,11 @@ export function InboxCapture() {
           <ImagePlus aria-hidden="true" />
           {t("inbox.addPicture")}
         </Button>
+        <VoiceButton
+          onText={(spoken) =>
+            setText((prev) => (prev.trim() ? `${prev.trim()} ${spoken}` : spoken))
+          }
+        />
         <span className="text-small text-text-muted">{t("inbox.pasteHint")}</span>
       </div>
       {error && <FieldError message={t(toErrorPayload(error).message)} />}

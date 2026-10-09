@@ -2217,6 +2217,7 @@ dependencies = [
  "thiserror 2.0.21",
  "ts-rs",
  "uuid",
+ "windows",
 ]
 
 [[package]]

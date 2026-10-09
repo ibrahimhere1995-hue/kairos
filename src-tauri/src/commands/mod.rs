@@ -14,6 +14,7 @@ pub mod items;
 pub mod onboarding;
 pub mod settings;
 pub mod trash;
+pub mod voice;
 
 use rusqlite::Connection;
 use tauri::{AppHandle, Emitter, Runtime};
