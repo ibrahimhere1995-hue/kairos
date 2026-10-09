@@ -250,7 +250,7 @@ CREATE VIRTUAL TABLE items_fts USING fts5(title, notes, content='items', content
 Global shortcut → small always-on-top Tauri window → user types → frontend parses with chrono-node + tag parser → shows chips → Enter → `create_item` command → window hides → main window receives `items:changed`.
 
 ### 6.5 AI image → task
-Frontend sends image path → Rust `ai_extract_from_image` → reads key from keychain → downscales image (max 1600 px) → calls Gemini with a strict JSON schema prompt → validates JSON → returns draft → user edits and confirms → `create_item`. Timeouts 20 s; friendly error on failure; never blocks other features.
+Frontend shrinks the picture in the webview (max 1600 px, `lib/image/shrink.ts`; decision 2026-10-09, no image crate) → sends the bytes to Rust `ai_extract_from_image` → reads key from keychain → calls Gemini with a strict JSON schema prompt → validates JSON → returns draft → user edits and confirms → `create_item`. Timeouts 20 s; friendly error on failure; never blocks other features.
 
 ## 7. Command API (initial)
 
@@ -280,7 +280,8 @@ Frontend sends image path → Rust `ai_extract_from_image` → reads key from ke
 | `main_window_ready` | Frontend painted its first frame: show the main window (unless started hidden at sign-in) |
 | `ai_status`, `ai_consent(given)`, `ai_set_key(key)`, `ai_clear_key`, `ai_open_key_page` | Smart features setup (P3-T08). Off until the consent screen is accepted (settings key `ai.consentAt`) **and** a key is saved. `ai_set_key` checks the key with Google (`GET models?pageSize=1`) before keeping it in the OS keychain (`ai/secrets.rs`); withdrawing consent also removes the key. `src-tauri/src/ai/`: `AiProvider` trait, `gemini.rs` (model `gemini-2.5-flash`, JSON schema output, 20 s timeout), errors as `AppError::Ai(reason)` → `errors.ai.<reason>` (`off`, `offline`, `timeout`, `badKey`, `busy`, `unreadable`, `failed`, `keychain`). The database lock is never held while waiting on the network. |
 | `ai_parse_text(text, now)` | A2 (P3-T10). Only the sentence and the local date/time are sent. Returns a draft (`title`, `date`, `time`, `durationMinutes`, `reminderMinutes`); malformed parts are dropped. Quick Capture offers "Read with AI" only when smart features are on and the offline parser looks unsure (`features/capture/looksUnsure.ts`); the draft shows as chips and saves only on Enter. |
-| `ai_extract_from_image`, `ai_plan_range` | AI (P3-T09, P3-T11) |
+| `ai_extract_from_image` (raw bytes + `x-image-type`, `x-now` headers) | A1 (P3-T09). PNG/JPEG/WebP up to 8 MB (already shrunk). Returns a draft (`title`, `date`, `time`, `durationMinutes`, `location`, `notes`) that opens the editor pre-filled; nothing is saved until the user presses Add. From Quick Capture (paste or "From a picture", app window only) and Inbox pictures ("Read with AI"). Dragging files in is not supported yet (the webview receives no file drops). |
+| `ai_plan(request)` | A3 (P3-T11). The frontend sends today (or the rest of the week), busy times (titles + local times), open tasks without a time (titles only; no repeating ones; at most 30), working hours 09:00–18:00 and an optional instruction. Rust keeps only proposals that fit (known task once, listed day, inside hours, not past, no overlaps). The user unticks any; accepted ones are rescheduled with one Undo. |
 
 All commands return `Result<T, AppError>`; `AppError` has a `code` and a user-safe `message` key for i18n.
 

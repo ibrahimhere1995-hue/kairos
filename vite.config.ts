@@ -52,6 +52,8 @@ export default defineConfig(() => ({
   test: {
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
+    // Screen tests type and wait a lot; 5 s is too tight when the whole suite runs at once.
+    testTimeout: 15_000,
     include: ["src/**/*.test.{ts,tsx}"],
   },
 }));

@@ -4,6 +4,9 @@ import { useTranslation } from "react-i18next";
 import { captureToItemInput } from "@/features/capture/captureInput";
 import { CaptureChip } from "@/features/capture/CaptureChip";
 import { useAiCapture } from "@/features/capture/useAiCapture";
+import { useAiReady } from "@/features/ai/api";
+import { PictureButton } from "@/features/ai/PictureButton";
+import { useImageToTask } from "@/features/ai/useImageToTask";
 import { chipLabel } from "@/features/capture/chipLabel";
 import { reminderLabel } from "@/features/items/editor/reminderLabels";
 import { useActiveAreas, useCreateItem } from "@/features/items/api";
@@ -40,6 +43,13 @@ export function QuickCapture({
     [text, areas, ignored],
   );
   const ai = useAiCapture(text, offline);
+  // A1 opens the full editor, so pictures are read only in the app window.
+  const pictures = useAiReady() && Boolean(onMoreDetails);
+  const picture = useImageToTask(onCancel);
+  const readPicture = (file: Blob) => {
+    setError(null);
+    picture.mutate(file, { onError: (e) => setError(toErrorPayload(e).message) });
+  };
   const { parsed, draft } = ai;
   const canSave = text.trim() !== "" && !create.isPending;
 
@@ -76,6 +86,12 @@ export function QuickCapture({
         value={text}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={onKeyDown}
+        onPaste={(e) => {
+          const file = [...e.clipboardData.files].find((f) => f.type.startsWith("image/"));
+          if (!pictures || !file) return;
+          e.preventDefault();
+          readPicture(file);
+        }}
         aria-label={t("capture.label")}
         aria-describedby="capture-hint"
         placeholder={t("capture.placeholder")}
@@ -131,6 +147,7 @@ export function QuickCapture({
             {t(ai.read.isPending ? "ai.reading" : "ai.readWithAi")}
           </button>
         )}
+        {pictures && <PictureButton busy={picture.isPending} onPicture={readPicture} />}
         {onMoreDetails && (
           <button
             type="button"

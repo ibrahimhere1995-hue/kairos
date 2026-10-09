@@ -5,7 +5,7 @@
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use serde_json::{Value, json};
 
-use crate::ai::AiProvider;
+use crate::ai::{AiProvider, Part};
 use crate::error::{AppError, AppResult};
 use crate::models::ai::AiDraft;
 
@@ -46,12 +46,34 @@ fn prompt(text: &str, now: NaiveDateTime) -> String {
     )
 }
 
-fn string(value: &Value, key: &str) -> Option<String> {
+pub(super) fn string(value: &Value, key: &str) -> Option<String> {
     value.get(key)?.as_str().map(str::trim).map(str::to_owned)
 }
 
-fn within(value: &Value, key: &str, max: i64) -> Option<i64> {
+pub(super) fn within(value: &Value, key: &str, max: i64) -> Option<i64> {
     value.get(key)?.as_i64().filter(|n| (1..=max).contains(n))
+}
+
+/// A well-formed `date` (YYYY-MM-DD), `time` (HH:MM, only with a date) and
+/// `durationMinutes` (only with a time, at most a day).
+pub(super) fn moment(value: &Value) -> (Option<String>, Option<String>, Option<i64>) {
+    let date = string(value, "date")
+        .and_then(|d| NaiveDate::parse_from_str(&d, "%Y-%m-%d").ok())
+        .map(|d| d.format("%Y-%m-%d").to_string());
+    let time = string(value, "time")
+        .filter(|_| date.is_some())
+        .and_then(|t| NaiveTime::parse_from_str(&t, "%H:%M").ok())
+        .map(|t| t.format("%H:%M").to_string());
+    let duration = time
+        .as_ref()
+        .and(within(value, "durationMinutes", DURATION_MAX));
+    (date, time, duration)
+}
+
+/// The local date and time the frontend sends, `YYYY-MM-DDTHH:mm`.
+pub(super) fn local_now(now: &str) -> AppResult<NaiveDateTime> {
+    NaiveDateTime::parse_from_str(now, "%Y-%m-%dT%H:%M")
+        .map_err(|_| AppError::invalid("now", "invalidDateTime"))
 }
 
 /// Keeps only what is well formed; the sentence itself is the title if none came back.
@@ -62,17 +84,9 @@ pub fn validate(value: &Value, text: &str) -> AiDraft {
         .chars()
         .take(TITLE_MAX)
         .collect();
-    let date = string(value, "date")
-        .and_then(|d| NaiveDate::parse_from_str(&d, "%Y-%m-%d").ok())
-        .map(|d| d.format("%Y-%m-%d").to_string());
-    let time = string(value, "time")
-        .filter(|_| date.is_some())
-        .and_then(|t| NaiveTime::parse_from_str(&t, "%H:%M").ok())
-        .map(|t| t.format("%H:%M").to_string());
+    let (date, time, duration_minutes) = moment(value);
     AiDraft {
-        duration_minutes: time
-            .as_ref()
-            .and(within(value, "durationMinutes", DURATION_MAX)),
+        duration_minutes,
         reminder_minutes: within(value, "reminderMinutesBefore", REMINDER_MAX),
         title,
         date,
@@ -93,10 +107,9 @@ pub async fn read_sentence(
     if text.chars().count() > TEXT_MAX {
         return Err(AppError::invalid("text", "tooLong"));
     }
-    let now = NaiveDateTime::parse_from_str(now, "%Y-%m-%dT%H:%M")
-        .map_err(|_| AppError::invalid("now", "invalidDateTime"))?;
+    let now = local_now(now)?;
     let answer = provider
-        .generate_json(&prompt(text, now), &schema())
+        .generate_json(&[Part::Text(prompt(text, now))], &schema())
         .await?;
     Ok(validate(&answer, text))
 }
@@ -108,7 +121,10 @@ mod tests {
     struct Fake(Value);
 
     impl AiProvider for Fake {
-        async fn generate_json(&self, prompt: &str, _schema: &Value) -> AppResult<Value> {
+        async fn generate_json(&self, parts: &[Part], _schema: &Value) -> AppResult<Value> {
+            let [Part::Text(prompt)] = parts else {
+                panic!("only text is sent");
+            };
             assert!(prompt.contains("Friday 2026-10-09 14:05"), "{prompt}");
             assert!(!prompt.contains("notes"), "only the sentence is sent");
             Ok(self.0.clone())

@@ -1,15 +1,16 @@
 //! Smart features (P3-T08, P3-T10). Network calls happen only after consent and with a key;
 //! the database lock is never held while waiting on the network.
 
+use tauri::ipc::{InvokeBody, Request};
 use tauri::{AppHandle, State};
 use tauri_plugin_opener::OpenerExt;
 
 use crate::ai::gemini::Gemini;
-use crate::ai::{parse, secrets};
+use crate::ai::{image, parse, plan, secrets};
 use crate::commands::with_conn;
 use crate::db::Db;
 use crate::error::{AppError, AppResult};
-use crate::models::ai::{AiDraft, AiStatus};
+use crate::models::ai::{AiDraft, AiImageDraft, AiStatus, PlanProposal, PlanRequest};
 use crate::services::app_settings;
 
 const KEY_PAGE: &str = "https://aistudio.google.com/apikey";
@@ -80,4 +81,34 @@ pub fn ai_open_key_page(app: AppHandle) -> AppResult<()> {
     app.opener()
         .open_url(KEY_PAGE, None::<&str>)
         .map_err(|_| AppError::Ai("failed"))
+}
+
+/// A1: the shrunk picture is the raw request body; headers `x-image-type` (png, jpeg, webp)
+/// and `x-now` (local `YYYY-MM-DDTHH:mm`).
+#[tauri::command]
+pub async fn ai_extract_from_image(
+    db: State<'_, Db>,
+    request: Request<'_>,
+) -> AppResult<AiImageDraft> {
+    let InvokeBody::Raw(bytes) = request.body() else {
+        return Err(AppError::Ai("imageType"));
+    };
+    let header = |name: &str| {
+        request
+            .headers()
+            .get(name)
+            .and_then(|v| v.to_str().ok())
+            .unwrap_or("")
+            .to_owned()
+    };
+    let (kind, now, bytes) = (header("x-image-type"), header("x-now"), bytes.clone());
+    let gemini = provider(&db)?;
+    image::read_picture(&gemini, bytes, &kind, &now).await
+}
+
+/// A3: proposals only; the frontend applies the ones the user accepts.
+#[tauri::command]
+pub async fn ai_plan(db: State<'_, Db>, request: PlanRequest) -> AppResult<Vec<PlanProposal>> {
+    let gemini = provider(&db)?;
+    plan::plan(&gemini, &request).await
 }
