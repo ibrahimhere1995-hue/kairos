@@ -68,7 +68,7 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 ## Phase 3 — Pro & AI
 **Goal:** the features that make Kairos worth paying for.
 
-- [x] **P3-T01 🗄🎨 Inbox** — text/image/voice entries, process into task. (Text and pictures done; voice notes come with P3-T14.)
+- [x] **P3-T01 🗄🎨 Inbox** — text/image/voice entries, process into task. (Text and pictures; voice notes are dictated into the note box as text, P3-T14.)
 - [x] **P3-T02 🗄🎨 Habits & streaks** — habit CRUD, daily ticks, streak, heatmap, gentle "streak paused" copy.
 - [x] **P3-T03 🗄🎨 Goals → milestones → tasks** with progress.
 - [x] **P3-T04 🗄🎨 Templates** — save selection as template, insert relative to a date.
@@ -82,7 +82,7 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 - [x] **P3-T11 ⚙️🎨 A3 Plan my day/week** with accept-all/some/none.
 - [x] **P3-T12 ⚙️🎨 A4 Overflow rescheduling suggestions.** *(Overbooked check on My Day is local: open tasks, 30 min each without a length, vs working hours left minus events; "Suggest what to move" uses Plan with AI. Working hours setting added.)*
 - [x] **P3-T13 ⚙️ A5 Energy-aware suggestions** from local completion patterns.
-- [ ] **P3-T14 ⚙️ Voice capture** (OS speech-to-text) in Quick Capture.
+- [x] **P3-T14 ⚙️ Voice capture** (OS speech-to-text) in Quick Capture. *(Windows speech recognition; also in the Inbox note box, saved as text. macOS later.)*
 
 ---
 

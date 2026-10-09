@@ -7,6 +7,7 @@ import { useAiCapture } from "@/features/capture/useAiCapture";
 import { useAiReady } from "@/features/ai/api";
 import { PictureButton } from "@/features/ai/PictureButton";
 import { useImageToTask } from "@/features/ai/useImageToTask";
+import { VoiceButton } from "@/features/voice/VoiceButton";
 import { chipLabel } from "@/features/capture/chipLabel";
 import { reminderLabel } from "@/features/items/editor/reminderLabels";
 import { useActiveAreas, useCreateItem } from "@/features/items/api";
@@ -147,6 +148,12 @@ export function QuickCapture({
             {t(ai.read.isPending ? "ai.reading" : "ai.readWithAi")}
           </button>
         )}
+        <VoiceButton
+          onText={(spoken) => {
+            setText((prev) => (prev.trim() ? `${prev.trim()} ${spoken}` : spoken));
+            ownInput.current?.focus();
+          }}
+        />
         {pictures && <PictureButton busy={picture.isPending} onPicture={readPicture} />}
         {onMoreDetails && (
           <button

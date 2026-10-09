@@ -26,6 +26,9 @@ pub enum AppError {
     /// A smart (AI) feature failed; the reason is a short i18n key under `errors.ai`.
     #[error("smart feature failed: {0}")]
     Ai(&'static str),
+    /// Voice capture failed; the reason is a short i18n key under `errors.voice`.
+    #[error("voice capture failed: {0}")]
+    Voice(&'static str),
 }
 
 impl AppError {
@@ -44,6 +47,7 @@ impl AppError {
             AppError::Lock => "lock",
             AppError::InvalidBackup => "invalid_backup",
             AppError::Ai(_) => "ai",
+            AppError::Voice(_) => "voice",
         }
     }
 
@@ -59,6 +63,7 @@ impl AppError {
             AppError::NotFound => "errors.notFound".into(),
             AppError::InvalidBackup => "errors.invalidBackup".into(),
             AppError::Ai(reason) => format!("errors.ai.{reason}"),
+            AppError::Voice(reason) => format!("errors.voice.{reason}"),
         }
     }
 

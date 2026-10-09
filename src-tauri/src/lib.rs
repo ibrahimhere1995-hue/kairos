@@ -17,6 +17,7 @@ pub mod startup;
 #[cfg(desktop)]
 pub mod tray;
 pub mod util;
+pub mod voice;
 pub mod window;
 
 use std::sync::Mutex;
@@ -159,6 +160,7 @@ pub fn run() {
             app.manage(StartupNoticeState(Mutex::new(notice)));
             app.manage(StartHidden::from_args());
             app.manage(commands::focus::FocusMute::default());
+            app.manage(voice::VoiceState::default());
 
             #[cfg(desktop)]
             {
@@ -267,6 +269,9 @@ pub fn run() {
             commands::ai::ai_extract_from_image,
             commands::ai::ai_plan,
             commands::ai::best_hours,
+            commands::voice::voice_start,
+            commands::voice::voice_stop,
+            commands::voice::voice_open_settings,
             commands::data::export_json,
             commands::data::export_ics,
             commands::data::import_ics,
