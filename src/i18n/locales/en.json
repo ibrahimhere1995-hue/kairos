@@ -31,7 +31,8 @@
       "notACalendar": "That doesn't look like a calendar file (.ics).",
       "unknownMilestone": "That goal step no longer exists. Please pick another.",
       "emailFailed": "Kairos couldn’t open your email app. Try “Export to file” instead.",
-      "workHoursOrder": "The working day has to end after it starts."
+      "workHoursOrder": "The working day has to end after it starts.",
+      "unsafeToOpen": "Kairos doesn't open program files directly, to keep your computer safe. Use “Show in folder” instead."
     },
     "ai": {
       "off": "Smart features are off. Turn them on in Settings › Smart features.",
@@ -58,7 +59,10 @@
     "cancel": "Cancel",
     "tryAgain": "Try again",
     "dismiss": "Dismiss",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "showMore": "Show {{count}} more",
+    "notShown_one": "({{count}} not shown)",
+    "notShown_other": "({{count}} not shown)"
   },
   "toast": {
     "undo": "Undo",
@@ -257,7 +261,8 @@
     "toSchedule": "To schedule",
     "toScheduleHelp": "Drag a task onto the calendar to give it a time.",
     "toScheduleEmpty": "Nothing waiting. Tasks without a date show up here.",
-    "hourGrid": "Hours of the day"
+    "hourGrid": "Hours of the day",
+    "agendaMore": "Show more days"
   },
   "myDay": {
     "goodMorning": "Good morning.",

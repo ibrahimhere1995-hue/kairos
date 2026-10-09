@@ -137,6 +137,26 @@ pub fn file_of(conn: &Connection, attachments_dir: &Path, id: &str) -> AppResult
     Ok(path)
 }
 
+/// File types that run code when "opened". Kairos shows these in their folder instead,
+/// so opening an attachment can never start a program (ARCHITECTURE §8).
+const RUNNABLE: &[&str] = &[
+    "exe", "com", "bat", "cmd", "msi", "msp", "scr", "pif", "cpl", "ps1", "psm1", "vbs", "vbe",
+    "js", "jse", "wsf", "wsh", "hta", "lnk", "url", "reg", "jar", "app", "command", "sh",
+];
+
+/// Refuses to open program-like files; the user can still show them in their folder.
+pub fn check_openable(path: &Path) -> AppResult<()> {
+    let ext = path
+        .extension()
+        .and_then(|e| e.to_str())
+        .unwrap_or("")
+        .to_ascii_lowercase();
+    if RUNNABLE.contains(&ext.as_str()) {
+        return Err(AppError::invalid("attachments", "unsafeToOpen"));
+    }
+    Ok(())
+}
+
 /// Backups: copies attachment files the backup folder doesn't have yet (they never change,
 /// so a name match means the same file). Returns how many were copied.
 pub fn mirror_to(attachments_dir: &Path, backup_dir: &Path) -> std::io::Result<usize> {
@@ -190,6 +210,16 @@ pub fn restore_missing(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn never_opens_program_files() {
+        for name in ["setup.exe", "RUN.BAT", "x.ps1", "link.lnk", "a.js"] {
+            assert!(check_openable(Path::new(name)).is_err(), "{name}");
+        }
+        for name in ["receipt.pdf", "photo.JPG", "notes.txt", "no-extension"] {
+            assert!(check_openable(Path::new(name)).is_ok(), "{name}");
+        }
+    }
     use crate::db::test_support::{migrated_conn, scratch_path};
     use crate::models::inputs::ItemInput;
     use crate::models::item::ItemKind;

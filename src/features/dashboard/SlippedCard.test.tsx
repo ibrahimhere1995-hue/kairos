@@ -161,3 +161,22 @@ describe("Slipped card (PRD R6)", () => {
     );
   });
 });
+
+describe("A very long slipped list (P4-T01)", () => {
+  it("shows 50 at a time, so My Day stays light", async () => {
+    const many = Array.from({ length: 120 }, (_, i) =>
+      task(`s${i}`, `Old task ${i}`, { dueDate: twoDaysAgo }),
+    );
+    mockBackend({
+      get_dashboard: (): Dashboard => ({ today: [], overdue: many, thisWeek: [], doneToday: [] }),
+    });
+    const user = userEvent.setup();
+    renderApp("/");
+    expect(await screen.findByText("Old task 0")).toBeInTheDocument();
+    expect(screen.queryByText("Old task 50")).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Show 50 more/ }));
+    expect(screen.getByText("Old task 99")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /20 not shown/ })).toBeInTheDocument();
+  });
+});

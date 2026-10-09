@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import type { DashboardItem } from "@/features/dashboard/groupDashboard";
 import { SlippedRow } from "@/features/dashboard/SlippedRow";
 import { useMoveItems } from "@/features/items/api";
+import { ShowMoreButton } from "@/components/ShowMoreButton";
 import { Button } from "@/components/ui/Button";
 import type { Area } from "@/types/Area";
 
@@ -12,6 +13,9 @@ import type { Area } from "@/types/Area";
  * PRD R6: "3 things slipped by. Want to give them a new moment?" Calm amber, never red.
  * Once everything has a new moment, a one-line "All caught up" takes its place.
  */
+/** Rows shown at first (and added per "Show more"): a long list is never calm. */
+const STEP = 50;
+
 export function SlippedCard({
   entries,
   areas,
@@ -24,6 +28,7 @@ export function SlippedCard({
   const { t } = useTranslation();
   const moveAll = useMoveItems();
   // Remember that there was something to sort out, so clearing it can be acknowledged.
+  const [shown, setShown] = useState(STEP);
   const [hadItems, setHadItems] = useState(entries.length > 0);
   if (entries.length > 0 && !hadItems) setHadItems(true);
 
@@ -69,7 +74,7 @@ export function SlippedCard({
           </div>
           <ul className="flex flex-col gap-2">
             <AnimatePresence initial={false}>
-              {entries.map(({ item }) => (
+              {entries.slice(0, shown).map(({ item }) => (
                 <SlippedRow
                   key={item.id}
                   item={item}
@@ -79,6 +84,11 @@ export function SlippedCard({
               ))}
             </AnimatePresence>
           </ul>
+          <ShowMoreButton
+            hidden={entries.length - shown}
+            label={t("common.showMore", { count: STEP })}
+            onMore={() => setShown((n) => n + STEP)}
+          />
         </motion.section>
       ) : (
         hadItems && (
