@@ -88,6 +88,10 @@ CI builds the whole Rust side on fresh Windows and macOS machines. After a chang
 | Old `C:\Users\<you>\AppData\Local\com.kairos.app` folder | WebView cache from before dev data moved to `.devdata` | Safe to delete |
 | PowerShell breaks a `git commit -m` message containing double quotes | PowerShell 5.1 argument quoting | Write the message to a file and use `git commit -F <file>` |
 | Types appear in `src-tauri/bindings/` instead of `src/types/` | Cargo didn't find `.cargo/config.toml` | It must stay at the **repo root** (Cargo searches from the current folder upwards) |
+| Reminder notifications say they come from **Windows PowerShell** | Development builds aren't installed, so Windows has no app id for Kairos; toasts borrow PowerShell's | Expected in dev. Installed builds show "Kairos" |
+| No reminder notifications at all in dev | Windows Focus assist / Do not disturb, or notifications for PowerShell turned off | Settings › System › Notifications |
+| "Open Kairos when you sign in" changes nothing in dev | Debug builds never register themselves to start at sign-in | Expected; only installed builds do |
+| Closing the window doesn't quit Kairos | It keeps running in the tray so reminders arrive (PRD R3) | Quit from the tray icon's menu |
 | `Blocking waiting for file lock on build directory` | A running `pnpm tauri dev` is rebuilding at the same time | Wait, or close the dev app first |
 
 ## 7. Inspecting the dev database

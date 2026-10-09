@@ -7,6 +7,7 @@ use rusqlite::Connection;
 use crate::error::{AppError, AppResult};
 use crate::models::checklist::{ChecklistEntryInput, ChecklistItem, ItemDetail};
 use crate::repo::{checklist as repo, items};
+use crate::services::reminders;
 use crate::util::{new_id, now_utc};
 
 pub const STEP_MAX_CHARS: usize = 500;
@@ -24,7 +25,12 @@ pub fn get_detail(conn: &Connection, item_id: &str) -> AppResult<ItemDetail> {
         .filter(|item| item.deleted_at.is_none())
         .ok_or(AppError::NotFound)?;
     let checklist = repo::list_for_item(conn, item_id)?;
-    Ok(ItemDetail { item, checklist })
+    let reminders = reminders::offsets_for_item(conn, item_id)?;
+    Ok(ItemDetail {
+        item,
+        checklist,
+        reminders,
+    })
 }
 
 /// Replaces an item's steps with `entries` (in order) in one transaction.
@@ -114,6 +120,7 @@ mod tests {
                 due_date: None,
                 location: None,
                 source: None,
+                reminders: None,
             },
         )
         .unwrap();

@@ -8,6 +8,18 @@ import type { WeekStart } from "./WeekStart";
  */
 export type AppSettings = { theme: ThemePreference, textSize: TextSize, weekStartsOn: WeekStart, 
 /**
- * Local `HH:mm`: when all-day tasks remind you (PRD R3 default 09:00). Used from Phase 2.
+ * Local `HH:mm`: when all-day tasks remind you (PRD R3 default 09:00).
  */
-defaultReminderTime: string, };
+defaultReminderTime: string, 
+/**
+ * PRD R3: a morning notification with the day ahead.
+ */
+dailySummaryEnabled: boolean, 
+/**
+ * Local `HH:mm` for the daily summary (default 08:00).
+ */
+dailySummaryTime: string, 
+/**
+ * PRD R3: start Kairos (in the tray) when you sign in. On by default.
+ */
+launchAtLogin: boolean, };

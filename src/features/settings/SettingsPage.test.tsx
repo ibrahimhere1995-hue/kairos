@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { useThemeStore } from "@/app/theme/themeStore";
 import { mockBackend, type Call } from "@/test/mockBackend";
 import { renderApp } from "@/test/renderWithProviders";
+import { DEFAULT_SETTINGS } from "@/lib/api/settings";
 import type { AppSettings } from "@/types/AppSettings";
 
 let saved: AppSettings;
@@ -13,12 +14,7 @@ const updates = () => calls.filter((c) => c.cmd === "update_settings").map((c) =
 
 beforeEach(() => {
   useThemeStore.setState({ preference: "light", textSize: "default" });
-  saved = {
-    theme: "light",
-    textSize: "default",
-    weekStartsOn: "monday",
-    defaultReminderTime: "09:00",
-  };
+  saved = { ...DEFAULT_SETTINGS, theme: "light" };
   calls = mockBackend({
     get_settings: () => saved,
     update_settings: ({ settings }) => {
@@ -69,5 +65,21 @@ describe("Settings (P1-T16)", () => {
     expect(updates()).toHaveLength(0);
     await user.tab();
     await waitFor(() => expect(updates().at(-1)).toMatchObject({ defaultReminderTime: "07:30" }));
+  });
+
+  it("turns the daily summary and launch at login on and off", async () => {
+    const user = userEvent.setup();
+    renderApp("/settings");
+    const summary = await screen.findByRole("switch", { name: "Daily summary" });
+    expect(summary).toHaveAttribute("aria-checked", "true");
+    expect(screen.getByLabelText("Send the daily summary at")).toHaveValue("08:00");
+
+    await user.click(summary);
+    await waitFor(() => expect(updates().at(-1)).toMatchObject({ dailySummaryEnabled: false }));
+    expect(summary).toHaveAttribute("aria-checked", "false");
+    expect(screen.queryByLabelText("Send the daily summary at")).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("switch", { name: "Open Kairos when you sign in" }));
+    await waitFor(() => expect(updates().at(-1)).toMatchObject({ launchAtLogin: false }));
   });
 });

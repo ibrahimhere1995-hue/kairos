@@ -68,6 +68,7 @@ mod tests {
                 due_date: None,
                 location: None,
                 source: None,
+                reminders: None,
             },
         )
         .unwrap()

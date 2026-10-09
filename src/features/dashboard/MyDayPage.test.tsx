@@ -131,7 +131,7 @@ describe("My Day", () => {
   it("opens the editor when an item's title is clicked", async () => {
     calls = mockBackend({
       get_dashboard: () => fullDay,
-      get_item_detail: () => ({ item: callBank, checklist: [] }),
+      get_item_detail: () => ({ item: callBank, checklist: [], reminders: [0] }),
     });
     const user = userEvent.setup();
     renderApp();

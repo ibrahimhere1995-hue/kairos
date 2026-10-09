@@ -1,3 +1,4 @@
+import { DEFAULT_SETTINGS } from "@/lib/api/settings";
 import { mockIPC } from "@tauri-apps/api/mocks";
 import type { Area } from "@/types/Area";
 import type { Dashboard } from "@/types/Dashboard";
@@ -38,12 +39,8 @@ export function mockBackend(overrides: Record<string, Handler> = {}): Call[] {
     list_items: () => [],
     set_checklist: () => [],
     list_trash: () => [],
-    get_settings: () => ({
-      theme: "system",
-      textSize: "default",
-      weekStartsOn: "monday",
-      defaultReminderTime: "09:00",
-    }),
+    get_settings: () => ({ ...DEFAULT_SETTINGS }),
+    main_window_ready: () => null,
     list_backups: () => [],
     get_backup_settings: () => ({ folder: null, lastBackupAt: null, lastFailureAt: null }),
   };

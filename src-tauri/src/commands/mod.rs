@@ -1,5 +1,6 @@
 //! Tauri commands: thin wrappers that take the database lock and call a service.
 
+pub mod app;
 pub mod areas;
 pub mod backups;
 pub mod items;

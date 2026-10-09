@@ -1,25 +1,36 @@
+#[cfg(desktop)]
+pub mod autostart;
 pub mod backup;
 pub mod capture;
 pub mod commands;
 pub mod db;
 pub mod error;
+pub mod i18n;
 pub mod models;
+pub mod notify;
 pub mod paths;
 pub mod repo;
+pub mod scheduler;
 pub mod services;
 pub mod startup;
+#[cfg(desktop)]
+pub mod tray;
 pub mod util;
+pub mod window;
 
 use std::sync::Mutex;
 use std::time::Duration;
 
-use tauri::{AppHandle, Manager, RunEvent};
+use tauri::{AppHandle, Manager, RunEvent, WindowEvent};
 
 use crate::backup::naming::LABEL_AUTO;
 use crate::db::Db;
 use crate::paths::AppPaths;
+use crate::scheduler::messages::{Notice, Target};
+use crate::services::app_settings;
 use crate::services::backups;
 use crate::startup::StartupNoticeState;
+use crate::window::StartHidden;
 
 /// The main window starts hidden and the frontend shows it after its first themed paint
 /// (no white flash). If that never happens, show it anyway so the user is never left with nothing.
@@ -77,6 +88,36 @@ fn automatic_backup(app: &AppHandle, only_if_due: bool) {
     }
 }
 
+/// Applies the saved "launch at login" choice to the OS (default on, PRD R3).
+#[cfg(desktop)]
+fn apply_launch_at_login(app: &AppHandle) {
+    let Some(db) = app.try_state::<Db>() else {
+        return;
+    };
+    let enabled = commands::with_conn(&db, |conn| app_settings::get(conn))
+        .map(|s| s.launch_at_login)
+        .unwrap_or(true);
+    autostart::apply(app, enabled);
+}
+
+/// The first time the window is closed, say that Kairos is still in the tray.
+fn show_tray_hint_once(app: &AppHandle) {
+    let Some(db) = app.try_state::<Db>() else {
+        return;
+    };
+    if commands::with_conn(&db, |conn| app_settings::take_tray_hint(conn)).unwrap_or(false) {
+        notify::show(
+            app,
+            Notice {
+                title: i18n::t("notifications.trayHintTitle", &[]),
+                body: i18n::t("notifications.trayHintBody", &[]),
+                target: Target::MyDay,
+                reminder: None,
+            },
+        );
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     // Development only: keep the WebView2 cache inside the project (.devdata), off the C: drive.
@@ -90,19 +131,35 @@ pub fn run() {
         unsafe { std::env::set_var("WEBVIEW2_USER_DATA_FOLDER", webview_dir) };
     }
 
+    let builder = tauri::Builder::default().plugin(tauri_plugin_dialog::init());
+    #[cfg(desktop)]
+    let builder = builder.plugin(autostart::plugin());
+    // Windows notifications use tauri-winrt-notification directly (buttons); see notify.rs.
+    #[cfg(not(windows))]
+    let builder = builder.plugin(tauri_plugin_notification::init());
+
     // Startup-fatal: if the Tauri runtime cannot start there is no app to recover into.
     #[allow(clippy::expect_used)]
-    let app = tauri::Builder::default()
-        .plugin(tauri_plugin_dialog::init())
+    let app = builder
         .setup(|app| {
             let data_dir = paths::data_dir(app.handle())?;
             let (db, notice) = startup::open_database(&data_dir)?;
             app.manage(db);
             app.manage(AppPaths::new(data_dir));
             app.manage(StartupNoticeState(Mutex::new(notice)));
+            app.manage(StartHidden::from_args());
 
             #[cfg(desktop)]
-            register_capture_shortcut(app);
+            {
+                register_capture_shortcut(app);
+                // Without a tray icon, closing the window would leave Kairos invisible;
+                // the window then closes normally (see on_window_event).
+                if let Err(error) = tray::create(app) {
+                    eprintln!("Tray icon unavailable: {error}");
+                }
+                apply_launch_at_login(app.handle());
+            }
+            scheduler::runner::start(app.handle().clone());
 
             let handle = app.handle().clone();
             std::thread::spawn(move || {
@@ -113,16 +170,26 @@ pub fn run() {
                 }
             });
 
-            if let Some(window) = app.get_webview_window("main") {
-                std::thread::spawn(move || {
-                    std::thread::sleep(SHOW_WINDOW_FALLBACK);
-                    // Best effort: if showing fails the window is already gone.
-                    let _ = window.show();
-                });
-            }
+            let handle = app.handle().clone();
+            std::thread::spawn(move || {
+                std::thread::sleep(SHOW_WINDOW_FALLBACK);
+                window::show_on_startup(&handle);
+            });
             Ok(())
         })
+        .on_window_event(|window, event| {
+            // PRD R3: closing the main window keeps Kairos running in the tray for reminders.
+            if window.label() == window::MAIN_WINDOW
+                && let WindowEvent::CloseRequested { api, .. } = event
+                && window.app_handle().tray_by_id("kairos").is_some()
+            {
+                api.prevent_close();
+                let _ = window.hide();
+                show_tray_hint_once(window.app_handle());
+            }
+        })
         .invoke_handler(tauri::generate_handler![
+            commands::app::main_window_ready,
             commands::items::create_item,
             commands::items::update_item,
             commands::items::delete_item,

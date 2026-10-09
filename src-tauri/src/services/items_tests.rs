@@ -30,6 +30,7 @@ fn task(title: &str) -> ItemInput {
         due_date: None,
         location: None,
         source: None,
+        reminders: None,
     }
 }
 

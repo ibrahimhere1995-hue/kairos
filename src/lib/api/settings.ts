@@ -12,4 +12,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   textSize: "default",
   weekStartsOn: "monday",
   defaultReminderTime: "09:00",
+  dailySummaryEnabled: true,
+  dailySummaryTime: "08:00",
+  launchAtLogin: true,
 };

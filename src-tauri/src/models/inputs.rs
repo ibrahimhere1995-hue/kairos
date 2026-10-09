@@ -21,6 +21,12 @@ pub struct ItemInput {
     pub location: Option<String>,
     /// Ignored on update. Defaults to `manual`.
     pub source: Option<ItemSource>,
+    /// Reminder offsets in minutes before the item's moment (0 = at the time; whole days keep
+    /// the clock time). Omitted: a new item gets the default reminder (PRD R3), an edited item
+    /// keeps its reminders. Empty: no reminders.
+    #[serde(default)]
+    #[cfg_attr(test, ts(optional))]
+    pub reminders: Option<Vec<i64>>,
 }
 
 /// New schedule for `reschedule_item` (drag on the calendar, the slipped-items card).
