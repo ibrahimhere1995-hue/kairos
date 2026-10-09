@@ -5,4 +5,8 @@ import type { Item } from "./Item";
 /**
  * An item with everything the editor shows.
  */
-export type ItemDetail = { item: Item, checklist: Array<ChecklistItem>, };
+export type ItemDetail = { item: Item, checklist: Array<ChecklistItem>, 
+/**
+ * Reminder offsets in minutes before the item's moment, nearest first.
+ */
+reminders: Array<number>, };

@@ -4,4 +4,5 @@ pub mod areas;
 pub mod backup_log;
 pub mod checklist;
 pub mod items;
+pub mod reminders;
 pub mod settings;

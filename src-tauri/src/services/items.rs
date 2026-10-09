@@ -10,6 +10,7 @@ use crate::repo::items as repo;
 use crate::services::item_rules::{
     Schedule, normalize_date, normalize_instant, validate_item, validate_schedule,
 };
+use crate::services::reminders::{self, Clock, DEFAULT_OFFSETS};
 use crate::util::{new_id, now_utc};
 
 fn schedule_of(item: &Item) -> Schedule {
@@ -42,6 +43,7 @@ fn load_active(tx: &Transaction, id: &str) -> AppResult<Item> {
 }
 
 /// Runs `change` on an active item inside one transaction and saves the result.
+/// If the item's date or time changed, its reminders start over from the new moment.
 fn modify(
     conn: &mut Connection,
     id: &str,
@@ -49,9 +51,13 @@ fn modify(
 ) -> AppResult<Item> {
     let tx = conn.transaction()?;
     let mut item = load_active(&tx, id)?;
+    let before = schedule_of(&item);
     change(&tx, &mut item)?;
     item.updated_at = now_utc();
     repo::update(&tx, &item)?;
+    if schedule_of(&item) != before {
+        reminders::reschedule_item(&tx, &item, &Clock::current(&tx)?)?;
+    }
     tx.commit()?;
     Ok(item)
 }
@@ -85,6 +91,8 @@ pub fn create(conn: &mut Connection, input: &ItemInput) -> AppResult<Item> {
         deleted_at: None,
     };
     repo::insert(&tx, &item)?;
+    let offsets = input.reminders.as_deref().unwrap_or(&DEFAULT_OFFSETS);
+    reminders::set_for_item(&tx, &item, offsets, &Clock::current(&tx)?)?;
     tx.commit()?;
     Ok(item)
 }
@@ -100,6 +108,9 @@ pub fn update(conn: &mut Connection, id: &str, input: &ItemInput) -> AppResult<I
         item.priority = valid.priority;
         item.location = valid.location;
         apply_schedule(item, valid.schedule);
+        if let Some(offsets) = &input.reminders {
+            reminders::set_for_item(tx, item, offsets, &Clock::current(tx)?)?;
+        }
         Ok(())
     })
 }

@@ -46,7 +46,7 @@ beforeEach(() => {
       return savedItem;
     },
     update_item: () => savedItem,
-    get_item_detail: () => ({ item: savedItem, checklist: [] }),
+    get_item_detail: () => ({ item: savedItem, checklist: [], reminders: [0] }),
   });
 });
 afterEach(() => clearMocks());
@@ -105,6 +105,36 @@ describe("Item editor", () => {
       itemId: "i1",
       entries: [{ id: null, text: "Find account number", done: false }],
     });
+  });
+
+  it("chooses reminders with the Remind me pill", async () => {
+    const { user, dialog } = await openNewEditor();
+    await user.type(within(dialog).getByRole("textbox", { name: "Title" }), "Pay rent");
+
+    // New items start with the default reminder: on the day, at the default reminder time.
+    const pill = within(dialog).getByRole("button", { name: /Remind me:/ });
+    expect(pill).toHaveTextContent("On the day at 9:00 AM");
+    await user.click(pill);
+    await user.click(await screen.findByRole("button", { name: "1 day before" }));
+    expect(pill).toHaveTextContent("2 reminders");
+    await user.keyboard("{Escape}");
+
+    await user.click(within(dialog).getByRole("button", { name: "Add task" }));
+    await waitFor(() => expect(callsTo("create_item")).toHaveLength(1));
+    expect(callsTo("create_item")[0]?.args.input).toMatchObject({ reminders: [0, 1440] });
+  });
+
+  it("can turn reminders off", async () => {
+    const { user, dialog } = await openNewEditor();
+    await user.type(within(dialog).getByRole("textbox", { name: "Title" }), "Quiet task");
+    await user.click(within(dialog).getByRole("button", { name: /Remind me:/ }));
+    await user.click(await screen.findByRole("button", { name: "No reminder" }));
+    expect(within(dialog).getByRole("button", { name: /Remind me:/ })).toHaveTextContent(
+      "No reminder",
+    );
+    await user.click(within(dialog).getByRole("button", { name: "Add task" }));
+    await waitFor(() => expect(callsTo("create_item")).toHaveLength(1));
+    expect(callsTo("create_item")[0]?.args.input).toMatchObject({ reminders: [] });
   });
 
   it("Esc closes a clean editor straight away", async () => {

@@ -216,6 +216,14 @@ CREATE VIRTUAL TABLE items_fts USING fts5(title, notes, content='items', content
 - On system wake / time change → recompute.
 - Missed reminders while the computer was off: show one combined notification ("While you were away: 3 reminders").
 
+**As built (P2-T01–T04):**
+- `reminders.offset_minutes` is measured back from the item's moment: the start time of a timed item, or the default reminder time (Settings, 09:00) on a date-only item's day. Whole-day offsets keep the local clock time across DST; others are exact durations. Pure maths in `scheduler/timing.rs` (DST-tested with a hand-built time zone).
+- New items get one reminder at the moment (`[0]`) unless the editor sends a list; `ItemInput.reminders` omitted on update keeps them. Changing an item's date/time recomputes its reminders and clears snoozes; a reminder whose time has already passed is marked fired (moving a task to earlier today never sets one off).
+- The loop (`scheduler/runner.rs`) wakes at the next `fire_at`, at most every 30 s. It marks due reminders fired in one transaction (each fires once), shows on-time ones individually, and combines several more than 10 minutes late into "While you were away". A local UTC-offset change, or a new default reminder time, recomputes reminders that haven't fired yet.
+- Notifications (`notify.rs`): Windows toasts with Done / Snooze 10 min / 1 hour / Tomorrow; clicking opens the item (`app:open-item` event) or My Day (`app:navigate`). Snooze and Done run in Rust, so there are no snooze/dismiss commands yet. Notification and tray text comes from `src/i18n/locales/en.json` (compiled in). E2E runs never show real notifications.
+- Daily summary: once per local day, from the chosen time until 4 hours later (a laptop opened at 10:30 still gets the 08:00 summary).
+- Tray (`tray.rs`): Open, Quick add, today's next item (opens it), Quit. Closing the main window hides it to the tray (a one-time hint explains). Launch at login (default on) starts with `--hidden`.
+
 ### 6.3 Backups
 - Use SQLite **Online Backup API** (safe while running) through a **separate read-only connection**, so the app's connection is never blocked → write `kairos-<label>-YYYYMMDD-HHMMSS.mmm.db` (UTC). Labels: `auto`, `manual`, `pre-restore`, `pre-migration`, `pre-purge`. Attachments folder copy: added with attachments (P2-T11).
 - When: every 24 h (background check every 30 min) and on every app close; "Back up now"; automatically before a migration, a restore, or a Trash purge.
@@ -245,7 +253,8 @@ Frontend sends image path → Rust `ai_extract_from_image` → reads key from ke
 | `get_settings`, `set_setting` | Settings |
 | `backup_now`, `list_backups`, `restore_backup`, `set_backup_folder` | Backups |
 | `export_json`, `export_ics`, `import_ics` | Portability |
-| `snooze_reminder`, `dismiss_reminder` | Reminder actions |
+| `snooze_reminder`, `dismiss_reminder` | Reminder actions (planned; notification buttons currently act in Rust directly) |
+| `main_window_ready` | Frontend painted its first frame: show the main window (unless started hidden at sign-in) |
 | `ai_set_key`, `ai_clear_key`, `ai_extract_from_image`, `ai_parse_text`, `ai_plan_range` | AI (Phase 3) |
 
 All commands return `Result<T, AppError>`; `AppError` has a `code` and a user-safe `message` key for i18n.

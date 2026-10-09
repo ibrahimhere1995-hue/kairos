@@ -1,4 +1,4 @@
-import { $, expect } from "@wdio/globals";
+import { $, browser, expect } from "@wdio/globals";
 import { byName, byText, click, goTo, quickAdd, section, waitForText } from "../helpers";
 
 // PROJECT_RULES: critical paths have E2E tests — create task, complete + undo,
@@ -66,10 +66,15 @@ describe("Kairos critical paths", () => {
     await byText("Keep me safe").waitForDisplayed({ reverse: true });
 
     await goTo("Settings");
-    const restore = await $(`//button[starts-with(@aria-label, "Restore the backup from")]`);
-    await restore.waitForClickable();
-    await restore.click();
-    const confirm = await $(`//*[@role="alertdialog"]`);
+    // The backup list can re-render just after it appears (it refreshes after "Back up now"),
+    // which swallows a click: click until the confirm dialog opens.
+    const confirm = $(`//*[@role="alertdialog"]`);
+    await browser.waitUntil(async () => {
+      const restore = $(`//button[starts-with(@aria-label, "Restore the backup from")]`);
+      await restore.waitForClickable();
+      await restore.click();
+      return confirm.waitForDisplayed({ timeout: 2_000 }).catch(() => false);
+    });
     await confirm.$(`.//button[normalize-space(.)="Restore"]`).click();
     await byText("Restore this backup?").waitForDisplayed({ reverse: true });
 

@@ -39,8 +39,14 @@ pub struct AppSettings {
     pub theme: ThemePreference,
     pub text_size: TextSize,
     pub week_starts_on: WeekStart,
-    /// Local `HH:mm`: when all-day tasks remind you (PRD R3 default 09:00). Used from Phase 2.
+    /// Local `HH:mm`: when all-day tasks remind you (PRD R3 default 09:00).
     pub default_reminder_time: String,
+    /// PRD R3: a morning notification with the day ahead.
+    pub daily_summary_enabled: bool,
+    /// Local `HH:mm` for the daily summary (default 08:00).
+    pub daily_summary_time: String,
+    /// PRD R3: start Kairos (in the tray) when you sign in. On by default.
+    pub launch_at_login: bool,
 }
 
 impl Default for AppSettings {
@@ -50,6 +56,9 @@ impl Default for AppSettings {
             text_size: TextSize::default(),
             week_starts_on: WeekStart::default(),
             default_reminder_time: "09:00".into(),
+            daily_summary_enabled: true,
+            daily_summary_time: "08:00".into(),
+            launch_at_login: true,
         }
     }
 }

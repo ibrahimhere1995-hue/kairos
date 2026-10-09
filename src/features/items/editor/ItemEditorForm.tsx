@@ -8,6 +8,7 @@ import { ChecklistEditor } from "@/features/items/editor/ChecklistEditor";
 import { DatePill } from "@/features/items/editor/DatePill";
 import { DiscardPrompt } from "@/features/items/editor/DiscardPrompt";
 import { PriorityPill } from "@/features/items/editor/PriorityPill";
+import { ReminderPill } from "@/features/items/editor/ReminderPill";
 import { TimePill } from "@/features/items/editor/TimePill";
 import {
   emptyItemForm,
@@ -131,6 +132,7 @@ export function ItemEditorForm({
             <div className="flex flex-wrap gap-2">
               <DatePill today={today} />
               <TimePill />
+              <ReminderPill />
               <AreaPill />
               <PriorityPill />
             </div>

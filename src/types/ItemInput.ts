@@ -21,4 +21,10 @@ dueDate: string | null, location: string | null,
 /**
  * Ignored on update. Defaults to `manual`.
  */
-source: ItemSource | null, };
+source: ItemSource | null, 
+/**
+ * Reminder offsets in minutes before the item's moment (0 = at the time; whole days keep
+ * the clock time). Omitted: a new item gets the default reminder (PRD R3), an edited item
+ * keeps its reminders. Empty: no reminders.
+ */
+reminders?: Array<number>, };

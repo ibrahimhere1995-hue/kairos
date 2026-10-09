@@ -1,5 +1,6 @@
-//! Basic settings (P1-T16), one JSON value per key in the `settings` table.
+//! Settings (P1-T16, P2-T01–T04), one JSON value per key in the `settings` table.
 
+use chrono::NaiveDate;
 use rusqlite::Connection;
 use serde::Serialize;
 use serde::de::DeserializeOwned;
@@ -12,6 +13,13 @@ const THEME: &str = "ui.theme";
 const TEXT_SIZE: &str = "ui.textSize";
 const WEEK_START: &str = "calendar.weekStartsOn";
 const REMINDER_TIME: &str = "reminders.defaultTime";
+const SUMMARY_ENABLED: &str = "reminders.dailySummary";
+const SUMMARY_TIME: &str = "reminders.dailySummaryTime";
+const LAUNCH_AT_LOGIN: &str = "system.launchAtLogin";
+/// Internal: the local date the last daily summary was sent for.
+const SUMMARY_LAST_SENT: &str = "reminders.dailySummaryLastSent";
+/// Internal: whether the "still running in the tray" hint has been shown.
+const TRAY_HINT_SHOWN: &str = "ui.trayHintShown";
 
 /// Missing or unreadable values fall back to the default, so a bad value never blocks the app.
 fn read<T: DeserializeOwned>(conn: &Connection, key: &str, default: T) -> AppResult<T> {
@@ -21,19 +29,10 @@ fn read<T: DeserializeOwned>(conn: &Connection, key: &str, default: T) -> AppRes
 }
 
 fn write<T: Serialize>(conn: &Connection, key: &str, value: &T) -> AppResult<()> {
-    let json = serde_json::to_string(value)
-        .map_err(|_| AppError::invalid(key_field(key), "outOfRange"))?;
+    let json =
+        serde_json::to_string(value).map_err(|_| AppError::invalid("settings", "outOfRange"))?;
     settings::set(conn, key, &json)?;
     Ok(())
-}
-
-fn key_field(key: &str) -> &'static str {
-    match key {
-        THEME => "theme",
-        TEXT_SIZE => "textSize",
-        WEEK_START => "weekStartsOn",
-        _ => "defaultReminderTime",
-    }
 }
 
 fn is_valid_time(value: &str) -> bool {
@@ -46,18 +45,25 @@ fn is_valid_time(value: &str) -> bool {
         && m.parse::<u8>().is_ok_and(|m| m < 60)
 }
 
+fn read_time(conn: &Connection, key: &str, default: String) -> AppResult<String> {
+    let saved: String = read(conn, key, default.clone())?;
+    Ok(if is_valid_time(&saved) {
+        saved
+    } else {
+        default
+    })
+}
+
 pub fn get(conn: &Connection) -> AppResult<AppSettings> {
     let defaults = AppSettings::default();
-    let reminder: String = read(conn, REMINDER_TIME, defaults.default_reminder_time.clone())?;
     Ok(AppSettings {
         theme: read(conn, THEME, defaults.theme)?,
         text_size: read(conn, TEXT_SIZE, defaults.text_size)?,
         week_starts_on: read(conn, WEEK_START, defaults.week_starts_on)?,
-        default_reminder_time: if is_valid_time(&reminder) {
-            reminder
-        } else {
-            defaults.default_reminder_time
-        },
+        default_reminder_time: read_time(conn, REMINDER_TIME, defaults.default_reminder_time)?,
+        daily_summary_enabled: read(conn, SUMMARY_ENABLED, defaults.daily_summary_enabled)?,
+        daily_summary_time: read_time(conn, SUMMARY_TIME, defaults.daily_summary_time)?,
+        launch_at_login: read(conn, LAUNCH_AT_LOGIN, defaults.launch_at_login)?,
     })
 }
 
@@ -66,13 +72,41 @@ pub fn update(conn: &mut Connection, next: &AppSettings) -> AppResult<AppSetting
     if !is_valid_time(&next.default_reminder_time) {
         return Err(AppError::invalid("defaultReminderTime", "invalidDateTime"));
     }
+    if !is_valid_time(&next.daily_summary_time) {
+        return Err(AppError::invalid("dailySummaryTime", "invalidDateTime"));
+    }
     let tx = conn.transaction()?;
     write(&tx, THEME, &next.theme)?;
     write(&tx, TEXT_SIZE, &next.text_size)?;
     write(&tx, WEEK_START, &next.week_starts_on)?;
     write(&tx, REMINDER_TIME, &next.default_reminder_time)?;
+    write(&tx, SUMMARY_ENABLED, &next.daily_summary_enabled)?;
+    write(&tx, SUMMARY_TIME, &next.daily_summary_time)?;
+    write(&tx, LAUNCH_AT_LOGIN, &next.launch_at_login)?;
     tx.commit()?;
     get(conn)
+}
+
+pub fn summary_last_sent(conn: &Connection) -> AppResult<Option<NaiveDate>> {
+    let saved: Option<String> = read(conn, SUMMARY_LAST_SENT, None)?;
+    Ok(saved.and_then(|d| NaiveDate::parse_from_str(&d, "%Y-%m-%d").ok()))
+}
+
+pub fn set_summary_last_sent(conn: &Connection, date: NaiveDate) -> AppResult<()> {
+    write(
+        conn,
+        SUMMARY_LAST_SENT,
+        &date.format("%Y-%m-%d").to_string(),
+    )
+}
+
+/// True only the first time it is called: the tray hint is shown once.
+pub fn take_tray_hint(conn: &Connection) -> AppResult<bool> {
+    let shown: bool = read(conn, TRAY_HINT_SHOWN, false)?;
+    if !shown {
+        write(conn, TRAY_HINT_SHOWN, &true)?;
+    }
+    Ok(!shown)
 }
 
 #[cfg(test)]
@@ -84,8 +118,12 @@ mod tests {
     #[test]
     fn defaults_when_nothing_is_saved() {
         let c = migrated_conn();
-        assert_eq!(get(&c).unwrap(), AppSettings::default());
-        assert_eq!(get(&c).unwrap().default_reminder_time, "09:00");
+        let s = get(&c).unwrap();
+        assert_eq!(s, AppSettings::default());
+        assert_eq!(s.default_reminder_time, "09:00");
+        assert_eq!(s.daily_summary_time, "08:00");
+        assert!(s.daily_summary_enabled);
+        assert!(s.launch_at_login, "PRD R3: on by default");
     }
 
     #[test]
@@ -96,6 +134,9 @@ mod tests {
             text_size: TextSize::Xl,
             week_starts_on: WeekStart::Sunday,
             default_reminder_time: "07:30".into(),
+            daily_summary_enabled: false,
+            daily_summary_time: "06:45".into(),
+            launch_at_login: false,
         };
         assert_eq!(update(&mut c, &next).unwrap(), next);
         assert_eq!(get(&c).unwrap(), next);
@@ -105,17 +146,37 @@ mod tests {
     fn rejects_bad_times_and_ignores_corrupt_values() {
         let mut c = migrated_conn();
         for bad in ["9:00", "24:00", "12:60", "noon", ""] {
-            let next = AppSettings {
+            let reminder = AppSettings {
                 default_reminder_time: bad.into(),
                 ..AppSettings::default()
             };
-            assert!(update(&mut c, &next).is_err(), "{bad} must be rejected");
+            assert!(update(&mut c, &reminder).is_err(), "{bad} must be rejected");
+            let summary = AppSettings {
+                daily_summary_time: bad.into(),
+                ..AppSettings::default()
+            };
+            assert!(update(&mut c, &summary).is_err(), "{bad} must be rejected");
         }
         settings::set(&c, THEME, "\"purple\"").unwrap();
-        assert_eq!(
-            get(&c).unwrap().theme,
-            ThemePreference::System,
-            "unknown value → default"
-        );
+        settings::set(&c, SUMMARY_TIME, "\"25:00\"").unwrap();
+        let s = get(&c).unwrap();
+        assert_eq!(s.theme, ThemePreference::System, "unknown value → default");
+        assert_eq!(s.daily_summary_time, "08:00");
+    }
+
+    #[test]
+    fn remembers_the_last_summary_date() {
+        let c = migrated_conn();
+        assert_eq!(summary_last_sent(&c).unwrap(), None);
+        let day = NaiveDate::from_ymd_opt(2026, 10, 8).unwrap();
+        set_summary_last_sent(&c, day).unwrap();
+        assert_eq!(summary_last_sent(&c).unwrap(), Some(day));
+    }
+
+    #[test]
+    fn tray_hint_only_once() {
+        let c = migrated_conn();
+        assert!(take_tray_hint(&c).unwrap());
+        assert!(!take_tray_hint(&c).unwrap());
     }
 }

@@ -7,4 +7,5 @@ pub mod checklist;
 pub mod dashboard;
 pub mod inputs;
 pub mod item;
+pub mod reminder;
 pub mod settings;

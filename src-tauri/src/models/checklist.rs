@@ -32,4 +32,6 @@ pub struct ChecklistEntryInput {
 pub struct ItemDetail {
     pub item: Item,
     pub checklist: Vec<ChecklistItem>,
+    /// Reminder offsets in minutes before the item's moment, nearest first.
+    pub reminders: Vec<i64>,
 }

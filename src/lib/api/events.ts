@@ -17,3 +17,19 @@ export async function onDataReloaded(onReload: () => void): Promise<UnlistenFn> 
   if (!isTauri()) return () => {};
   return listen(DATA_RELOADED, onReload);
 }
+
+/** Must match `OPEN_ITEM` / `NAVIGATE` in src-tauri/src/notify.rs (notification and tray clicks). */
+export const OPEN_ITEM = "app:open-item";
+export const NAVIGATE = "app:navigate";
+
+/** A notification or the tray asked to open an item's editor. */
+export async function onOpenItem(open: (itemId: string) => void): Promise<UnlistenFn> {
+  if (!isTauri()) return () => {};
+  return listen<string>(OPEN_ITEM, (event) => open(event.payload));
+}
+
+/** A notification asked to go to a screen (a route path such as "/"). */
+export async function onNavigate(go: (path: string) => void): Promise<UnlistenFn> {
+  if (!isTauri()) return () => {};
+  return listen<string>(NAVIGATE, (event) => go(event.payload));
+}

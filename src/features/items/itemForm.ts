@@ -7,6 +7,12 @@ import type { ChecklistEntryInput } from "@/types/ChecklistEntryInput";
 
 export const DURATION_OPTIONS = [0, 15, 30, 45, 60, 90, 120, 180, 240] as const;
 
+/** PRD R3: one reminder at the item's moment unless you choose otherwise. */
+export const DEFAULT_REMINDERS = [0];
+/** Must match MAX_REMINDERS / MAX_OFFSET_MINUTES in src-tauri/src/services/reminders.rs. */
+const MAX_REMINDERS = 10;
+const MAX_OFFSET_MINUTES = 4 * 7 * 24 * 60;
+
 /**
  * Editor fields in the user's terms (local date, local time, duration). Messages are i18n keys.
  * `schedule`: "none" (Inbox), "date" (whole day) or "time" (date + start time).
@@ -26,6 +32,7 @@ export const itemFormSchema = z
     areaId: z.string().nullable(),
     priority: z.number().int().min(0).max(3),
     notes: z.string().max(100_000, { error: "errors.validation.tooLong" }),
+    reminders: z.array(z.number().int().min(0).max(MAX_OFFSET_MINUTES)).max(MAX_REMINDERS),
     checklist: z.array(
       z.object({
         stepId: z.string().nullable(),
@@ -85,11 +92,15 @@ export function emptyItemForm(today: string): ItemFormValues {
     areaId: null,
     priority: 0,
     notes: "",
+    reminders: DEFAULT_REMINDERS,
     checklist: [],
   };
 }
 
-export function formFromDetail({ item, checklist }: ItemDetail, today: string): ItemFormValues {
+export function formFromDetail(
+  { item, checklist, reminders }: ItemDetail,
+  today: string,
+): ItemFormValues {
   const start = item.startAt ? parseISO(item.startAt) : null;
   const end = item.endAt ? parseISO(item.endAt) : null;
   return {
@@ -102,6 +113,7 @@ export function formFromDetail({ item, checklist }: ItemDetail, today: string): 
     areaId: item.areaId,
     priority: item.priority,
     notes: item.notes ?? "",
+    reminders,
     checklist: checklist.map((step) => ({ stepId: step.id, text: step.text, done: step.done })),
   };
 }
@@ -137,6 +149,7 @@ export function toItemInput(
     dueDate,
     location: existing?.location ?? null,
     source: existing?.source ?? "manual",
+    reminders: values.reminders,
   };
 }
 

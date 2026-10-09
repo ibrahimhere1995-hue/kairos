@@ -61,7 +61,15 @@
     "sunday": "Sunday",
     "reminders": "Reminders",
     "reminderTime": "Remind me about all-day tasks at",
-    "reminderTimeHelp": "Reminders arrive in the next update; your choice is saved and ready for them."
+    "reminderTimeHelp": "Tasks with a date but no time remind you at this time on the day.",
+    "dailySummary": "Daily summary",
+    "dailySummaryHelp": "A short note each morning with your day ahead.",
+    "dailySummaryTime": "Send the daily summary at",
+    "startup": "Startup",
+    "launchAtLogin": "Open Kairos when you sign in",
+    "launchAtLoginHelp": "Kairos starts quietly in the tray, so reminders reach you even before you open it.",
+    "on": "On",
+    "off": "Off"
   },
   "trash": {
     "title": "Trash",
@@ -250,7 +258,12 @@
     "moveToTrash": "Move to Trash",
     "discardQuestion": "You have unsaved changes. Discard them?",
     "keepEditing": "Keep editing",
-    "discard": "Discard"
+    "discard": "Discard",
+    "remind": "Remind me",
+    "noReminder": "No reminder",
+    "reminderCount_one": "{{count}} reminder",
+    "reminderCount_other": "{{count}} reminders",
+    "reminderChoices": "Choose one or more reminders"
   },
   "app": {
     "name": "Kairos",
@@ -343,5 +356,54 @@
       "destructive": "Empty Trash",
       "disabled": "Not available"
     }
+  },
+  "reminders": {
+    "atTime": "At the time",
+    "onTheDay": "On the day at {{time}}",
+    "minutesBefore_one": "{{count}} min before",
+    "minutesBefore_other": "{{count}} min before",
+    "hoursBefore_one": "{{count}} hour before",
+    "hoursBefore_other": "{{count}} hours before",
+    "daysBefore_one": "{{count}} day before",
+    "daysBefore_other": "{{count}} days before",
+    "weeksBefore_one": "{{count}} week before",
+    "weeksBefore_other": "{{count}} weeks before"
+  },
+  "notifications": {
+    "done": "Done",
+    "snooze10": "Snooze 10 min",
+    "snooze1h": "Snooze 1 hour",
+    "snoozeTomorrow": "Tomorrow",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "todayAt": "Today at {{time}}",
+    "tomorrowAt": "Tomorrow at {{time}}",
+    "onDay": "{{date}}",
+    "onDayAt": "{{date}} at {{time}}",
+    "awayTitle": "While you were away",
+    "awayBody_one": "{{count}} reminder: {{titles}}",
+    "awayBody_other": "{{count}} reminders: {{titles}}",
+    "moreItems": "+{{count}} more",
+    "summaryTitle": "Your day",
+    "summaryToday": "Today: {{list}}.",
+    "summaryAnd": "{{first}} and {{second}}",
+    "summaryTasks_one": "{{count}} task",
+    "summaryTasks_other": "{{count}} tasks",
+    "summaryEvents_one": "{{count}} event",
+    "summaryEvents_other": "{{count}} events",
+    "summarySlipped_one": "{{count}} slipped by, ready for a new moment.",
+    "summarySlipped_other": "{{count}} slipped by, ready for a new moment.",
+    "summaryEmpty": "Nothing planned today. A good moment to add something.",
+    "trayHintTitle": "Kairos is still here",
+    "trayHintBody": "It keeps running in the tray so your reminders arrive. Quit from the tray icon."
+  },
+  "tray": {
+    "tooltip": "Kairos",
+    "open": "Open Kairos",
+    "quickAdd": "Quick add",
+    "quit": "Quit Kairos",
+    "nothingNext": "Nothing else today",
+    "nextAt": "Next: {{title}} · {{time}}",
+    "nextToday": "Next: {{title}}"
   }
 }

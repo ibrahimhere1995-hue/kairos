@@ -6,11 +6,12 @@ import { useAppSettings, useUpdateSettings } from "@/features/settings/api";
 import { SettingRow } from "@/features/settings/SettingRow";
 import { ReminderTimeInput } from "@/features/settings/ReminderTimeInput";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
+import { Switch } from "@/components/ui/Switch";
 import { DEFAULT_SETTINGS } from "@/lib/api/settings";
 import type { ThemePreference } from "@/types/ThemePreference";
 import type { WeekStart } from "@/types/WeekStart";
 
-/** P1-T16: appearance, calendar and reminder settings. Every change applies immediately. */
+/** Appearance, calendar, reminder and startup settings. Every change applies immediately. */
 export function GeneralSettings() {
   const { t } = useTranslation();
   const { preference, textSize, setPreference, setTextSize } = useThemeStore();
@@ -79,6 +80,39 @@ export function GeneralSettings() {
             saved={settings.defaultReminderTime}
             label={t("settings.reminderTime")}
             onSave={(defaultReminderTime) => update.mutate({ defaultReminderTime })}
+          />
+        </SettingRow>
+        <SettingRow label={t("settings.dailySummary")} description={t("settings.dailySummaryHelp")}>
+          <Switch
+            checked={settings.dailySummaryEnabled}
+            label={t("settings.dailySummary")}
+            onChange={(dailySummaryEnabled) => update.mutate({ dailySummaryEnabled })}
+          />
+        </SettingRow>
+        {settings.dailySummaryEnabled && (
+          <SettingRow label={t("settings.dailySummaryTime")}>
+            <ReminderTimeInput
+              key={settings.dailySummaryTime}
+              saved={settings.dailySummaryTime}
+              label={t("settings.dailySummaryTime")}
+              onSave={(dailySummaryTime) => update.mutate({ dailySummaryTime })}
+            />
+          </SettingRow>
+        )}
+      </section>
+
+      <section aria-labelledby="startup-settings-heading" className="flex flex-col">
+        <h2 id="startup-settings-heading" className="text-h2">
+          {t("settings.startup")}
+        </h2>
+        <SettingRow
+          label={t("settings.launchAtLogin")}
+          description={t("settings.launchAtLoginHelp")}
+        >
+          <Switch
+            checked={settings.launchAtLogin}
+            label={t("settings.launchAtLogin")}
+            onChange={(launchAtLogin) => update.mutate({ launchAtLogin })}
           />
         </SettingRow>
       </section>

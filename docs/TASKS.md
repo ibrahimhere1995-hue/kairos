@@ -46,10 +46,10 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 ## Phase 2 — Smart layer
 **Goal:** Kairos reaches you, forgives you, and teaches itself.
 
-- [ ] **P2-T01 ⚙️ Reminder scheduler** — Rust loop, multiple reminders per item, sleep/wake + clock-change handling, "while you were away" summary.
-- [ ] **P2-T02 ⚙️ Native notifications + actions** — Done / Snooze (10 min, 1 h, tomorrow) / Open.
-- [ ] **P2-T03 ⚙️ Tray / menu bar + autostart** — close-to-tray, tray menu (Open, Quick add, Today's next item, Quit), launch at login toggle.
-- [ ] **P2-T04 ⚙️ Daily summary notification** at chosen time.
+- [x] **P2-T01 ⚙️ Reminder scheduler** — Rust loop, multiple reminders per item, sleep/wake + clock-change handling, "while you were away" summary.
+- [x] **P2-T02 ⚙️ Native notifications + actions** — Done / Snooze (10 min, 1 h, tomorrow) / Open.
+- [x] **P2-T03 ⚙️ Tray / menu bar + autostart** — close-to-tray, tray menu (Open, Quick add, Today's next item, Quit), launch at login toggle.
+- [x] **P2-T04 ⚙️ Daily summary notification** at chosen time.
 - [ ] **P2-T05 🎨 Missed-task ("slipped") flow** — morning card, per-item and bulk actions, "break into smaller steps" after 3 reschedules.
 - [ ] **P2-T06 ⚙️ Recurrence** — rrule storage, range expansion, exceptions, "this one / all future" editing, Repeat picker in plain language; NLP "every Monday".
 - [ ] **P2-T07 🎨 Time-blocking** — drag unscheduled/Inbox tasks onto the Day/Week grid.

@@ -114,7 +114,7 @@ describe("toItemInput", () => {
 describe("formFromDetail", () => {
   it("round-trips a timed event in local time", () => {
     process.env.TZ = "America/New_York";
-    const values = formFromDetail({ item: storedItem, checklist: [] }, "2026-10-07");
+    const values = formFromDetail({ item: storedItem, checklist: [], reminders: [] }, "2026-10-07");
     expect(values).toMatchObject({
       schedule: "time",
       date: "2026-10-07",
