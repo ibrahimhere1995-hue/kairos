@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { CalendarClock, CircleCheck, Trash2 } from "lucide-react";
+import { CalendarClock, CircleCheck } from "lucide-react";
 import { FormProvider, useForm, useWatch, type FieldPath } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useDeleteItem, useSaveItem } from "@/features/items/api";
 import { AreaPill } from "@/features/items/editor/AreaPill";
 import { ChecklistEditor } from "@/features/items/editor/ChecklistEditor";
 import { DatePill } from "@/features/items/editor/DatePill";
-import { DiscardPrompt } from "@/features/items/editor/DiscardPrompt";
+import { EditorFooter } from "@/features/items/editor/EditorFooter";
 import { PriorityPill } from "@/features/items/editor/PriorityPill";
+import { RepeatPill } from "@/features/items/editor/RepeatPill";
 import { ReminderPill } from "@/features/items/editor/ReminderPill";
 import { TimePill } from "@/features/items/editor/TimePill";
 import {
@@ -18,11 +19,11 @@ import {
   toItemInput,
   type ItemFormValues,
 } from "@/features/items/itemForm";
-import { Button } from "@/components/ui/Button";
 import { FieldError } from "@/components/ui/FieldError";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { SidePanel } from "@/components/ui/SidePanel";
 import { toErrorPayload } from "@/lib/api/errors";
+import type { EditScope } from "@/types/EditScope";
 import type { ItemDetail } from "@/types/ItemDetail";
 
 /** Backend field name → editor field that shows the message. */
@@ -67,13 +68,19 @@ export function ItemEditorForm({
 
   const requestClose = () => (isDirty ? setConfirmDiscard(true) : onClose());
 
-  const onSubmit = handleSubmit(async (values) => {
+  // A repeating item asks "only this one or this and following?" before saving or trashing.
+  const repeating =
+    detail !== null && (detail.item.rrule !== null || detail.item.recurrenceParentId !== null);
+  const [scopeFor, setScopeFor] = useState<"save" | "delete" | null>(null);
+
+  const saveWith = async (values: ItemFormValues, scope?: EditScope) => {
     try {
       await save.mutateAsync({
         id: detail?.item.id ?? null,
         input: toItemInput(values, detail?.item ?? null),
         checklist: toChecklistInput(values),
         checklistChanged: Boolean(dirtyFields.checklist),
+        scope,
       });
       onClose();
     } catch (error) {
@@ -81,7 +88,13 @@ export function ItemEditorForm({
       const field = payload.field ? SERVER_FIELDS[payload.field] : undefined;
       setError(field ?? "root.server", { message: payload.message });
     }
-  });
+  };
+  const onSubmit = handleSubmit((values) => (repeating ? setScopeFor("save") : saveWith(values)));
+  const trash = async (scope?: EditScope) => {
+    if (!detail) return;
+    await remove.mutateAsync({ item: detail.item, scope });
+    onClose();
+  };
 
   const titleError = formState.errors.title?.message;
   const dateError = formState.errors.date?.message ?? formState.errors.time?.message;
@@ -135,6 +148,7 @@ export function ItemEditorForm({
               <DatePill today={today} />
               <TimePill />
               <ReminderPill />
+              <RepeatPill />
               <AreaPill />
               <PriorityPill />
             </div>
@@ -159,41 +173,25 @@ export function ItemEditorForm({
             </details>
           </div>
 
-          <footer className="flex shrink-0 flex-col gap-3 border-t border-border px-5 py-4">
-            {serverError && <FieldError message={t(serverError)} />}
-            {confirmDiscard ? (
-              <DiscardPrompt onKeep={() => setConfirmDiscard(false)} onDiscard={onClose} />
-            ) : (
-              <div className="flex items-center gap-2">
-                <Button type="submit" disabled={save.isPending}>
-                  {t(
-                    isNew
-                      ? kind === "event"
-                        ? "editor.addEvent"
-                        : "editor.addTask"
-                      : "editor.save",
-                  )}
-                </Button>
-                <Button variant="ghost" onClick={requestClose}>
-                  {t("common.cancel")}
-                </Button>
-                {!isNew && (
-                  <Button
-                    variant="ghost"
-                    className="ml-auto text-text-muted"
-                    disabled={remove.isPending}
-                    onClick={async () => {
-                      await remove.mutateAsync(detail.item);
-                      onClose();
-                    }}
-                  >
-                    <Trash2 aria-hidden="true" />
-                    {t("editor.moveToTrash")}
-                  </Button>
-                )}
-              </div>
-            )}
-          </footer>
+          <EditorFooter
+            isNew={isNew}
+            isEvent={kind === "event"}
+            busy={save.isPending || remove.isPending}
+            serverError={serverError}
+            confirmDiscard={confirmDiscard}
+            scopeFor={scopeFor}
+            onKeepEditing={() => setConfirmDiscard(false)}
+            onDiscard={onClose}
+            onCancel={requestClose}
+            onDelete={() => (repeating ? setScopeFor("delete") : void trash())}
+            onChooseScope={(scope) => {
+              const action = scopeFor;
+              setScopeFor(null);
+              if (action === "delete") void trash(scope);
+              else void handleSubmit((values) => saveWith(values, scope))();
+            }}
+            onCancelScope={() => setScopeFor(null)}
+          />
         </form>
       </FormProvider>
     </SidePanel>

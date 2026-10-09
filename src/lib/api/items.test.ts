@@ -31,6 +31,7 @@ const input: ItemInput = {
   dueDate: "2026-10-08",
   location: null,
   source: "quick",
+  rrule: null,
 };
 
 describe("itemsApi", () => {
@@ -64,8 +65,8 @@ describe("itemsApi", () => {
 
     expect(calls).toEqual([
       { cmd: "create_item", args: { input } },
-      { cmd: "update_item", args: { id: "id1", input } },
-      { cmd: "delete_item", args: { id: "id1" } },
+      { cmd: "update_item", args: { id: "id1", input, scope: null } },
+      { cmd: "delete_item", args: { id: "id1", scope: null } },
       { cmd: "restore_item", args: { id: "id1" } },
       { cmd: "complete_item", args: { id: "id1" } },
       { cmd: "uncomplete_item", args: { id: "id1" } },

@@ -60,6 +60,10 @@ const PAIRS: [string, string, number][] = [
   ["--warning", "--surface", UI],
   ["--info", "--surface", UI],
   ["--danger", "--surface", UI],
+  // Area colours: stripes and dots on cards (DESIGN_SYSTEM §3.3).
+  ...["work", "home", "personal", "learning", "health", "slate", "olive", "earth"].map(
+    (area): [string, string, number] => [`--area-${area}`, "--surface", UI],
+  ),
 ];
 
 describe.each([

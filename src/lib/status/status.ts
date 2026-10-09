@@ -1,4 +1,4 @@
-import type { DayContext } from "@/lib/dates/dayContext";
+import { toLocalDateString, type DayContext } from "@/lib/dates/dayContext";
 import type { Item } from "@/types/Item";
 
 /**
@@ -18,7 +18,12 @@ export type ItemStatus =
 export type StatusInput = Pick<
   Item,
   "kind" | "startAt" | "endAt" | "dueDate" | "completedAt" | "skippedAt"
->;
+> &
+  Partial<Pick<Item, "id">>;
+
+/** A computed occurrence of a repeating item (`series@key`), not a stored one. */
+export const isComputedOccurrence = (item: Partial<Pick<Item, "id">>) =>
+  item.id?.includes("@") ?? false;
 
 function dateOnlyStatus(item: StatusInput, dueDate: string, ctx: DayContext): ItemStatus {
   // `YYYY-MM-DD` strings compare correctly as text.
@@ -44,7 +49,20 @@ function timedStatus(item: StatusInput, startAt: string, ctx: DayContext): ItemS
 export function getItemStatus(item: StatusInput, ctx: DayContext): ItemStatus {
   if (item.completedAt !== null) return "done";
   if (item.skippedAt !== null) return "skipped";
-  if (item.startAt !== null) return timedStatus(item, item.startAt, ctx);
-  if (item.dueDate !== null) return dateOnlyStatus(item, item.dueDate, ctx);
-  return "unscheduled";
+  const status =
+    item.startAt !== null
+      ? timedStatus(item, item.startAt, ctx)
+      : item.dueDate !== null
+        ? dateOnlyStatus(item, item.dueDate, ctx)
+        : "unscheduled";
+  // Repeating tasks: earlier days' occurrences are simply past; only the latest one slips,
+  // and My Day picks that one (PRD R6, decision 2026-10-09).
+  if (status === "missed" && isComputedOccurrence(item) && dayOf(item) < ctx.today) return "past";
+  return status;
+}
+
+function dayOf(item: StatusInput): string {
+  if (item.dueDate !== null) return item.dueDate;
+  const start = item.startAt === null ? null : new Date(item.startAt);
+  return start ? toLocalDateString(start) : "";
 }

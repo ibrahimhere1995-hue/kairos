@@ -7,8 +7,13 @@ const COLUMNS: &str = "id, kind, title, notes, area_id, priority, all_day, start
      due_date, completed_at, skipped_at, location, rrule, recurrence_parent_id, \
      original_start_at, milestone_id, reschedule_count, source, created_at, updated_at, deleted_at";
 
-/// Not deleted and not finished (completed or skipped).
-const OPEN: &str = "deleted_at IS NULL AND completed_at IS NULL AND skipped_at IS NULL";
+/// A single item or a stored occurrence, not a repeating series row: series show up through
+/// their computed occurrences (`services::recurrence`).
+const NOT_SERIES: &str = "rrule IS NULL";
+
+/// Not deleted, not finished (completed or skipped), not a series row.
+const OPEN: &str =
+    "deleted_at IS NULL AND completed_at IS NULL AND skipped_at IS NULL AND rrule IS NULL";
 
 fn bad_text(index: usize, value: &str) -> rusqlite::Error {
     rusqlite::Error::FromSqlConversionFailure(
@@ -66,14 +71,41 @@ pub fn get(conn: &Connection, id: &str) -> rusqlite::Result<Option<Item>> {
     .optional()
 }
 
-/// Items in the Trash, most recently deleted first.
+/// Items in the Trash, most recently deleted first. Occurrences of a deleted series are not
+/// listed separately: they come back with the series.
 pub fn list_deleted(conn: &Connection) -> rusqlite::Result<Vec<Item>> {
     query_items(
         conn,
         &format!(
-            "SELECT {COLUMNS} FROM items WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC"
+            "SELECT {COLUMNS} FROM items
+             WHERE deleted_at IS NOT NULL
+               AND NOT EXISTS (SELECT 1 FROM items p
+                               WHERE p.id = items.recurrence_parent_id AND p.deleted_at IS NOT NULL)
+             ORDER BY deleted_at DESC"
         ),
         &[],
+    )
+}
+
+/// Repeating series that aren't in the Trash.
+pub fn list_series(conn: &Connection) -> rusqlite::Result<Vec<Item>> {
+    query_items(
+        conn,
+        &format!(
+            "SELECT {COLUMNS} FROM items
+             WHERE rrule IS NOT NULL AND recurrence_parent_id IS NULL AND deleted_at IS NULL
+             ORDER BY created_at"
+        ),
+        &[],
+    )
+}
+
+/// Stored occurrences (done, moved or deleted ones) of a series, deleted ones included.
+pub fn list_exceptions(conn: &Connection, series_id: &str) -> rusqlite::Result<Vec<Item>> {
+    query_items(
+        conn,
+        &format!("SELECT {COLUMNS} FROM items WHERE recurrence_parent_id = :series"),
+        named_params! { ":series": series_id },
     )
 }
 
@@ -149,7 +181,7 @@ pub fn update(conn: &Connection, item: &Item) -> rusqlite::Result<usize> {
         "UPDATE items SET kind = ?2, title = ?3, notes = ?4, area_id = ?5, priority = ?6,
             all_day = ?7, start_at = ?8, end_at = ?9, due_date = ?10, completed_at = ?11,
             skipped_at = ?12, location = ?13, reschedule_count = ?14, updated_at = ?15,
-            deleted_at = ?16
+            deleted_at = ?16, rrule = ?17, recurrence_parent_id = ?18
          WHERE id = ?1",
         params![
             item.id,
@@ -168,6 +200,8 @@ pub fn update(conn: &Connection, item: &Item) -> rusqlite::Result<usize> {
             item.reschedule_count,
             item.updated_at,
             item.deleted_at,
+            item.rrule,
+            item.recurrence_parent_id,
         ],
     )
 }
@@ -201,7 +235,7 @@ pub fn list_in_range(
         conn,
         &format!(
             "SELECT {COLUMNS} FROM items
-             WHERE deleted_at IS NULL AND (
+             WHERE deleted_at IS NULL AND {NOT_SERIES} AND (
                (due_date >= :start_date AND due_date < :end_date)
                OR (start_at < :end AND (
                      (end_at IS NULL AND start_at >= :start) OR end_at > :start))
@@ -289,7 +323,8 @@ pub fn completed_between(
         conn,
         &format!(
             "SELECT {COLUMNS} FROM items
-             WHERE deleted_at IS NULL AND completed_at >= :day_start AND completed_at < :day_end
+             WHERE deleted_at IS NULL AND {NOT_SERIES}
+               AND completed_at >= :day_start AND completed_at < :day_end
              ORDER BY completed_at DESC"
         ),
         named_params! { ":day_start": day_start, ":day_end": day_end },

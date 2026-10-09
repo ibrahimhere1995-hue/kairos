@@ -69,6 +69,7 @@ mod tests {
                 location: None,
                 source: None,
                 reminders: None,
+                rrule: None,
             },
         )
         .unwrap()

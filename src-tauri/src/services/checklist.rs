@@ -6,7 +6,11 @@ use rusqlite::Connection;
 
 use crate::error::{AppError, AppResult};
 use crate::models::checklist::{ChecklistEntryInput, ChecklistItem, ItemDetail};
+use chrono::Local;
+
+use crate::models::item::Item;
 use crate::repo::{checklist as repo, items};
+use crate::scheduler::recurrence as rule;
 use crate::services::reminders;
 use crate::util::{new_id, now_utc};
 
@@ -20,12 +24,40 @@ fn active_item_exists(conn: &Connection, item_id: &str) -> AppResult<()> {
     }
 }
 
-pub fn get_detail(conn: &Connection, item_id: &str) -> AppResult<ItemDetail> {
-    let item = items::get(conn, item_id)?
+/// Whose steps an item shows: a repeating item's occurrences all share the series' steps.
+fn steps_owner(conn: &Connection, item_id: &str) -> AppResult<String> {
+    if let Some((series_id, _)) = rule::split_occurrence_id(item_id) {
+        return Ok(series_id.to_owned());
+    }
+    Ok(items::get(conn, item_id)?
+        .and_then(|item| item.recurrence_parent_id)
+        .unwrap_or_else(|| item_id.to_owned()))
+}
+
+/// The item as the editor shows it. A computed occurrence (`series@key`) shows that occurrence
+/// with the series' steps and reminders.
+fn load_for_detail(conn: &Connection, item_id: &str) -> AppResult<(Item, String)> {
+    if let Some((series_id, key)) = rule::split_occurrence_id(item_id) {
+        let series = items::get(conn, series_id)?
+            .filter(|s| s.deleted_at.is_none() && s.rrule.is_some())
+            .ok_or(AppError::NotFound)?;
+        let at = rule::parse_key(key).ok_or(AppError::NotFound)?;
+        return Ok((rule::occurrence_item(&Local, &series, at), series.id));
+    }
+    let mut item = items::get(conn, item_id)?
         .filter(|item| item.deleted_at.is_none())
         .ok_or(AppError::NotFound)?;
-    let checklist = repo::list_for_item(conn, item_id)?;
-    let reminders = reminders::offsets_for_item(conn, item_id)?;
+    // A stored occurrence shows its series' repeat rule (for "this and following" edits).
+    if let Some(parent) = &item.recurrence_parent_id {
+        item.rrule = items::get(conn, parent)?.and_then(|series| series.rrule);
+    }
+    Ok((item, item_id.to_owned()))
+}
+
+pub fn get_detail(conn: &Connection, item_id: &str) -> AppResult<ItemDetail> {
+    let (item, reminders_owner) = load_for_detail(conn, item_id)?;
+    let checklist = repo::list_for_item(conn, &steps_owner(conn, item_id)?)?;
+    let reminders = reminders::offsets_for_item(conn, &reminders_owner)?;
     Ok(ItemDetail {
         item,
         checklist,
@@ -41,6 +73,8 @@ pub fn set_checklist(
     entries: &[ChecklistEntryInput],
 ) -> AppResult<Vec<ChecklistItem>> {
     let tx = conn.transaction()?;
+    let owner = steps_owner(&tx, item_id)?;
+    let item_id = owner.as_str();
     active_item_exists(&tx, item_id)?;
 
     let wanted: Vec<(&ChecklistEntryInput, String)> = entries
@@ -121,6 +155,7 @@ mod tests {
                 location: None,
                 source: None,
                 reminders: None,
+                rrule: None,
             },
         )
         .unwrap();

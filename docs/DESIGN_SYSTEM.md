@@ -79,6 +79,11 @@ All colours are defined as CSS custom properties in `src/styles/tokens.css` and 
 | Personal | `#C2547A` | `#F28BAE` | `heart` |
 | Learning | `#7B5BD6` | `#AE96F5` | `graduation-cap` |
 | Health | `#1E9C9A` | `#4FD1CF` | `activity` |
+| *Slate* (extra choice) | `#5B6B82` | `#9AA9C2` | — |
+| *Olive* (extra choice) | `#6F7F2E` | `#B3C46A` | — |
+| *Brown* (extra choice) | `#8A6A4F` | `#C4A28A` | — |
+
+The three extra colours (added 2026-10-09, approved) are for areas the user adds; none is amber, gold or red, so they never read as "slipped", the accent or danger. Every area colour meets 3:1 on `--surface` in both themes (`src/styles/contrast.test.ts`).
 
 Areas appear as a 4 px left stripe on item cards, a small dot in lists, and a soft tint (10% opacity) for calendar blocks.
 

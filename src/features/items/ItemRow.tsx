@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from "react";
-import { CalendarClock, Flag } from "lucide-react";
+import { CalendarClock, Flag, Repeat } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { useCompleteItem, useUncompleteItem } from "@/features/items/api";
@@ -36,6 +36,7 @@ export function ItemRow({
   const [optimisticDone, setOptimisticDone] = useState<boolean | null>(null);
   const done = optimisticDone ?? item.completedAt !== null;
   const when = itemWhen(item, today, t);
+  const repeats = item.rrule !== null || item.recurrenceParentId !== null;
 
   const row = (
     <div
@@ -72,8 +73,14 @@ export function ItemRow({
         <span className={cn("max-w-full truncate text-body", done && "strike text-text-muted")}>
           {item.title}
         </span>
-        {(when ?? area) && (
-          <span className="max-w-full truncate text-small text-text-muted">
+        {(when ?? area ?? repeats) && (
+          <span className="inline-flex max-w-full items-center gap-1 truncate text-small text-text-muted">
+            {repeats && (
+              <>
+                <Repeat aria-hidden="true" className="size-3.5 shrink-0" />
+                <span className="sr-only">{t("repeat.repeats")}</span>
+              </>
+            )}
             {[when, area?.name].filter(Boolean).join(" · ")}
           </span>
         )}

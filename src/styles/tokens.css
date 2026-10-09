@@ -44,6 +44,9 @@
   --area-personal: #c2547a;
   --area-learning: #7b5bd6;
   --area-health: #1e9c9a;
+  --area-slate: #5b6b82;
+  --area-olive: #6f7f2e;
+  --area-earth: #8a6a4f;
 
   /* §5 Depth (light: soft shadows) */
   --elevation-sm: 0 1px 2px rgba(18, 23, 42, 0.06);
@@ -79,6 +82,9 @@
   --area-personal: #f28bae;
   --area-learning: #ae96f5;
   --area-health: #4fd1cf;
+  --area-slate: #9aa9c2;
+  --area-olive: #b3c46a;
+  --area-earth: #c4a28a;
 
   /* §5 Dark depth: a 1px border instead of heavy shadows */
   --elevation-sm: 0 0 0 1px var(--border);

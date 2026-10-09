@@ -8,6 +8,7 @@ import type { Area } from "@/types/Area";
 import type { ChecklistEntryInput } from "@/types/ChecklistEntryInput";
 import type { DashboardQuery } from "@/types/DashboardQuery";
 import type { DateRange } from "@/types/DateRange";
+import type { EditScope } from "@/types/EditScope";
 import type { Item } from "@/types/Item";
 import type { ItemInput } from "@/types/ItemInput";
 import type { ScheduleInput } from "@/types/ScheduleInput";
@@ -43,14 +44,17 @@ export interface SaveItemArgs {
   checklist: ChecklistEntryInput[];
   /** Skip the checklist call when nothing changed (and for new items with no steps). */
   checklistChanged: boolean;
+  /** Repeating items: only this occurrence, or this and following. */
+  scope?: EditScope;
 }
 
 /** Creates or updates an item, then its checklist; refreshes every item view afterwards. */
 export function useSaveItem() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, input, checklist, checklistChanged }: SaveItemArgs) => {
-      const item = id === null ? await itemsApi.create(input) : await itemsApi.update(id, input);
+    mutationFn: async ({ id, input, checklist, checklistChanged, scope }: SaveItemArgs) => {
+      const item =
+        id === null ? await itemsApi.create(input) : await itemsApi.update(id, input, scope);
       if (checklistChanged) await itemsApi.setChecklist(item.id, checklist);
       return item;
     },
@@ -74,8 +78,9 @@ export function useDeleteItem() {
   const showToast = useToastStore((state) => state.show);
   const refresh = () => queryClient.invalidateQueries({ queryKey: itemKeys.all });
   return useMutation({
-    mutationFn: (item: Item) => itemsApi.delete(item.id),
-    onSuccess: (_, item) => {
+    mutationFn: ({ item, scope }: { item: Item; scope?: EditScope }) =>
+      itemsApi.delete(item.id, scope),
+    onSuccess: (_, { item }) => {
       showToast({
         message: t("toast.movedToTrash", { title: item.title }),
         actionLabel: t("toast.undo"),

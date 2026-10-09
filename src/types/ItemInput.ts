@@ -27,4 +27,9 @@ source: ItemSource | null,
  * the clock time). Omitted: a new item gets the default reminder (PRD R3), an edited item
  * keeps its reminders. Empty: no reminders.
  */
-reminders?: Array<number>, };
+reminders?: Array<number>, 
+/**
+ * Repeat rule (RFC 5545 RRULE without DTSTART, e.g. `FREQ=WEEKLY;BYDAY=MO`); null = once.
+ * Ignored when editing a single occurrence of a repeating item.
+ */
+rrule: string | null, };

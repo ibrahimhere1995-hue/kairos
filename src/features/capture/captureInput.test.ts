@@ -28,6 +28,7 @@ describe("captureToItemInput", () => {
       dueDate: null,
       location: null,
       source: "nlp",
+      rrule: null,
     });
   });
 
@@ -49,6 +50,16 @@ describe("captureToItemInput", () => {
     expect(captureToItemInput(parse("Meeting tomorrow 3-4pm"), "2026-10-07")).toMatchObject({
       startAt: "2026-10-08T15:00:00.000Z",
       endAt: "2026-10-08T16:00:00.000Z",
+    });
+  });
+
+  it("turns “every Monday” into a weekly repeat starting next Monday", () => {
+    const now = new Date(2026, 9, 7, 10, 0); // Wed 7 Oct
+    const parsed = parseCapture("Team review every Monday", { now, areas: [] });
+    expect(captureToItemInput(parsed, "2026-10-07")).toMatchObject({
+      title: "Team review",
+      dueDate: "2026-10-12",
+      rrule: "FREQ=WEEKLY;BYDAY=MO",
     });
   });
 });

@@ -21,7 +21,7 @@ export interface ParsedCapture {
   areaId: string | null;
   /** 1 low, 2 medium, 3 high. */
   priority: 1 | 2 | 3 | null;
-  /** "every Monday" etc. Recognised but not saved until recurrence lands (P2-T06). */
+  /** "every Monday" etc.: turned into a repeat rule when saved (P2-T06). */
   repeat: string | null;
   /** Which parts were recognised, in display order. */
   chips: ChipKind[];

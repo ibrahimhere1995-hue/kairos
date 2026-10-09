@@ -31,6 +31,7 @@ fn task(title: &str) -> ItemInput {
         location: None,
         source: None,
         reminders: None,
+        rrule: None,
     }
 }
 

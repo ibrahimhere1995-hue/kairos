@@ -2,6 +2,7 @@ import { format, parseISO } from "date-fns";
 import type { TFunction } from "i18next";
 import { friendlyDate, friendlyDuration } from "@/features/items/editor/friendlyDate";
 import type { ChipKind, ParsedCapture } from "@/lib/nlp/parseCapture";
+import { describeRule, phraseToRule } from "@/lib/recurrence/rules";
 import type { Area } from "@/types/Area";
 
 const PRIORITY_KEYS = { 1: "priority.low", 2: "priority.medium", 3: "priority.high" } as const;
@@ -28,7 +29,9 @@ export function chipLabel(
       return areas.find((a) => a.id === parsed.areaId)?.name ?? "";
     case "priority":
       return parsed.priority ? t(PRIORITY_KEYS[parsed.priority]) : "";
-    case "repeat":
-      return t("capture.repeatLater", { phrase: parsed.repeat ?? "" });
+    case "repeat": {
+      const rule = parsed.repeat ? phraseToRule(parsed.repeat) : null;
+      return rule ? describeRule(rule, parsed.date ?? today, t) : (parsed.repeat ?? "");
+    }
   }
 }
