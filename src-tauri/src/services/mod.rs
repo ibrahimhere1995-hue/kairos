@@ -5,6 +5,7 @@ pub mod areas;
 pub mod attachments;
 pub mod backups;
 pub mod checklist;
+pub mod feedback;
 pub mod focus;
 pub mod goals;
 pub mod habit_logic;

@@ -6,6 +6,7 @@ pub mod attachment;
 pub mod backup;
 pub mod checklist;
 pub mod dashboard;
+pub mod feedback;
 pub mod focus;
 pub mod goal;
 pub mod habit;

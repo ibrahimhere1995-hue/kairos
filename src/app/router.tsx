@@ -15,6 +15,7 @@ import { parseCalendarSearch, type CalendarView } from "@/features/calendar/cale
 import { MyDayPage } from "@/features/dashboard/MyDayPage";
 import { GoalsPage } from "@/features/goals/GoalsPage";
 import { HabitsPage } from "@/features/habits/HabitsPage";
+import { WishlistPage } from "@/features/feedback/WishlistPage";
 import { ReviewPage } from "@/features/review/ReviewPage";
 import { TemplatesPage } from "@/features/templates/TemplatesPage";
 import { InboxPage } from "@/features/inbox/InboxPage";
@@ -75,6 +76,11 @@ const reviewRoute = createRoute({
   path: "/review",
   component: ReviewPage,
 });
+const wishlistRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/wishlist",
+  component: WishlistPage,
+});
 const settingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/settings",
@@ -104,6 +110,7 @@ const routeTree = rootRoute.addChildren([
   goalsRoute,
   templatesRoute,
   reviewRoute,
+  wishlistRoute,
   settingsRoute,
   trashRoute,
   styleguideRoute,

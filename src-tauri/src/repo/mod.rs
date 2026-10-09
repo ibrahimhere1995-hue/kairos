@@ -5,6 +5,7 @@ pub mod attachments;
 pub mod backup_log;
 pub mod checklist;
 pub mod export;
+pub mod feedback;
 pub mod focus;
 pub mod goals;
 pub mod habits;

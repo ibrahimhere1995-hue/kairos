@@ -1,10 +1,12 @@
 import { useMemo } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import * as chrono from "chrono-node";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { useThemeStore } from "@/app/theme/themeStore";
 import { useCaptureStore } from "@/features/capture/captureStore";
+import { useFeedbackStore } from "@/features/feedback/feedbackStore";
+import { screenName } from "@/features/feedback/screenName";
 import { useFocusStore } from "@/features/focus/focusStore";
 import { matchCommands, type PaletteCommand } from "@/features/search/paletteEntries";
 import { toLocalDateString } from "@/lib/dates/dayContext";
@@ -19,6 +21,8 @@ export function usePaletteCommands(query: string): PaletteCommand[] {
   const openCapture = useCaptureStore((s) => s.openCapture);
   const setPreference = useThemeStore((s) => s.setPreference);
   const openFocus = useFocusStore((s) => s.openFocus);
+  const openSuggest = useFeedbackStore((s) => s.openSuggest);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const all = useMemo<PaletteCommand[]>(() => {
     const nav = t("palette.keywords.nav");
@@ -76,6 +80,18 @@ export function usePaletteCommands(query: string): PaletteCommand[] {
         run: () => openFocus(),
       },
       {
+        id: "suggest",
+        label: t("palette.cmd.suggest"),
+        keywords: "feedback idea wish bug frustration",
+        run: () => openSuggest(screenName(pathname, t)),
+      },
+      {
+        id: "go-wishlist",
+        label: t("palette.cmd.goWishlist"),
+        keywords: `${nav} feedback ideas`,
+        run: go("/wishlist"),
+      },
+      {
         id: "go-review",
         label: t("palette.cmd.goReview"),
         keywords: `${nav} weekly week reflect`,
@@ -119,7 +135,7 @@ export function usePaletteCommands(query: string): PaletteCommand[] {
         run: () => setPreference("system"),
       },
     ];
-  }, [t, navigate, openCapture, setPreference, openFocus]);
+  }, [t, navigate, openCapture, setPreference, openFocus, openSuggest, pathname]);
 
   return useMemo(() => {
     const matched = matchCommands(all, query);

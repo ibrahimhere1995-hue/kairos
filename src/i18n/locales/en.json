@@ -29,7 +29,8 @@
       "copyFailed": "Kairos couldn't copy that file. Please try again.",
       "openFailed": "Kairos couldn't open that file.",
       "notACalendar": "That doesn't look like a calendar file (.ics).",
-      "unknownMilestone": "That goal step no longer exists. Please pick another."
+      "unknownMilestone": "That goal step no longer exists. Please pick another.",
+      "emailFailed": "Kairos couldn’t open your email app. Try “Export to file” instead."
     }
   },
   "common": {
@@ -348,7 +349,8 @@
     "habits": "Habits",
     "goals": "Goals",
     "templates": "Templates",
-    "review": "Weekly review"
+    "review": "Weekly review",
+    "wishlist": "Wishlist"
   },
   "topbar": {
     "search": "Search or type a command…",
@@ -589,7 +591,9 @@
       "goGoals": "Go to Goals",
       "goTemplates": "Go to Templates",
       "startFocus": "Start focus",
-      "goReview": "Go to Weekly review"
+      "goReview": "Go to Weekly review",
+      "suggest": "Suggest a feature",
+      "goWishlist": "Go to Wishlist"
     },
     "keywords": {
       "newTask": "add create capture task event",
@@ -757,5 +761,43 @@
     "insightEven": "Your time was spread across your life areas.",
     "nudge": "It is review day. Take a minute to look back on your week.",
     "open": "Open review"
+  },
+  "feedback": {
+    "exportTitle": "Kairos wishlist",
+    "kinds": {
+      "idea": "Idea",
+      "frustration": "Frustration",
+      "bug": "Bug"
+    },
+    "statuses": {
+      "open": "Open",
+      "planned": "Planned",
+      "done": "Done"
+    },
+    "on": "on {{screen}}",
+    "emailSubject": "Kairos feedback",
+    "emailTruncated": "The list was shortened. Export it to a file to send everything.",
+    "suggest": "Suggest a feature",
+    "dialogTitle": "Suggest a feature",
+    "dialogIntro": "Ideas, frustrations, bugs: all welcome. It stays on this computer until you choose to send it.",
+    "kind": "What kind?",
+    "text": "What would make Kairos better?",
+    "textPlaceholder": "I wish Kairos could…",
+    "includeScreen": "Mention that I was on {{screen}}",
+    "save": "Add to wishlist",
+    "saved": "Added to your wishlist.",
+    "intro": "Your ideas and frustrations, kept on this computer. Send them to the developer whenever you like.",
+    "export": "Export to file",
+    "exportDialog": "Save your wishlist",
+    "exported": "Wishlist saved.",
+    "email": "Email to the developer",
+    "emailNote": "Opens your email app with the list filled in. Nothing is sent until you press Send there.",
+    "empty": "Nothing here yet. Got an idea? Add it any time.",
+    "columnEmpty": "Nothing here.",
+    "moveTo": "Status of “{{text}}”",
+    "edit": "Edit “{{text}}”",
+    "delete": "Delete “{{text}}”",
+    "deleted": "Removed from your wishlist.",
+    "helpful": "Missing something in your review? Suggest an improvement."
   }
 }

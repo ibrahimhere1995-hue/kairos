@@ -66,6 +66,7 @@ describe("Accessibility (axe-core)", () => {
         "Goals",
         "Templates",
         "Weekly review",
+        "Wishlist",
         "Trash",
         "Settings",
       ]) {
@@ -102,6 +103,13 @@ describe("Accessibility (axe-core)", () => {
       await scan(`${theme} · Focus mode`);
       await browser.keys("Escape");
       await (await byName("Start focusing")).waitForDisplayed({ reverse: true });
+
+      await nav("Wishlist");
+      await click("Suggest a feature");
+      await (await byName("Add to wishlist")).waitForDisplayed();
+      await scan(`${theme} · Suggest a feature`);
+      await browser.keys("Escape");
+      await (await byName("Add to wishlist")).waitForDisplayed({ reverse: true });
     });
   }
 
