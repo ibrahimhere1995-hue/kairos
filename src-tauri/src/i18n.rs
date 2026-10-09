@@ -84,6 +84,16 @@ mod tests {
             "tray.nothingNext",
             "tray.nextAt",
             "tray.nextToday",
+            "feedback.exportTitle",
+            "feedback.kinds.idea",
+            "feedback.kinds.frustration",
+            "feedback.kinds.bug",
+            "feedback.statuses.open",
+            "feedback.statuses.planned",
+            "feedback.statuses.done",
+            "feedback.on",
+            "feedback.emailSubject",
+            "feedback.emailTruncated",
         ];
         for key in keys {
             assert!(lookup(key).is_some(), "missing i18n key {key}");

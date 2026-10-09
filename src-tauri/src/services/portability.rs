@@ -39,7 +39,7 @@ struct JsonExport {
     attachments: Vec<Attachment>,
 }
 
-fn write_file(path: &Path, text: &str) -> AppResult<()> {
+pub(crate) fn write_file(path: &Path, text: &str) -> AppResult<()> {
     if !path.is_absolute() {
         return Err(AppError::invalid("path", "folderNotAbsolute"));
     }

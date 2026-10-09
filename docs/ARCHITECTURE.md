@@ -179,8 +179,8 @@ CREATE TABLE focus_sessions (
 
 CREATE TABLE feedback (
   id TEXT PRIMARY KEY, kind TEXT NOT NULL,   -- idea|frustration|bug
-  text TEXT NOT NULL, context TEXT, status TEXT NOT NULL DEFAULT 'open',
-  created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+  text TEXT NOT NULL, context TEXT, status TEXT NOT NULL DEFAULT 'open',  -- open|planned|done
+  created_at TEXT NOT NULL, updated_at TEXT NOT NULL, deleted_at TEXT    -- 0007 adds deleted_at
 );
 
 CREATE TABLE settings (key TEXT PRIMARY KEY, value TEXT NOT NULL); -- JSON values
@@ -275,6 +275,7 @@ Frontend sends image path → Rust `ai_extract_from_image` → reads key from ke
 | `list_goals`, `create_goal`, `update_goal`, `achieve_goal`, `delete_goal(id, deleted)`, `add_milestone`, `rename_milestone`, `delete_milestone(id, deleted)` | Goals (P3-T03). Tasks link to a milestone via `ItemInput.milestoneId` (validated; omitted = none). Progress = done / all linked tasks (not trashed, skipped or repeating series). |
 | `list_templates`, `create_template(name, itemIds)`, `delete_template(id, deleted)`, `apply_template(id, startDate)`, `delete_items(ids)` | Templates (P3-T04, migration 0005). Payload: entries with `dayOffset` from the earliest item, local `time`, `durationMinutes`, steps. Insert creates them from the chosen day (local wall-clock); Undo = `delete_items`. |
 | `set_focus_mode(active)`, `start_focus(itemId?, plannedMinutes)`, `stop_focus(id)`, `focus_totals(start, end)` | Focus mode (P3-T05, migration 0006). One session per running work stretch (pausing ends it, resuming starts another; breaks are not logged). Focus mode makes the window full screen and the reminder loop holds notifications until it ends; they then arrive (several as "While you were away"). Sessions left open by a closed app end at their planned length. Totals are seconds per life area of the task. |
+| `list_feedback`, `create_feedback(input)`, `update_feedback(id, input)`, `set_feedback_status(id, status)`, `delete_feedback(id, deleted)`, `export_feedback(path)`, `email_feedback` | Wishlist (P3-T07, migration 0007). Kept locally. Export writes a plain-text file; email opens the user's mail app with a `mailto:` link of entries not yet done (shortened past ~1500 characters). Kairos itself sends nothing. |
 | `snooze_reminder`, `dismiss_reminder` | Reminder actions (planned; notification buttons currently act in Rust directly) |
 | `main_window_ready` | Frontend painted its first frame: show the main window (unless started hidden at sign-in) |
 | `ai_set_key`, `ai_clear_key`, `ai_extract_from_image`, `ai_parse_text`, `ai_plan_range` | AI (Phase 3) |

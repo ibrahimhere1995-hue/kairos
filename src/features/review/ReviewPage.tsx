@@ -3,6 +3,7 @@ import { addDays, format } from "date-fns";
 import { ChevronLeft, ChevronRight, CircleCheck, RotateCcw, Undo2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { weeklyBalance } from "@/features/dashboard/balance";
+import { useFeedbackStore } from "@/features/feedback/feedbackStore";
 import { useFocusTotals } from "@/features/focus/api";
 import { friendlyDuration } from "@/features/items/editor/friendlyDate";
 import { useAreas, useItemsInRange } from "@/features/items/api";
@@ -19,6 +20,7 @@ import { getDayContext } from "@/lib/dates/dayContext";
 export function ReviewPage() {
   const { t } = useTranslation();
   const weekStartsOn = useWeekStartsOn();
+  const openSuggest = useFeedbackStore((s) => s.openSuggest);
   const ctx = useMemo(() => getDayContext(), []);
   const [offset, setOffset] = useState(() => defaultWeekOffset(ctx.now, weekStartsOn));
   const { first, range } = reviewWeek(ctx.now, weekStartsOn, offset);
@@ -78,6 +80,9 @@ export function ReviewPage() {
           />
         </div>
         <AreaTimeList areas={withFocus(weeklyBalance(items.data, active), focus.data)} />
+        <Button variant="ghost" className="self-start" onClick={() => openSuggest(t("nav.review"))}>
+          {t("feedback.helpful")}
+        </Button>
       </>
     );
   }
