@@ -8,5 +8,6 @@ pub mod item_rules;
 pub mod items;
 pub mod reminders;
 pub mod seed;
+pub mod series;
 pub mod today;
 pub mod trash;

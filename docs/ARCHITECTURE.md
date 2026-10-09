@@ -224,6 +224,16 @@ CREATE VIRTUAL TABLE items_fts USING fts5(title, notes, content='items', content
 - Daily summary: once per local day, from the chosen time until 4 hours later (a laptop opened at 10:30 still gets the 08:00 summary).
 - Tray (`tray.rs`): Open, Quick add, today's next item (opens it), Quit. Closing the main window hides it to the tray (a one-time hint explains). Launch at login (default on) starts with `--hidden`.
 
+### 6.2a Repeating items (P2-T06)
+- A **series** is one `items` row with `rrule` (RFC 5545 RRULE without DTSTART; its own date or start time is the first occurrence). Series rows never appear in lists themselves; repo queries exclude `rrule IS NOT NULL`.
+- **Occurrences are computed** (`scheduler/recurrence.rs`, `services/series.rs`) in local wall-clock time, so "every Monday 9:00" stays 9:00 across DST. Each has a key (`YYYY-MM-DD` or local `YYYY-MM-DDTHH:MM`) and the id `seriesId@key`.
+- Acting on one occurrence (done, skip, move, edit "only this one", delete "only this one") first **stores it as an exception** row: `recurrence_parent_id` = series, `original_start_at` = key, a copy of the series' fields and reminders. A stored key hides the computed one. Every item command accepts `series@key` ids.
+- **"This and following"** (`update_item`/`delete_item` with `scope: "following"`): from the first occurrence it changes or deletes the whole series; otherwise the series gets `UNTIL` just before the occurrence and (for edits) a new series starts there, taking over the later stored occurrences. When timing changes, unfinished stored occurrences are dropped (soft-deleted); finished ones stay as history.
+- Steps (checklist) belong to the series and are shared by its occurrences.
+- **Slipping (decision 2026-10-09):** only the most recent past occurrence of a repeating task can slip (and only if after the series was created); earlier days' computed occurrences show as *past*. "This week" on My Day lists only each series' next occurrence.
+- Reminders sit on the series and always point at its next not-yet-handled occurrence; after firing they move on.
+- Deleting a whole series soft-deletes its stored occurrences with the same timestamp; restoring the series restores them. The Trash lists the series once.
+
 ### 6.3 Backups
 - Use SQLite **Online Backup API** (safe while running) through a **separate read-only connection**, so the app's connection is never blocked → write `kairos-<label>-YYYYMMDD-HHMMSS.mmm.db` (UTC). Labels: `auto`, `manual`, `pre-restore`, `pre-migration`, `pre-purge`. Attachments folder copy: added with attachments (P2-T11).
 - When: every 24 h (background check every 30 min) and on every app close; "Back up now"; automatically before a migration, a restore, or a Trash purge.
@@ -247,7 +257,7 @@ Frontend sends image path → Rust `ai_extract_from_image` → reads key from ke
 |---------|---------|
 | `list_items(range, filters)` | Items + expanded occurrences in a date range |
 | `get_dashboard(today)` | Pre-grouped Now/Today/Missed/Week/Done |
-| `create_item`, `update_item`, `delete_item`, `restore_item`, `complete_item`, `uncomplete_item`, `reschedule_item` | Item CRUD |
+| `create_item`, `update_item`, `delete_item`, `restore_item`, `complete_item`, `uncomplete_item`, `reschedule_item` | Item CRUD. `update_item`/`delete_item` take an optional `scope` (`this` default, `following`) for repeating items; all accept computed occurrence ids (`series@key`). |
 | `list_areas`, `create_area`, `update_area`, `archive_area(id, archived)`, `reorder_areas(ids)` | Life areas (P2-T10). `list_areas` includes archived areas (items keep showing them); pickers hide them. Names are unique (any case) because Quick Capture matches `#area` by name; colours are the area tokens. Changes emit `areas:changed`. |
 | `reschedule_items(ids, schedule)` | Several items, one new moment, one transaction ("Move all to today", PRD R6) |
 | `skip_item`, `unskip_item` | "Let it go" (sets `skipped_at`; Undo) |

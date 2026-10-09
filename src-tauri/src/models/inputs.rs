@@ -27,6 +27,9 @@ pub struct ItemInput {
     #[serde(default)]
     #[cfg_attr(test, ts(optional))]
     pub reminders: Option<Vec<i64>>,
+    /// Repeat rule (RFC 5545 RRULE without DTSTART, e.g. `FREQ=WEEKLY;BYDAY=MO`); null = once.
+    /// Ignored when editing a single occurrence of a repeating item.
+    pub rrule: Option<String>,
 }
 
 /// New schedule for `reschedule_item` (drag on the calendar, the slipped-items card).

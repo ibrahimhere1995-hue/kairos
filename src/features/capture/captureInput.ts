@@ -1,10 +1,11 @@
 import { addMinutes } from "date-fns";
 import type { ParsedCapture } from "@/lib/nlp/parseCapture";
+import { phraseToRule } from "@/lib/recurrence/rules";
 import type { ItemInput } from "@/types/ItemInput";
 
 /**
  * Turns a parsed capture into a new task. PRD R4: with no date given it lands on Today.
- * Times are local and sent as UTC. "every …" is recognised but saved once (recurrence: P2-T06).
+ * Times are local and sent as UTC. "every Monday" etc. makes it repeat (P2-T06).
  */
 export function captureToItemInput(parsed: ParsedCapture, today: string): ItemInput {
   let startAt: string | null = null;
@@ -30,5 +31,6 @@ export function captureToItemInput(parsed: ParsedCapture, today: string): ItemIn
     dueDate,
     location: null,
     source: parsed.chips.length > 0 ? "nlp" : "quick",
+    rrule: parsed.repeat ? phraseToRule(parsed.repeat) : null,
   };
 }

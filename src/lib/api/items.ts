@@ -4,6 +4,7 @@ import type { ChecklistItem } from "@/types/ChecklistItem";
 import type { Dashboard } from "@/types/Dashboard";
 import type { DashboardQuery } from "@/types/DashboardQuery";
 import type { DateRange } from "@/types/DateRange";
+import type { EditScope } from "@/types/EditScope";
 import type { Item } from "@/types/Item";
 import type { ItemDetail } from "@/types/ItemDetail";
 import type { ItemFilters } from "@/types/ItemFilters";
@@ -17,8 +18,11 @@ import type { ScheduleInput } from "@/types/ScheduleInput";
  */
 export const itemsApi = {
   create: (input: ItemInput) => invoke<Item>("create_item", { input }),
-  update: (id: string, input: ItemInput) => invoke<Item>("update_item", { id, input }),
-  delete: (id: string) => invoke<null>("delete_item", { id }),
+  /** `scope` matters for repeating items only: this occurrence (default) or this and following. */
+  update: (id: string, input: ItemInput, scope?: EditScope) =>
+    invoke<Item>("update_item", { id, input, scope: scope ?? null }),
+  delete: (id: string, scope?: EditScope) =>
+    invoke<null>("delete_item", { id, scope: scope ?? null }),
   restore: (id: string) => invoke<Item>("restore_item", { id }),
   complete: (id: string) => invoke<Item>("complete_item", { id }),
   uncomplete: (id: string) => invoke<Item>("uncomplete_item", { id }),

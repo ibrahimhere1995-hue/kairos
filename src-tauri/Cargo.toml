@@ -24,6 +24,7 @@ chrono = { version = "0.4.45", default-features = false, features = ["clock", "s
 thiserror = "2.0.21"
 rusqlite = { version = "0.40", features = ["bundled", "backup"] }
 tauri-plugin-dialog = "2"
+rrule = "0.14"
 
 [lints.clippy]
 # PROJECT_RULES: no unwrap()/expect() outside tests and startup-fatal paths.

@@ -6,7 +6,7 @@ use super::*;
 /// (clocks jump 01:00 → 02:00) to 25 Oct 01:00 UTC (clocks fall back 02:00 → 01:00).
 /// Hand-built so DST tests don't depend on the machine's time zone.
 #[derive(Debug, Clone, Copy)]
-struct London;
+pub(crate) struct London;
 
 fn utc(s: &str) -> DateTime<Utc> {
     DateTime::parse_from_rfc3339(s).unwrap().with_timezone(&Utc)

@@ -7,6 +7,7 @@ use crate::models::checklist::{ChecklistEntryInput, ChecklistItem, ItemDetail};
 use crate::models::dashboard::{Dashboard, DashboardQuery};
 use crate::models::inputs::{DateRange, ItemFilters, ItemInput, ScheduleInput};
 use crate::models::item::Item;
+use crate::services::series::EditScope;
 use crate::services::{checklist, items};
 
 #[tauri::command]
@@ -14,19 +15,30 @@ pub fn create_item(app: AppHandle, db: State<'_, Db>, input: ItemInput) -> AppRe
     write_items(&app, &db, |conn| items::create(conn, &input))
 }
 
+/// `scope` matters only for repeating items: only this occurrence (default) or this and following.
 #[tauri::command]
 pub fn update_item(
     app: AppHandle,
     db: State<'_, Db>,
     id: String,
     input: ItemInput,
+    scope: Option<EditScope>,
 ) -> AppResult<Item> {
-    write_items(&app, &db, |conn| items::update(conn, &id, &input))
+    let scope = scope.unwrap_or_default();
+    write_items(&app, &db, |conn| {
+        items::update_scoped(conn, &id, &input, scope)
+    })
 }
 
 #[tauri::command]
-pub fn delete_item(app: AppHandle, db: State<'_, Db>, id: String) -> AppResult<()> {
-    write_items(&app, &db, |conn| items::delete(conn, &id))
+pub fn delete_item(
+    app: AppHandle,
+    db: State<'_, Db>,
+    id: String,
+    scope: Option<EditScope>,
+) -> AppResult<()> {
+    let scope = scope.unwrap_or_default();
+    write_items(&app, &db, |conn| items::delete_scoped(conn, &id, scope))
 }
 
 #[tauri::command]

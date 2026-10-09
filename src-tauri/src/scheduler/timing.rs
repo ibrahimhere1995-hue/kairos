@@ -135,4 +135,4 @@ pub fn parse_day_time(value: &str) -> Option<NaiveTime> {
 
 #[cfg(test)]
 #[path = "timing_tests.rs"]
-mod tests;
+pub(crate) mod tests;

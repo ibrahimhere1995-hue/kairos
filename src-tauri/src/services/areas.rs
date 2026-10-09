@@ -10,12 +10,15 @@ use crate::repo::areas as repo;
 use crate::util::{new_id, now_utc};
 
 /// The colours an area can have: the DESIGN_SYSTEM §3.3 area tokens.
-pub const AREA_COLORS: [&str; 5] = [
+pub const AREA_COLORS: [&str; 8] = [
     "area.work",
     "area.home",
     "area.personal",
     "area.learning",
     "area.health",
+    "area.slate",
+    "area.olive",
+    "area.earth",
 ];
 pub const NAME_MAX_CHARS: usize = 40;
 pub const MAX_AREAS: usize = 20;

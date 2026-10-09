@@ -33,6 +33,8 @@ export const itemFormSchema = z
     priority: z.number().int().min(0).max(3),
     notes: z.string().max(100_000, { error: "errors.validation.tooLong" }),
     reminders: z.array(z.number().int().min(0).max(MAX_OFFSET_MINUTES)).max(MAX_REMINDERS),
+    /** Repeat rule (RRULE without DTSTART), or null for "Does not repeat". */
+    rrule: z.string().nullable(),
     checklist: z.array(
       z.object({
         stepId: z.string().nullable(),
@@ -93,6 +95,7 @@ export function emptyItemForm(today: string): ItemFormValues {
     priority: 0,
     notes: "",
     reminders: DEFAULT_REMINDERS,
+    rrule: null,
     checklist: [],
   };
 }
@@ -114,6 +117,7 @@ export function formFromDetail(
     priority: item.priority,
     notes: item.notes ?? "",
     reminders,
+    rrule: item.rrule,
     checklist: checklist.map((step) => ({ stepId: step.id, text: step.text, done: step.done })),
   };
 }
@@ -150,6 +154,8 @@ export function toItemInput(
     location: existing?.location ?? null,
     source: existing?.source ?? "manual",
     reminders: values.reminders,
+    // Without a date nothing can repeat.
+    rrule: values.schedule === "none" ? null : values.rrule,
   };
 }
 

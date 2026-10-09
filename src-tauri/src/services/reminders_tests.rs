@@ -27,6 +27,7 @@ fn input(title: &str) -> ItemInput {
         location: None,
         source: None,
         reminders: None,
+        rrule: None,
     }
 }
 
@@ -111,6 +112,7 @@ fn chosen_offsets_are_sorted_deduplicated_and_validated() {
         &mut c,
         &ItemInput {
             reminders: Some(vec![]),
+            rrule: None,
             ..timed("Quiet", FUTURE_START)
         },
     )

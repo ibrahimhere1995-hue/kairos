@@ -40,6 +40,9 @@
   --color-area-personal: var(--area-personal);
   --color-area-learning: var(--area-learning);
   --color-area-health: var(--area-health);
+  --color-area-slate: var(--area-slate);
+  --color-area-olive: var(--area-olive);
+  --color-area-earth: var(--area-earth);
 
   --color-status-now: var(--status-now);
   --color-status-upcoming: var(--status-upcoming);

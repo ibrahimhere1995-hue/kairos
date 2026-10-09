@@ -51,7 +51,7 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 - [x] **P2-T03 ⚙️ Tray / menu bar + autostart** — close-to-tray, tray menu (Open, Quick add, Today's next item, Quit), launch at login toggle.
 - [x] **P2-T04 ⚙️ Daily summary notification** at chosen time.
 - [x] **P2-T05 🎨 Missed-task ("slipped") flow** — morning card, per-item and bulk actions, "break into smaller steps" after 3 reschedules.
-- [ ] **P2-T06 ⚙️ Recurrence** — rrule storage, range expansion, exceptions, "this one / all future" editing, Repeat picker in plain language; NLP "every Monday".
+- [x] **P2-T06 ⚙️ Recurrence** — rrule storage, range expansion, exceptions, "this one / all future" editing, Repeat picker in plain language; NLP "every Monday".
 - [x] **P2-T07 🎨 Time-blocking** — drag unscheduled/Inbox tasks onto the Day/Week grid.
 - [ ] **P2-T08 🎨 Onboarding** — 3-screen welcome (name, theme, areas), sample teaching tasks, skippable.
 - [ ] **P2-T09 🎨 Search & command palette** — `Ctrl/⌘+K`, FTS results grouped by status, commands (new task, go to date, switch theme).

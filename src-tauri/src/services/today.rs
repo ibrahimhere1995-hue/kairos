@@ -8,6 +8,7 @@ use crate::models::item::{Item, ItemKind};
 use crate::repo::items;
 use crate::scheduler::timing::local_to_utc;
 use crate::services::reminders::iso;
+use crate::services::series;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct NextItem {
@@ -47,8 +48,16 @@ pub fn overview<Tz: TimeZone>(
     let day_end = iso(local_to_utc(tz, tomorrow.and_time(NaiveTime::MIN)));
     let today_text = today.format("%Y-%m-%d").to_string();
 
-    let open = items::open_today(conn, &day_start, &day_end, &today_text)?;
-    let slipped = items::overdue_tasks(conn, &day_start, &today_text)?.len();
+    let (start_utc, end_utc) = (
+        local_to_utc(tz, today.and_time(NaiveTime::MIN)),
+        local_to_utc(tz, tomorrow.and_time(NaiveTime::MIN)),
+    );
+    let mut open = items::open_today(conn, &day_start, &day_end, &today_text)?;
+    open.extend(series::in_range(
+        conn, tz, start_utc, end_utc, today, tomorrow,
+    )?);
+    let slipped = items::overdue_tasks(conn, &day_start, &today_text)?.len()
+        + series::latest_missed(conn, tz, start_utc)?.len();
 
     let upcoming = open
         .iter()
@@ -107,6 +116,7 @@ mod tests {
                 location: None,
                 source: None,
                 reminders: Some(vec![]),
+                rrule: None,
             },
         )
         .unwrap()

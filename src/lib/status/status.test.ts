@@ -102,4 +102,17 @@ describe("getItemStatus", () => {
       ["yesterday", event(at("09:00", "2026-10-06"), at("10:00", "2026-10-06")), "past"],
     ]);
   });
+
+  it("repeating tasks: earlier days' computed occurrences are past, not slipped", () => {
+    expectStatus([
+      ["computed, yesterday", task({ id: "s1@2026-10-06", dueDate: "2026-10-06" }), "past"],
+      [
+        "computed, earlier today",
+        task({ id: "s1@2026-10-07T08:00", startAt: at("08:00") }),
+        "missed",
+      ],
+      ["stored (moved) occurrence, yesterday", task({ id: "x9", dueDate: "2026-10-06" }), "missed"],
+      ["computed, today", task({ id: "s1@2026-10-07", dueDate: "2026-10-07" }), "dueToday"],
+    ]);
+  });
 });

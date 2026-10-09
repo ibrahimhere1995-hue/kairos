@@ -192,4 +192,74 @@ describe("Item editor", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
+
+  it("sets a repeat in plain language", async () => {
+    const { user, dialog } = await openNewEditor();
+    await user.type(within(dialog).getByRole("textbox", { name: "Title" }), "Water plants");
+    const pill = within(dialog).getByRole("button", { name: /Repeat:/ });
+    expect(pill).toHaveTextContent("Does not repeat");
+    await user.click(pill);
+    await user.click(await screen.findByRole("button", { name: "Every day" }));
+    await user.click(await screen.findByRole("button", { name: "After a number of times" }));
+    expect(pill).toHaveTextContent("Every day, 10 times");
+    await user.keyboard("{Escape}");
+
+    await user.click(within(dialog).getByRole("button", { name: "Add task" }));
+    await waitFor(() => expect(callsTo("create_item")).toHaveLength(1));
+    expect(callsTo("create_item")[0]?.args.input).toMatchObject({ rrule: "FREQ=DAILY;COUNT=10" });
+  });
+
+  it("asks whether to change only this occurrence or the following ones too", async () => {
+    const occurrence = {
+      ...savedItem,
+      id: "s1@2026-10-07",
+      rrule: "FREQ=WEEKLY",
+      recurrenceParentId: "s1",
+      originalStartAt: "2026-10-07",
+    };
+    calls = mockBackend({
+      update_item: () => occurrence,
+      delete_item: () => null,
+      get_item_detail: () => ({ item: occurrence, checklist: [], reminders: [] }),
+    });
+    const user = userEvent.setup();
+    renderApp();
+    act(() => useEditorStore.getState().openItem(occurrence.id));
+    await screen.findByRole("textbox", { name: "Title" }); // the loaded form replaces the loading panel
+    const dialog = screen.getByRole("dialog", { name: "Edit item" });
+    expect(within(dialog).getByRole("button", { name: /Repeat:/ })).toHaveTextContent(
+      "Every week on Wednesday",
+    );
+
+    await user.click(within(dialog).getByRole("button", { name: "Save changes" }));
+    const prompt = await within(dialog).findByRole("alertdialog");
+    expect(prompt).toHaveTextContent("This repeats. Which ones should change?");
+    expect(within(prompt).getByRole("button", { name: "Only this one" })).toHaveFocus();
+    await user.click(within(prompt).getByRole("button", { name: "This and following" }));
+    await waitFor(() =>
+      expect(callsTo("update_item")[0]?.args).toMatchObject({
+        id: occurrence.id,
+        scope: "following",
+      }),
+    );
+  });
+
+  it("asks the same before moving a repeating item to the Trash", async () => {
+    const occurrence = { ...savedItem, id: "s1@2026-10-07", rrule: "FREQ=DAILY" };
+    calls = mockBackend({
+      delete_item: () => null,
+      get_item_detail: () => ({ item: occurrence, checklist: [], reminders: [] }),
+    });
+    const user = userEvent.setup();
+    renderApp();
+    act(() => useEditorStore.getState().openItem(occurrence.id));
+    await screen.findByRole("textbox", { name: "Title" }); // the loaded form replaces the loading panel
+    const dialog = screen.getByRole("dialog", { name: "Edit item" });
+    await user.click(within(dialog).getByRole("button", { name: "Move to Trash" }));
+    const prompt = await within(dialog).findByRole("alertdialog");
+    await user.click(within(prompt).getByRole("button", { name: "Only this one" }));
+    await waitFor(() =>
+      expect(callsTo("delete_item")[0]?.args).toEqual({ id: occurrence.id, scope: "this" }),
+    );
+  });
 });

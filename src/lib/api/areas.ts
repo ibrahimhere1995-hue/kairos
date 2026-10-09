@@ -19,6 +19,9 @@ export const AREA_COLORS = [
   "area.personal",
   "area.learning",
   "area.health",
+  "area.slate",
+  "area.olive",
+  "area.earth",
 ] as const;
 
 const AREA_TOKEN = /^area\.[a-z]+$/;

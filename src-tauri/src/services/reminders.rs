@@ -10,7 +10,7 @@ use crate::models::item::Item;
 use crate::models::reminder::{DueReminder, Reminder};
 use crate::repo::{items, reminders as repo};
 use crate::scheduler::timing::{self, Snooze};
-use crate::services::app_settings;
+use crate::services::{app_settings, series};
 use crate::util::{new_id, now_utc};
 
 /// PRD R3 default: at the start time for timed items, at the default time on the day otherwise.
@@ -65,27 +65,44 @@ pub fn normalize_offsets(offsets: &[i64]) -> AppResult<Vec<i64>> {
     Ok(sorted)
 }
 
+fn is_series(item: &Item) -> bool {
+    item.rrule.is_some() && item.recurrence_parent_id.is_none()
+}
+
 /// Fresh timing for a reminder: its next fire time, already "fired" if that moment has passed
 /// (moving a task to earlier today must not set off a reminder for a time already gone).
+/// A repeating series reminds about its next occurrence that is still ahead.
 fn fresh_timing<Tz: TimeZone>(
+    conn: &Connection,
     item: &Item,
     offset: i64,
     clock: &Clock<Tz>,
-) -> (Option<String>, Option<String>) {
+) -> AppResult<(Option<String>, Option<String>)> {
+    if is_series(item) {
+        let next =
+            series::next_reminder_anchor(conn, &clock.tz, item, offset, clock.day_time, clock.now)?;
+        return Ok(match next {
+            Some((anchor, _)) => (
+                Some(iso(timing::fire_time(&clock.tz, anchor, offset))),
+                None,
+            ),
+            None => (None, Some(iso(clock.now))),
+        });
+    }
     let anchor = timing::anchor(
         &clock.tz,
         item.start_at.as_deref(),
         item.due_date.as_deref(),
         clock.day_time,
     );
-    match anchor {
+    Ok(match anchor {
         None => (None, None),
         Some(anchor) => {
             let fire = timing::fire_time(&clock.tz, anchor, offset);
             let fired = (fire <= clock.now).then(|| iso(clock.now));
             (Some(iso(fire)), fired)
         }
-    }
+    })
 }
 
 /// Replaces an item's reminders with `offsets`. Kept offsets keep their state; removed ones
@@ -108,7 +125,7 @@ pub fn set_for_item<Tz: TimeZone>(
         if existing.iter().any(|r| r.offset_minutes == offset) {
             continue;
         }
-        let (fire_at, fired_at) = fresh_timing(item, offset, clock);
+        let (fire_at, fired_at) = fresh_timing(conn, item, offset, clock)?;
         let reminder = Reminder {
             id: new_id(),
             item_id: item.id.clone(),
@@ -131,7 +148,7 @@ pub fn reschedule_item<Tz: TimeZone>(
 ) -> AppResult<()> {
     let now = now_utc();
     for mut reminder in repo::list_for_item(conn, &item.id)? {
-        let (fire_at, fired_at) = fresh_timing(item, reminder.offset_minutes, clock);
+        let (fire_at, fired_at) = fresh_timing(conn, item, reminder.offset_minutes, clock)?;
         reminder.fire_at = fire_at;
         reminder.fired_at = fired_at;
         reminder.snoozed_until = None;
@@ -153,7 +170,7 @@ pub fn recompute_waiting<Tz: TimeZone>(
         let Some(item) = items::get(&tx, &reminder.item_id)? else {
             continue;
         };
-        let (fire_at, fired_at) = fresh_timing(&item, reminder.offset_minutes, clock);
+        let (fire_at, fired_at) = fresh_timing(&tx, &item, reminder.offset_minutes, clock)?;
         if fire_at != reminder.fire_at {
             reminder.fire_at = fire_at;
             reminder.fired_at = fired_at;
@@ -174,19 +191,57 @@ pub fn offsets_for_item(conn: &Connection, item_id: &str) -> AppResult<Vec<i64>>
 }
 
 /// Takes every reminder due by `now` and marks it fired, in one transaction, so each fires once.
+/// A repeating series' reminder moves on to its next occurrence instead, and is announced for
+/// the occurrence it was due for (unless that one was meanwhile done, moved or deleted).
 pub fn take_due(conn: &mut Connection, now: DateTime<Utc>) -> AppResult<Vec<DueReminder>> {
     let tx = conn.transaction()?;
+    let clock = Clock {
+        now,
+        ..Clock::current(&tx)?
+    };
     let stamp = iso(now);
-    let due = repo::due(&tx, &stamp)?;
-    for entry in &due {
-        if let Some(mut reminder) = repo::get(&tx, &entry.reminder_id)? {
-            reminder.fired_at = Some(stamp.clone());
-            reminder.snoozed_until = None;
-            repo::update_timing(&tx, &reminder, &stamp)?;
+    let mut announced = Vec::new();
+    for mut entry in repo::due(&tx, &stamp)? {
+        let Some(mut reminder) = repo::get(&tx, &entry.reminder_id)? else {
+            continue;
+        };
+        let series_item = items::get(&tx, &entry.item_id)?.filter(is_series);
+        reminder.snoozed_until = None;
+        match series_item {
+            None => {
+                reminder.fired_at = Some(stamp.clone());
+                announced.push(entry);
+            }
+            Some(series_item) => {
+                let offset = reminder.offset_minutes;
+                let fired_at = DateTime::parse_from_rfc3339(&entry.fire_at)
+                    .map(|t| t.with_timezone(&Utc))
+                    .unwrap_or(now);
+                let due_for = series::next_reminder_anchor(
+                    &tx,
+                    &clock.tz,
+                    &series_item,
+                    offset,
+                    clock.day_time,
+                    fired_at - chrono::Duration::seconds(1),
+                )?;
+                if let Some((anchor, occurrence)) = due_for
+                    && timing::fire_time(&clock.tz, anchor, offset) <= now
+                {
+                    entry.item_id = occurrence.id;
+                    entry.start_at = occurrence.start_at;
+                    entry.due_date = occurrence.due_date;
+                    announced.push(entry);
+                }
+                let (fire_at, fired) = fresh_timing(&tx, &series_item, offset, &clock)?;
+                reminder.fire_at = fire_at;
+                reminder.fired_at = fired;
+            }
         }
+        repo::update_timing(&tx, &reminder, &stamp)?;
     }
     tx.commit()?;
-    Ok(due)
+    Ok(announced)
 }
 
 /// "Snooze" on a notification: the reminder fires again later.
