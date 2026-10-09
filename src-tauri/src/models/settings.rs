@@ -66,6 +66,9 @@ pub struct AppSettings {
     pub name: String,
     /// PRD R17: the day the weekly review is offered (Sunday by default).
     pub review_day: Weekday,
+    /// Local `HH:mm`: the hours Plan my day and the overbooked check use (default 09:00–18:00).
+    pub work_day_start: String,
+    pub work_day_end: String,
 }
 
 impl Default for AppSettings {
@@ -80,6 +83,8 @@ impl Default for AppSettings {
             launch_at_login: true,
             name: String::new(),
             review_day: Weekday::default(),
+            work_day_start: "09:00".into(),
+            work_day_end: "18:00".into(),
         }
     }
 }

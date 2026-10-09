@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import type { AiDraft } from "@/types/AiDraft";
 import type { AiImageDraft } from "@/types/AiImageDraft";
 import type { AiStatus } from "@/types/AiStatus";
+import type { BestHours } from "@/types/BestHours";
 import type { PlanProposal } from "@/types/PlanProposal";
 import type { PlanRequest } from "@/types/PlanRequest";
 
@@ -20,4 +21,5 @@ export const aiApi = {
       headers: { "x-image-type": type, "x-now": now },
     }),
   plan: (request: PlanRequest) => invoke<PlanProposal[]>("ai_plan", { request }),
+  bestHours: () => invoke<BestHours | null>("best_hours"),
 };

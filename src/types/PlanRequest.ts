@@ -18,4 +18,8 @@ now: string,
 /**
  * Local `HH:mm`: plan only inside these hours.
  */
-dayStart: string, dayEnd: string, days: Array<PlanDay>, tasks: Array<PlanTask>, };
+dayStart: string, dayEnd: string, days: Array<PlanDay>, tasks: Array<PlanTask>, 
+/**
+ * A5: the user's best hours, e.g. "09:00–11:00" (only the range, never the history).
+ */
+preferredHours?: string, };

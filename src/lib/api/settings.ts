@@ -17,4 +17,6 @@ export const DEFAULT_SETTINGS: AppSettings = {
   launchAtLogin: true,
   name: "",
   reviewDay: "sunday",
+  workDayStart: "09:00",
+  workDayEnd: "18:00",
 };

@@ -44,6 +44,30 @@ describe("Plan my day / week request", () => {
     ]);
   });
 
+  it("lightens today by looking at the next six days", () => {
+    expect(planDates(ctx, "lighten", "2026-10-19")).toEqual([
+      "2026-10-15",
+      "2026-10-16",
+      "2026-10-17",
+      "2026-10-18",
+      "2026-10-19",
+      "2026-10-20",
+    ]);
+    const request = buildPlanRequest({
+      ctx,
+      span: "lighten",
+      weekEnd: "2026-10-19",
+      instruction: "",
+      rangeItems: [],
+      candidates: [item({ id: "a", dueDate: "2026-10-14" })],
+      dayStart: "08:00",
+      dayEnd: "16:00",
+    });
+    expect(request.instruction).toMatch(/^Today is overbooked/);
+    expect(request.days).toHaveLength(6);
+    expect(request.tasks.map((t) => t.id)).toEqual(["a"]);
+  });
+
   it("offers open tasks without a time, once each, never repeating ones", () => {
     const tasks = planTasks([
       item({ id: "a", title: "Report", dueDate: "2026-10-14" }),
@@ -76,6 +100,9 @@ describe("Plan my day / week request", () => {
       instruction: "  around my meeting ",
       rangeItems: [meeting],
       candidates: [item({ id: "a", title: "Report" }), item({ id: "z", dueDate: "2026-10-16" })],
+      dayStart: "09:00",
+      dayEnd: "18:00",
+      preferredHours: "09:00–11:00",
     });
     expect(request).toEqual({
       instruction: "around my meeting",
@@ -84,6 +111,7 @@ describe("Plan my day / week request", () => {
       dayEnd: "18:00",
       days: [{ date: "2026-10-14", busy: [{ title: "Team sync", start: "11:00", end: "12:00" }] }],
       tasks: [{ id: "a", title: "Report", durationMinutes: null }],
+      preferredHours: "09:00–11:00",
     });
     expect(JSON.stringify(request)).not.toContain("private notes");
   });

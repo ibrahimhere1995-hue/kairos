@@ -83,3 +83,31 @@ describe("Settings (P1-T16)", () => {
     await waitFor(() => expect(updates().at(-1)).toMatchObject({ launchAtLogin: false }));
   });
 });
+
+describe("Working hours (P3-T12)", () => {
+  it("saves the working day and refuses one that ends before it starts", async () => {
+    const calls = mockBackend({
+      update_settings: ({ settings }) => {
+        const s = settings as { workDayStart: string; workDayEnd: string };
+        if (s.workDayStart >= s.workDayEnd) {
+          throw { code: "validation", message: "errors.validation.workHoursOrder" };
+        }
+        return settings;
+      },
+    });
+    const user = userEvent.setup();
+    renderApp("/settings");
+    const end = await screen.findByLabelText("Working day ends");
+    await user.clear(end);
+    await user.type(end, "17:30");
+    await user.tab();
+    await waitFor(() => expect(calls.some((c) => c.cmd === "update_settings")).toBe(true));
+    const start = screen.getByLabelText("Working day starts");
+    await user.clear(start);
+    await user.type(start, "19:00");
+    await user.tab();
+    expect(
+      await screen.findByText("The working day has to end after it starts."),
+    ).toBeInTheDocument();
+  });
+});

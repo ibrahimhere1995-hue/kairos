@@ -5,6 +5,7 @@ pub mod areas;
 pub mod attachments;
 pub mod backups;
 pub mod checklist;
+pub mod energy;
 pub mod feedback;
 pub mod focus;
 pub mod goals;

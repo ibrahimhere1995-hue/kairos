@@ -345,3 +345,12 @@ pub fn completed_between(
         named_params! { ":day_start": day_start, ":day_end": day_end },
     )
 }
+
+/// When tasks were ticked done since `since` (UTC ISO), for the best-hours pattern (A5).
+pub fn completion_times(conn: &Connection, since: &str) -> rusqlite::Result<Vec<String>> {
+    let mut stmt = conn.prepare(&format!(
+        "SELECT completed_at FROM items
+         WHERE deleted_at IS NULL AND {NOT_SERIES} AND kind = 'task' AND completed_at >= ?1"
+    ))?;
+    stmt.query_map([since], |r| r.get(0))?.collect()
+}

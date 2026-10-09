@@ -4,6 +4,7 @@ import { TEXT_SIZES } from "@/app/theme/textSize";
 import { useThemeStore } from "@/app/theme/themeStore";
 import { useAppSettings, useUpdateSettings } from "@/features/settings/api";
 import { WEEKDAYS } from "@/features/review/review";
+import { WorkHoursSetting } from "@/features/settings/WorkHoursSetting";
 import { SettingRow } from "@/features/settings/SettingRow";
 import { NameInput } from "@/features/settings/NameInput";
 import { ReminderTimeInput } from "@/features/settings/ReminderTimeInput";
@@ -93,6 +94,7 @@ export function GeneralSettings() {
             ))}
           </select>
         </SettingRow>
+        <WorkHoursSetting settings={settings} />
       </section>
 
       <section aria-labelledby="reminder-settings-heading" className="flex flex-col">

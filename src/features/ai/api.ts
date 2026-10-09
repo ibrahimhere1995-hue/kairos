@@ -22,3 +22,8 @@ export function useAiActions() {
     clearKey: useMutation({ mutationFn: aiApi.clearKey, onSettled: refresh }),
   };
 }
+
+/** A5: the hours you usually get things done (learned locally; no AI). */
+export function useBestHours() {
+  return useQuery({ queryKey: [...key, "bestHours"], queryFn: aiApi.bestHours });
+}

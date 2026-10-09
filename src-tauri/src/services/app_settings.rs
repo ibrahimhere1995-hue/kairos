@@ -18,6 +18,8 @@ const SUMMARY_TIME: &str = "reminders.dailySummaryTime";
 const LAUNCH_AT_LOGIN: &str = "system.launchAtLogin";
 const NAME: &str = "profile.name";
 const REVIEW_DAY: &str = "review.day";
+const WORK_START: &str = "planning.dayStart";
+const WORK_END: &str = "planning.dayEnd";
 pub const NAME_MAX_CHARS: usize = 40;
 /// Internal: the local date the last daily summary was sent for.
 const SUMMARY_LAST_SENT: &str = "reminders.dailySummaryLastSent";
@@ -71,6 +73,8 @@ pub fn get(conn: &Connection) -> AppResult<AppSettings> {
         launch_at_login: read(conn, LAUNCH_AT_LOGIN, defaults.launch_at_login)?,
         name: read(conn, NAME, defaults.name)?,
         review_day: read(conn, REVIEW_DAY, defaults.review_day)?,
+        work_day_start: read_time(conn, WORK_START, defaults.work_day_start)?,
+        work_day_end: read_time(conn, WORK_END, defaults.work_day_end)?,
     })
 }
 
@@ -81,6 +85,13 @@ pub fn update(conn: &mut Connection, next: &AppSettings) -> AppResult<AppSetting
     }
     if !is_valid_time(&next.daily_summary_time) {
         return Err(AppError::invalid("dailySummaryTime", "invalidDateTime"));
+    }
+    if !is_valid_time(&next.work_day_start) || !is_valid_time(&next.work_day_end) {
+        return Err(AppError::invalid("workDay", "invalidDateTime"));
+    }
+    // Same-format `HH:mm` strings compare like times.
+    if next.work_day_start >= next.work_day_end {
+        return Err(AppError::invalid("workDay", "workHoursOrder"));
     }
     let name = valid_name(&next.name)?;
     let tx = conn.transaction()?;
@@ -93,6 +104,8 @@ pub fn update(conn: &mut Connection, next: &AppSettings) -> AppResult<AppSetting
     write(&tx, SUMMARY_TIME, &next.daily_summary_time)?;
     write(&tx, LAUNCH_AT_LOGIN, &next.launch_at_login)?;
     write(&tx, REVIEW_DAY, &next.review_day)?;
+    write(&tx, WORK_START, &next.work_day_start)?;
+    write(&tx, WORK_END, &next.work_day_end)?;
     tx.commit()?;
     get(conn)
 }
@@ -177,9 +190,27 @@ mod tests {
             launch_at_login: false,
             name: "Zack".into(),
             review_day: Weekday::Friday,
+            work_day_start: "08:30".into(),
+            work_day_end: "17:00".into(),
         };
         assert_eq!(update(&mut c, &next).unwrap(), next);
         assert_eq!(get(&c).unwrap(), next);
+    }
+
+    #[test]
+    fn working_hours_must_run_forwards() {
+        let mut c = migrated_conn();
+        let backwards = AppSettings {
+            work_day_start: "18:00".into(),
+            work_day_end: "09:00".into(),
+            ..AppSettings::default()
+        };
+        assert!(update(&mut c, &backwards).is_err());
+        let bad = AppSettings {
+            work_day_end: "25:00".into(),
+            ..AppSettings::default()
+        };
+        assert!(update(&mut c, &bad).is_err());
     }
 
     #[test]
