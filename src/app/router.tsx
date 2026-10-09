@@ -13,6 +13,7 @@ import { AppShell } from "@/app/shell/AppShell";
 import { CalendarPage } from "@/features/calendar/CalendarPage";
 import { parseCalendarSearch, type CalendarView } from "@/features/calendar/calendarView";
 import { MyDayPage } from "@/features/dashboard/MyDayPage";
+import { HabitsPage } from "@/features/habits/HabitsPage";
 import { InboxPage } from "@/features/inbox/InboxPage";
 import { SettingsPage } from "@/features/settings/SettingsPage";
 import { TrashPage } from "@/features/trash/TrashPage";
@@ -51,6 +52,11 @@ const inboxRoute = createRoute({
   path: "/inbox",
   component: InboxPage,
 });
+const habitsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/habits",
+  component: HabitsPage,
+});
 const settingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/settings",
@@ -76,6 +82,7 @@ const routeTree = rootRoute.addChildren([
   myDayRoute,
   calendarRoute,
   inboxRoute,
+  habitsRoute,
   settingsRoute,
   trashRoute,
   styleguideRoute,

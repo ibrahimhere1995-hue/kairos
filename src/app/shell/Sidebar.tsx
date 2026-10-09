@@ -5,6 +5,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Settings,
+  Sprout,
   Sunrise,
   Trash2,
 } from "lucide-react";
@@ -39,6 +40,7 @@ export function Sidebar() {
           collapsed={collapsed}
         />
         <NavItem to="/inbox" icon={Inbox} label={t("nav.inbox")} collapsed={collapsed} />
+        <NavItem to="/habits" icon={Sprout} label={t("nav.habits")} collapsed={collapsed} />
       </ul>
 
       <ul className="mt-auto flex flex-col gap-1">

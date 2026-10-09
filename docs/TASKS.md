@@ -68,8 +68,8 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 ## Phase 3 — Pro & AI
 **Goal:** the features that make Kairos worth paying for.
 
-- [ ] **P3-T01 🗄🎨 Inbox** — text/image/voice entries, process into task.
-- [ ] **P3-T02 🗄🎨 Habits & streaks** — habit CRUD, daily ticks, streak, heatmap, gentle "streak paused" copy.
+- [x] **P3-T01 🗄🎨 Inbox** — text/image/voice entries, process into task. (Text and pictures done; voice notes come with P3-T14.)
+- [x] **P3-T02 🗄🎨 Habits & streaks** — habit CRUD, daily ticks, streak, heatmap, gentle "streak paused" copy.
 - [ ] **P3-T03 🗄🎨 Goals → milestones → tasks** with progress.
 - [ ] **P3-T04 🗄🎨 Templates** — save selection as template, insert relative to a date.
 - [ ] **P3-T05 🎨 Focus mode** — timer, full-screen calm view, notification mute, focus logs.

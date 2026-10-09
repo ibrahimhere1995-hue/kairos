@@ -62,6 +62,12 @@ export function usePaletteCommands(query: string): PaletteCommand[] {
       },
       { id: "go-inbox", label: t("palette.cmd.goInbox"), keywords: nav, run: go("/inbox") },
       {
+        id: "go-habits",
+        label: t("palette.cmd.goHabits"),
+        keywords: `${nav} streak routine`,
+        run: go("/habits"),
+      },
+      {
         id: "go-trash",
         label: t("palette.cmd.goTrash"),
         keywords: `${nav} deleted restore`,

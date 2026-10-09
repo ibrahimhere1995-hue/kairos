@@ -9,14 +9,14 @@ export async function pickFiles(title: string): Promise<string[]> {
   return Array.isArray(chosen) ? chosen : [chosen];
 }
 
-/** System "choose a file" window limited to one extension. Null if cancelled. */
-export async function pickFile(title: string, extension: string): Promise<string | null> {
+/** System "choose a file" window limited to some extensions. Null if cancelled. */
+export async function pickFile(title: string, extensions: string[]): Promise<string | null> {
   if (!isTauri()) return null;
   const chosen = await open({
     multiple: false,
     directory: false,
     title,
-    filters: [{ name: extension.toUpperCase(), extensions: [extension] }],
+    filters: [{ name: extensions.join(", ").toUpperCase(), extensions }],
   });
   return typeof chosen === "string" ? chosen : null;
 }

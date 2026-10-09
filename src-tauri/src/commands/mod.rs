@@ -5,6 +5,7 @@ pub mod areas;
 pub mod attachments;
 pub mod backups;
 pub mod data;
+pub mod inbox_habits;
 pub mod items;
 pub mod onboarding;
 pub mod settings;

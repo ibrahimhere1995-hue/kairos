@@ -58,7 +58,7 @@ describe("Accessibility (axe-core)", () => {
     it(`${theme} theme: every screen and dialog`, async () => {
       await nav("Settings");
       await click(theme);
-      for (const screen of ["My Day", "Calendar", "Inbox", "Trash", "Settings"]) {
+      for (const screen of ["My Day", "Calendar", "Inbox", "Habits", "Trash", "Settings"]) {
         await nav(screen);
         await scan(`${theme} · ${screen}`);
       }
