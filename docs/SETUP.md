@@ -52,6 +52,7 @@ Windows does not let these move:
 - Windows SDK (~1.7 GB) in `C:\Program Files (x86)\Windows Kits`
 - Visual Studio Installer (~125 MB) and its settings in `C:\ProgramData\Microsoft\VisualStudio`
 - Tiny config files: `%USERPROFILE%\.npmrc` and pnpm's `rc` file
+- Tauri's NSIS installer-builder tools (~8 MB) in `%LOCALAPPDATA%\tauri\NSIS`, used only when building an installer (approved 2026-10-09)
 
 ## 4. Everyday commands (run in the project folder)
 
