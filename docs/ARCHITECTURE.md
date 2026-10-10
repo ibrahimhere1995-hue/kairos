@@ -289,10 +289,10 @@ All commands return `Result<T, AppError>`; `AppError` has a `code` and a user-sa
 
 ## 8. Security
 - Tauri capabilities: grant only needed plugins/permissions per window (main vs capture window).
-- CSP: `default-src 'self'`; `connect-src` none from the frontend (network only in Rust).
+- CSP (`tauri.conf.json`, P4-T02): `default-src 'self'`; scripts only from the app; `connect-src` only Tauri IPC (+ `data:` for picture previews) — network only in Rust. The dev server has no CSP (`devCsp: null`).
 - No `eval`, no remote scripts, no remote fonts.
 - Gemini key: OS keychain only; never in DB, logs, or exports.
-- Attachments opened via OS default app; never executed by Kairos.
+- Attachments opened via OS default app; never executed by Kairos: program and script types (`.exe`, `.bat`, `.ps1`, `.lnk`, …) are refused by `check_openable` and can only be shown in their folder.
 
 ## 9. Designing for the future (P2)
 - **Sync:** UUID v7 IDs, `updated_at` on every row, soft deletes → enables later last-write-wins or CRDT sync with end-to-end encryption.

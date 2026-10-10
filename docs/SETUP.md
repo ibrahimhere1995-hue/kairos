@@ -28,6 +28,7 @@ Rule: nothing goes on the C: drive without approval. The only approved exception
 | Rust (stable, MSVC) | 1.99 | `I:\DevTools\rustup` + `I:\DevTools\cargo` | `rustup-init.exe -y` with the env vars below set first |
 | C++ Build Tools (VS 2022, "Desktop development with C++") | 17.x | `I:\DevTools\VSBuildTools` | `vs_BuildTools.exe --installPath I:\DevTools\VSBuildTools --path cache=I:\DevTools\VSCache --path shared=I:\DevTools\VSShared --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended` |
 | tauri-driver (E2E) | 2.1.0 | `I:\DevTools\cargo\bin` | `cargo install tauri-driver --locked` |
+| cargo-audit (security, P4-T02) | 0.22.2 | `I:\DevTools\cargo\bin` (advisory database in `I:\DevTools\cargo\advisory-db`) | `cargo install cargo-audit --locked` (approved 2026-10-10) |
 | msedgedriver (E2E) | **must match the WebView2 version** (154.0.4258.62 at setup) | `I:\DevTools\edgedriver` | Download `https://msedgedriver.microsoft.com/<WebView2 version>/edgedriver_win64.zip` and unzip there |
 
 Installers are kept in `I:\DevTools\installers\`.
@@ -65,8 +66,9 @@ Windows does not let these move:
 | `pnpm test:rust` / `pnpm lint:rust` / `pnpm fmt:rust` | Rust tests, clippy, rustfmt |
 | `pnpm build` | Production frontend build |
 | `pnpm tauri build --bundles nsis` | Release installer. Output: `src-tauri\target\release\bundle\nsis\Kairos_<version>_x64-setup.exe`, unsigned (see TASKS P4-T07a). Tauri downloads its NSIS tools (~8 MB) into `C:\Users\<you>\AppData\Local\tauri\NSIS`; it ignores a changed `LOCALAPPDATA` (it asks Windows for the folder directly). |
-| `$env:LOCALAPPDATA="I:DevToolsocalappdata"; pnpm tauri build --bundles nsis` | Release installer (PowerShell). Tauri downloads its NSIS tools into `%LOCALAPPDATA%	auri`; the variable keeps them on I:. Output: `src-tauri	argeteleasebundle
 sisKairos_<version>_x64-setup.exe` (unsigned, see TASKS P4-T07a). |
+| `pnpm audit` and, in `src-tauri`, `cargo audit` | Known-vulnerability checks for npm packages and Rust crates. Run before every release; results in `docs/qa/SECURITY.md`. |
+| `cargo test --release perf_ -- --ignored --nocapture` (in `src-tauri`) | The 50,000-item performance test (P4-T01, `docs/qa/PERFORMANCE.md`). Set `KAIROS_PERF_DB` to a new file to keep the database. |
 | `pnpm test:e2e` | End-to-end tests on the real app (Windows): builds a debug app into `src-tauri\target-e2e`, opens it, and runs `tests/e2e/specs`. Uses a fresh data folder under `.devdata\e2e` each run. Set `E2E_SKIP_BUILD=1` to reuse the last build. |
 
 **End-to-end tests:** a second Kairos window opens and clicks through the critical paths by itself, through WebDriver (only inside that window, never system-wide keystrokes). If they suddenly fail after a Windows update, WebView2 probably updated: download the matching `msedgedriver` (see §2; check the version in the registry key `HKLM\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}` → `pv`). CI doesn't run them yet (driver version matching on CI machines is fragile; tracked for Phase 4 QA). Old `.devdata\e2e\run-*` folders and `src-tauri\target-e2e` are safe to delete to free space. UI-checklist screenshots land in `.devdata\e2e\screens`; a failing test leaves a screenshot in `.devdata\e2e\failures`. Each fresh test profile starts on the welcome screens, which the tests skip. `accessibility.e2e.ts` runs axe-core on every screen in both themes and fails on any WCAG 2.2 A/AA violation (the findings are printed in the log).

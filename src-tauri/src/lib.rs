@@ -18,6 +18,9 @@ pub mod startup;
 pub mod tray;
 pub mod util;
 pub mod voice;
+
+#[cfg(test)]
+mod perf_tests;
 pub mod window;
 
 use std::sync::Mutex;

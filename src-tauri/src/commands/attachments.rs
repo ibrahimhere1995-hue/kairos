@@ -57,6 +57,7 @@ pub fn open_attachment(
     let path = with_conn(&db, |conn| {
         attachments::file_of(conn, &paths.attachments_dir, &id)
     })?;
+    attachments::check_openable(&path)?;
     app.opener()
         .open_path(path.display().to_string(), None::<&str>)
         .map_err(|_| AppError::invalid("attachments", "openFailed"))
