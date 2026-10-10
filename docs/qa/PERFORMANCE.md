@@ -39,5 +39,5 @@ The production frontend is 1.16 MB of JavaScript (360 KB compressed) plus 38 KB 
 
 ## Open items
 
-- **Stress-test memory (needs a decision):** with thousands of slipped tasks, My Day could fetch only the newest 200 plus a count. "Move all to today" would then move them in Rust. Normal use is well within budget, so this is optional.
+- **Stress-test memory: done in P4-T03.** My Day now fetches the newest 200 slipped tasks plus a count, and "Move all to today" moves every one in Rust (`move_all_slipped`). Measured after the change: **158–166 MB** (was 157–182 MB), window in 0.67–0.75 s. The cap helps less than expected: with 45 items a day, My Day still holds about 300 items for "This week" and the balance strip. Normal data stays at 87 MB, so no further change is planned unless real use shows otherwise.
 - The view-switch render time is not measured automatically yet. Queries and row counts are bounded, as above.

@@ -28,6 +28,9 @@ export const itemsApi = {
   uncomplete: (id: string) => invoke<Item>("uncomplete_item", { id }),
   reschedule: (id: string, schedule: ScheduleInput) =>
     invoke<Item>("reschedule_item", { id, schedule }),
+  /** Every slipped task (and `also`), when My Day didn't load them all. Returns how many. */
+  moveAllSlipped: (dayStart: string, today: string, also: string[], schedule: ScheduleInput) =>
+    invoke<number>("move_all_slipped", { dayStart, today, also, schedule }),
   rescheduleMany: (ids: string[], schedule: ScheduleInput) =>
     invoke<Item[]>("reschedule_items", { ids, schedule }),
   skip: (id: string) => invoke<Item>("skip_item", { id }),

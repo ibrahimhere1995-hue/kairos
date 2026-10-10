@@ -65,12 +65,22 @@ export function groupDashboard(
   return sections;
 }
 
-export function summarize(sections: DashboardSections): DaySummary {
+/**
+ * Slipped tasks the backend counted but didn't send (it sends the newest 200). Area filters
+ * can't apply to them, so they only count when no area is chosen.
+ */
+export function unloadedSlipped(data: Dashboard, areaId: string | null = null): number {
+  if (areaId !== null) return 0;
+  const loaded = data.overdue.filter((item) => !isComputedOccurrence(item)).length;
+  return Math.max(0, data.overdueTotal - loaded);
+}
+
+export function summarize(sections: DashboardSections, unloaded = 0): DaySummary {
   const remaining = [...sections.now, ...sections.today];
   return {
     tasks: remaining.filter((e) => e.item.kind === "task").length,
     meetings: remaining.filter((e) => e.item.kind === "event").length,
-    slipped: sections.slipped.length,
+    slipped: sections.slipped.length + unloaded,
   };
 }
 

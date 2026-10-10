@@ -583,3 +583,41 @@ fn unscheduled_lists_open_inbox_tasks_newest_first() {
         ["Newer idea", "Older idea"]
     );
 }
+
+#[test]
+fn my_day_loads_only_the_newest_slipped_tasks_but_moves_them_all() {
+    let mut c = conn();
+    let shown = usize::try_from(OVERDUE_SHOWN).unwrap();
+    for n in 0..shown + 5 {
+        // Days 1..=205 of the year, all before today (7 Oct).
+        let day = NaiveDate::from_yo_opt(2026, u32::try_from(n + 1).unwrap()).unwrap();
+        create(
+            &mut c,
+            &dated(&format!("Old {n}"), &day.format("%Y-%m-%d").to_string()),
+        )
+        .unwrap();
+    }
+    let query = dashboard_query();
+    let d = dashboard(&c, &query).unwrap();
+    assert_eq!(d.overdue_total, u32::try_from(shown + 5).unwrap());
+    assert_eq!(d.overdue.len(), shown);
+    assert_eq!(d.overdue[0].title, "Old 5", "the five oldest are left out");
+    assert_eq!(
+        d.overdue[shown - 1].title,
+        format!("Old {}", shown + 4),
+        "oldest first"
+    );
+
+    let to_today = ScheduleInput {
+        start_at: None,
+        end_at: None,
+        due_date: Some(query.today.clone()),
+    };
+    let moved = move_all_slipped(&mut c, &query.day_start, &query.today, &[], &to_today).unwrap();
+    assert_eq!(moved, shown + 5);
+    let d = dashboard(&c, &query).unwrap();
+    assert_eq!(
+        (d.overdue_total, d.overdue.len(), d.today.len()),
+        (0, 0, shown + 5)
+    );
+}

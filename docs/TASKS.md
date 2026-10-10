@@ -89,9 +89,9 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 ## Phase 4 — Polish & launch
 **Goal:** a signed, sellable product.
 
-- [x] **P4-T01 🧪 Performance pass** — 50k-item test DB, startup/view budgets, list virtualisation, bundle size. *(Results: `docs/qa/PERFORMANCE.md`. Open: stress-test memory with thousands of slipped tasks.)*
+- [x] **P4-T01 🧪 Performance pass** — 50k-item test DB, startup/view budgets, list virtualisation, bundle size. *(Results: `docs/qa/PERFORMANCE.md`.)*
 - [x] **P4-T02 🧪 Security review** (workflow step 13) — capabilities, CSP, keychain, dependency audit (`pnpm audit`, `cargo audit`). *(Results: `docs/qa/SECURITY.md`; CSP turned on, program attachments no longer opened.)*
-- [ ] **P4-T03 🧪 Code review pass** (step 14) — dead code, consistency, docs updated.
+- [x] **P4-T03 🧪 Code review pass** (step 14) — dead code, consistency, docs updated. *(6 unused strings removed; no dead code; no component over 250 lines; ARCHITECTURE layout brought up to date. Also: My Day loads the newest 200 slipped tasks + a count; "Move all" moves them all in Rust.)*
 - [ ] **P4-T04 ⚙️ Licensing** — free vs Pro gating, offline licence key verification, payment provider integration.
 - [ ] **P4-T05 🚀 Auto-update** — signed updates via `tauri-plugin-updater`, toggle in settings.
 - [ ] **P4-T06 🚀 Opt-in crash reporting** (step 18) — anonymised, off by default.

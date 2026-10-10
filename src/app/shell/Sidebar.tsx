@@ -19,8 +19,7 @@ import { useUiStore } from "@/app/uiStore";
 import { IconButton } from "@/components/ui/IconButton";
 import { cn } from "@/lib/utils";
 
-// Life areas join the sidebar once they come from the database (P1-T04/T05);
-// Goals and Habits arrive in Phase 3.
+/** The main places, then Wishlist, Trash and Settings at the bottom; collapses to an icon rail. */
 export function Sidebar() {
   const { t } = useTranslation();
   const collapsed = useUiStore((state) => state.sidebarCollapsed);

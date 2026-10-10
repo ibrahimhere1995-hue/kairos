@@ -111,6 +111,21 @@ pub fn reschedule_items(
     })
 }
 
+/// "Move all to today" for more slipped tasks than My Day loaded. Returns how many moved.
+#[tauri::command]
+pub fn move_all_slipped(
+    app: AppHandle,
+    db: State<'_, Db>,
+    day_start: String,
+    today: String,
+    also: Vec<String>,
+    schedule: ScheduleInput,
+) -> AppResult<usize> {
+    write_items(&app, &db, |conn| {
+        items::move_all_slipped(conn, &day_start, &today, &also, &schedule)
+    })
+}
+
 #[tauri::command]
 pub fn skip_item(app: AppHandle, db: State<'_, Db>, id: String) -> AppResult<Item> {
     write_items(&app, &db, |conn| items::skip(conn, &id))

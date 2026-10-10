@@ -27,8 +27,11 @@ pub struct DashboardQuery {
 pub struct Dashboard {
     /// Not finished, scheduled at any time today (includes events in progress).
     pub today: Vec<Item>,
-    /// Unfinished **tasks** scheduled before today (only tasks can slip).
+    /// Unfinished **tasks** scheduled before today (only tasks can slip): the most recent
+    /// `OVERDUE_SHOWN`, oldest first, plus routines' latest missed occurrences.
     pub overdue: Vec<Item>,
+    /// How many stored tasks slipped in all (more than `overdue` holds when there are many).
+    pub overdue_total: u32,
     /// Not finished, scheduled after today and before the end of the week.
     pub this_week: Vec<Item>,
     /// Completed today.

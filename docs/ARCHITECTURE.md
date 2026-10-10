@@ -35,19 +35,24 @@ kairos/
 ├─ src/                      # frontend
 │  ├─ app/                   # router, providers, layout shell
 │  ├─ features/
-│  │  ├─ dashboard/
+│  │  ├─ dashboard/          # My Day: sections, slipped/routines cards, overload check
 │  │  ├─ calendar/           # day, week, month, agenda views
-│  │  ├─ items/              # item editor, item card, checklist
-│  │  ├─ capture/            # quick capture, NL parser
-│  │  ├─ inbox/
+│  │  ├─ items/              # item editor, item row, checklist
+│  │  ├─ capture/            # quick capture (+ AI sentence reading)
+│  │  ├─ inbox/  trash/
 │  │  ├─ habits/  goals/  templates/  focus/  review/
+│  │  ├─ feedback/           # Suggest a feature, wishlist
+│  │  ├─ ai/                 # picture → task, Plan with AI, best hours
+│  │  ├─ voice/              # hold-to-speak button
 │  │  ├─ search/             # command palette
-│  │  ├─ settings/  onboarding/  backup/
-│  │  └─ ai/
-│  ├─ components/ui/         # shadcn/ui primitives (restyled)
+│  │  ├─ settings/           # incl. areas/, backups/, data/, ai/ sections
+│  │  ├─ onboarding/
+│  │  └─ dev/                # styleguide (development builds only)
+│  ├─ components/            # shared pieces (EmptyState, VirtualList, ShowMoreButton…)
+│  │  └─ ui/                 # primitives on Radix (Button, Popover, SidePanel…)
 │  ├─ lib/
 │  │  ├─ api/                # typed wrappers around invoke()
-│  │  ├─ dates/  nlp/  recurrence/
+│  │  ├─ dates/  nlp/  recurrence/  status/  image/
 │  │  └─ utils.ts
 │  ├─ styles/                # tokens.css, globals.css, fonts
 │  ├─ i18n/locales/en.json
@@ -58,10 +63,14 @@ kairos/
 │  │  ├─ commands/           # thin: validate → call service
 │  │  ├─ services/           # business logic
 │  │  ├─ repo/               # SQL queries
-│  │  ├─ db/  (pool.rs, migrations/)
+│  │  ├─ models/             # shared data shapes (→ src/types via ts-rs)
+│  │  ├─ db/                 # connection.rs, migrations/
 │  │  ├─ scheduler/          # reminder engine
 │  │  ├─ backup/
-│  │  ├─ ai/                 # AiProvider trait + gemini.rs
+│  │  ├─ ai/                 # AiProvider trait, gemini.rs, parse/image/plan, keychain
+│  │  ├─ voice.rs            # Windows speech recognition
+│  │  ├─ notify.rs  tray.rs  window.rs  autostart.rs  capture.rs
+│  │  ├─ perf_tests.rs       # 50k-item performance test (ignored by default)
 │  │  └─ error.rs
 │  ├─ capabilities/          # Tauri permission files
 │  └─ tauri.conf.json
@@ -257,7 +266,8 @@ Frontend shrinks the picture in the webview (max 1600 px, `lib/image/shrink.ts`;
 | Command | Purpose |
 |---------|---------|
 | `list_items(range, filters)` | Items + expanded occurrences in a date range |
-| `get_dashboard(today)` | Pre-grouped Now/Today/Missed/Week/Done |
+| `get_dashboard(today)` | Pre-grouped Now/Today/Missed/Week/Done. Slipped tasks: the newest 200 plus `overdueTotal` (P4-T03). |
+| `move_all_slipped(dayStart, today, also, schedule)` | "Move all to today" when My Day didn't load every slipped task: moves all of them (and `also`) in one transaction; returns how many. |
 | `create_item`, `update_item`, `delete_item`, `restore_item`, `complete_item`, `uncomplete_item`, `reschedule_item` | Item CRUD. `update_item`/`delete_item` take an optional `scope` (`this` default, `following`) for repeating items; all accept computed occurrence ids (`series@key`). |
 | `list_areas`, `create_area`, `update_area`, `archive_area(id, archived)`, `reorder_areas(ids)` | Life areas (P2-T10). `list_areas` includes archived areas (items keep showing them); pickers hide them. Names are unique (any case) because Quick Capture matches `#area` by name; colours are the area tokens. Changes emit `areas:changed`. |
 | `reschedule_items(ids, schedule)` | Several items, one new moment, one transaction ("Move all to today", PRD R6) |

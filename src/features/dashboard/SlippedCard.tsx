@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import type { DashboardItem } from "@/features/dashboard/groupDashboard";
 import { SlippedRow } from "@/features/dashboard/SlippedRow";
-import { useMoveItems } from "@/features/items/api";
+import { useMoveAllSlipped, useMoveItems } from "@/features/items/api";
 import { ShowMoreButton } from "@/components/ShowMoreButton";
 import { Button } from "@/components/ui/Button";
 import type { Area } from "@/types/Area";
@@ -18,17 +18,25 @@ const STEP = 50;
 
 export function SlippedCard({
   entries,
+  unloaded,
   areas,
   today,
+  dayStart,
 }: {
   entries: DashboardItem[];
+  /** Older slipped tasks counted but not loaded (My Day loads the newest 200). */
+  unloaded: number;
   areas: Map<string, Area>;
   today: string;
+  /** Local midnight today, as a UTC instant. */
+  dayStart: string;
 }) {
   const { t } = useTranslation();
   const moveAll = useMoveItems();
-  // Remember that there was something to sort out, so clearing it can be acknowledged.
+  const moveEvery = useMoveAllSlipped();
+  const total = entries.length + unloaded;
   const [shown, setShown] = useState(STEP);
+  // Remember that there was something to sort out, so clearing it can be acknowledged.
   const [hadItems, setHadItems] = useState(entries.length > 0);
   if (entries.length > 0 && !hadItems) setHadItems(true);
 
@@ -48,23 +56,25 @@ export function SlippedCard({
               <RotateCcw aria-hidden="true" className="mt-1 size-5 shrink-0 text-status-slipped" />
               <div className="flex flex-col">
                 <h2 id="slipped-heading" className="text-h3">
-                  {t("slipped.title", { count: entries.length })}
+                  {t("slipped.title", { count: total })}
                 </h2>
                 <p className="text-small text-text-muted">
-                  {t("slipped.prompt", { count: entries.length })}
+                  {t("slipped.prompt", { count: total })}
                 </p>
               </div>
             </div>
-            {entries.length > 1 && (
+            {total > 1 && (
               <Button
                 size="sm"
                 variant="secondary"
-                disabled={moveAll.isPending}
+                disabled={moveAll.isPending || moveEvery.isPending}
                 onClick={() =>
-                  moveAll.mutate({
-                    ids: entries.map((e) => e.item.id),
-                    schedule: { dueDate: today, startAt: null, endAt: null },
-                  })
+                  unloaded > 0
+                    ? moveEvery.mutate({ dayStart, today, also: entries.map((e) => e.item.id) })
+                    : moveAll.mutate({
+                        ids: entries.map((e) => e.item.id),
+                        schedule: { dueDate: today, startAt: null, endAt: null },
+                      })
                 }
               >
                 <Sun aria-hidden="true" />
@@ -89,6 +99,9 @@ export function SlippedCard({
             label={t("common.showMore", { count: STEP })}
             onMore={() => setShown((n) => n + STEP)}
           />
+          {unloaded > 0 && shown >= entries.length && (
+            <p className="text-small text-text-muted">{t("slipped.older", { count: unloaded })}</p>
+          )}
         </motion.section>
       ) : (
         hadItems && (

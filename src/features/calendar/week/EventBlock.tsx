@@ -76,7 +76,6 @@ export function EventBlock({
         {...moveAttributes}
         {...moveListeners}
         onClick={() => openItem(item.id)}
-        aria-label={`${item.title}, ${timeLabel}${area ? `, ${area.name}` : ""}`}
         className={cn(
           "flex h-full w-full flex-col overflow-hidden border-l-4 px-2 py-1 text-left text-small text-text",
           "rounded-sm hover:brightness-95 focus-visible:z-30",
@@ -91,19 +90,26 @@ export function EventBlock({
         }}
       >
         <span className={cn("truncate font-semibold", done && "line-through")}>{item.title}</span>
+        <span className="sr-only">,</span>{" "}
         <span className="truncate text-caption text-text-muted tabular-nums">
           {status === "missed" && (
             <RotateCcw aria-hidden="true" className="mr-1 inline size-3 text-status-slipped" />
           )}
           {timeLabel}
         </span>
+        {/* The visible words are the name (WCAG 2.5.3); the area is added for screen readers. */}
+        {area && <span className="sr-only">, {area.name}</span>}
       </button>
       <span
         ref={resizeRef}
         {...resizeListeners}
         {...resizeAttributes}
-        role="button"
-        aria-label={t("calendar.resize", { title: item.title })}
+        // Mouse and touch only: keyboard and screen-reader users change the length in the
+        // editor, an equivalent control (WCAG 2.5.8), so the thin strip stays out of their way.
+        role={undefined}
+        tabIndex={-1}
+        aria-hidden="true"
+        title={t("calendar.resize", { title: item.title })}
         className="absolute right-1 bottom-0 left-1 h-2 cursor-ns-resize rounded-full focus-visible:bg-accent"
       />
     </div>

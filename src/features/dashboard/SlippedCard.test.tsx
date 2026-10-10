@@ -50,7 +50,13 @@ let overdue: Item[] = [];
 let todayItems: Item[] = [];
 let calls: Call[] = [];
 const callsTo = (cmd: string) => calls.filter((c) => c.cmd === cmd);
-const dashboard = (): Dashboard => ({ today: todayItems, overdue, thisWeek: [], doneToday: [] });
+const dashboard = (): Dashboard => ({
+  today: todayItems,
+  overdue,
+  thisWeek: [],
+  overdueTotal: 0,
+  doneToday: [],
+});
 
 beforeEach(() => {
   overdue = [bill, essay];
@@ -168,7 +174,13 @@ describe("A very long slipped list (P4-T01)", () => {
       task(`s${i}`, `Old task ${i}`, { dueDate: twoDaysAgo }),
     );
     mockBackend({
-      get_dashboard: (): Dashboard => ({ today: [], overdue: many, thisWeek: [], doneToday: [] }),
+      get_dashboard: (): Dashboard => ({
+        today: [],
+        overdue: many,
+        thisWeek: [],
+        overdueTotal: 0,
+        doneToday: [],
+      }),
     });
     const user = userEvent.setup();
     renderApp("/");
@@ -178,5 +190,37 @@ describe("A very long slipped list (P4-T01)", () => {
     await user.click(screen.getByRole("button", { name: /Show 50 more/ }));
     expect(screen.getByText("Old task 99")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /20 not shown/ })).toBeInTheDocument();
+  });
+});
+
+describe("More slipped tasks than My Day loads (P4-T03)", () => {
+  it("counts them all, says so, and moves them all in one go", async () => {
+    const loaded = [
+      task("a", "Recent one", { dueDate: twoDaysAgo }),
+      task("b", "Recent two", { dueDate: twoDaysAgo }),
+    ];
+    const calls = mockBackend({
+      get_dashboard: (): Dashboard => ({
+        today: [],
+        overdue: loaded,
+        overdueTotal: 302,
+        thisWeek: [],
+        doneToday: [],
+      }),
+      move_all_slipped: () => 302,
+    });
+    const user = userEvent.setup();
+    renderApp("/");
+    expect(await screen.findByText(/302 things slipped by/)).toBeInTheDocument();
+    expect(screen.getByText(/300 older tasks aren't listed here/)).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Move all to today/ }));
+    await waitFor(() =>
+      expect(calls.find((c) => c.cmd === "move_all_slipped")?.args).toMatchObject({
+        today,
+        also: ["a", "b"],
+      }),
+    );
+    expect(calls.some((c) => c.cmd === "reschedule_items")).toBe(false);
   });
 });

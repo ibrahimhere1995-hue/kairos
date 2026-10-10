@@ -386,9 +386,6 @@
     "addTask": "Add task"
   },
   "pages": {
-    "myDay": "Your day at a glance will live here: what's happening now, what's left today, and what slipped by.",
-    "calendar": "Your day, week, and month views will live here.",
-    "settings": "Theme, text size, reminders, and backups will be set here.",
     "errorTitle": "Something went wrong",
     "notFoundTitle": "Nothing here",
     "notFound": "This page doesn't exist. Pick a place from the sidebar."
@@ -520,7 +517,9 @@
     "choicesFor": "Choices for “{{title}}”",
     "keepsMoving": "This one keeps moving. Break it into smaller steps?",
     "breakDown": "Break it down",
-    "allCaughtUp": "All caught up. Nice work."
+    "allCaughtUp": "All caught up. Nice work.",
+    "older_one": "{{count}} older task isn't listed here. “Move all to today” includes it.",
+    "older_other": "{{count}} older tasks aren't listed here. “Move all to today” includes them."
   },
   "repeat": {
     "label": "Repeat",
@@ -598,7 +597,6 @@
       "step": "Found in a step",
       "area": "In this area"
     },
-    "searching": "Searching…",
     "noResults": "Nothing found for “{{query}}”. Create it as a new task?",
     "create": "Create",
     "hint": "↑↓ to move · Enter to open · Esc to close",
@@ -659,7 +657,6 @@
   "inbox": {
     "intro": "Jot things down before they slip away. Turn a note into a task with one click. Tasks without a date wait here too.",
     "add": "Add a task without a date",
-    "loading": "Loading your Inbox",
     "empty": "Nothing waiting here. Tasks without a date show up in the Inbox.",
     "pictureTitle": "Picture",
     "notes": "Notes and pictures",
@@ -833,7 +830,6 @@
     "helpful": "Missing something in your review? Suggest an improvement."
   },
   "ai": {
-    "mark": "Smart feature",
     "title": "Smart features",
     "intro": "Optional extras powered by Google Gemini, using your own free key. Everything else in Kairos works without them.",
     "consentTitle": "Before you turn them on",

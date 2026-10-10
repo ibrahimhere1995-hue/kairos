@@ -59,6 +59,7 @@ const fullDay: Dashboard = {
   today: [meeting, callBank],
   overdue: [gym],
   thisWeek: [],
+  overdueTotal: 0,
   doneToday: [],
 };
 

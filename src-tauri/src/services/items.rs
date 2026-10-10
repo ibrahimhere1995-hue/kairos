@@ -79,6 +79,8 @@ fn modify(
 
 /// Most items `reschedule_many` moves at once ("Move all to today").
 pub const MAX_BULK: usize = 500;
+/// My Day loads at most this many slipped tasks; it shows 50 at a time (P4-T01).
+pub const OVERDUE_SHOWN: i64 = 200;
 /// Most Inbox tasks listed for time-blocking.
 pub const UNSCHEDULED_LIMIT: i64 = 200;
 
@@ -270,14 +272,46 @@ pub fn reschedule_many(
         return Err(AppError::invalid("ids", "tooMany"));
     }
     let tx = conn.transaction()?;
-    let mut moved = Vec::with_capacity(ids.len());
-    for id in ids {
-        moved.push(modify_in(&tx, id, |_, item| {
-            let schedule = validate_schedule(item.kind, input)?;
-            apply_schedule(item, schedule);
-            Ok(())
-        })?);
+    let moved = reschedule_in(&tx, ids, input)?;
+    tx.commit()?;
+    Ok(moved)
+}
+
+fn reschedule_in(tx: &Transaction, ids: &[String], input: &ScheduleInput) -> AppResult<Vec<Item>> {
+    ids.iter()
+        .map(|id| {
+            modify_in(tx, id, |_, item| {
+                let schedule = validate_schedule(item.kind, input)?;
+                apply_schedule(item, schedule);
+                Ok(())
+            })
+        })
+        .collect()
+}
+
+/// "Move all to today" when My Day hasn't loaded every slipped task: moves all of them (and
+/// `also`, e.g. tasks that slipped earlier today) in one transaction. Returns how many moved.
+pub fn move_all_slipped(
+    conn: &mut Connection,
+    day_start: &str,
+    today: &str,
+    also: &[String],
+    input: &ScheduleInput,
+) -> AppResult<usize> {
+    if also.len() > MAX_BULK {
+        return Err(AppError::invalid("ids", "tooMany"));
     }
+    let day_start = normalize_instant("dayStart", day_start)?;
+    let today = normalize_date("today", today)?;
+    let mut ids = repo::overdue_ids(conn, &day_start, &today)?;
+    ids.extend(
+        also.iter()
+            .filter(|id| !ids.contains(id))
+            .cloned()
+            .collect::<Vec<_>>(),
+    );
+    let tx = conn.transaction()?;
+    let moved = reschedule_in(&tx, &ids, input)?.len();
     tx.commit()?;
     Ok(moved)
 }
@@ -421,7 +455,8 @@ pub fn dashboard(conn: &Connection, query: &DashboardQuery) -> AppResult<Dashboa
     today_items.extend(series::in_range(
         conn, &tz, start, end, today_date, tomorrow,
     )?);
-    let mut overdue = repo::overdue_tasks(conn, &day_start, &today)?;
+    let overdue_total = repo::count_overdue(conn, &day_start, &today)?;
+    let mut overdue = repo::overdue_tasks(conn, &day_start, &today, OVERDUE_SHOWN)?;
     overdue.extend(series::latest_missed(conn, &tz, start)?);
     let mut this_week = repo::open_rest_of_week(conn, &day_end, &today, &week_end, &week_end_date)?;
     // Only the next occurrence of each series, so a daily habit doesn't fill the week.
@@ -431,6 +466,7 @@ pub fn dashboard(conn: &Connection, query: &DashboardQuery) -> AppResult<Dashboa
     Ok(Dashboard {
         today: today_items,
         overdue,
+        overdue_total: u32::try_from(overdue_total).unwrap_or(u32::MAX),
         this_week,
         done_today: repo::completed_between(conn, &day_start, &day_end)?,
     })
