@@ -6,7 +6,7 @@ Reviewed 2026-10-10 against ARCHITECTURE §8 and PROJECT_RULES (local-first, no 
 
 | Finding | Fix |
 |---------|-----|
-| **The content security policy was off** (`"csp": null`), unlike ARCHITECTURE §8. | A strict CSP for the bundled app: `default-src 'self'`, scripts only from the app, no `eval`, `connect-src` only Tauri's IPC (and `data:` for picture previews), no frames, objects, forms or base changes. The dev server (`devCsp`) stays open for hot reload. The E2E suite runs against the CSP build. |
+| **The content security policy was off** (`"csp": null`), unlike ARCHITECTURE §8. | A strict CSP for the bundled app: `default-src 'self'`, scripts only from the app, no `eval`, `connect-src` only Tauri's IPC (and `data:` for picture previews), no frames, objects, forms or base changes. Development builds get a separate, looser `devCsp` for Vite hot reload (fixed 2026-10-10: setting it to `null` made Tauri use the strict policy in development and the dev page stayed blank). The E2E suite runs against the CSP build. |
 | **Opening a program attachment would run it.** `open_attachment` handed any file to the OS, so an attached `.exe`, `.bat`, `.ps1`, `.lnk` or similar would start. | `services/attachments.rs::check_openable` refuses about 25 program and script types with a friendly message ("Use Show in folder instead"). Showing the file in its folder still works. |
 
 ## Checked: as designed
