@@ -65,7 +65,7 @@ Windows does not let these move:
 | `pnpm lint` / `pnpm typecheck` / `pnpm format` | Code quality |
 | `pnpm test:rust` / `pnpm lint:rust` / `pnpm fmt:rust` | Rust tests, clippy, rustfmt |
 | `pnpm build` | Production frontend build |
-| `pnpm tauri build --bundles nsis` | Release installer. Output: `src-tauri\target\release\bundle\nsis\Kairos_<version>_x64-setup.exe`, unsigned (see TASKS P4-T07a). Tauri downloads its NSIS tools (~8 MB) into `C:\Users\<you>\AppData\Local\tauri\NSIS`; it ignores a changed `LOCALAPPDATA` (it asks Windows for the folder directly). |
+| `pnpm tauri build --bundles nsis` (with the signing variables below) | Release installer. Output: `src-tauri\target\release\bundle\nsis\Kairos_<version>_x64-setup.exe`, unsigned (see TASKS P4-T07a). Tauri downloads its NSIS tools (~8 MB) into `C:\Users\<you>\AppData\Local\tauri\NSIS`; it ignores a changed `LOCALAPPDATA` (it asks Windows for the folder directly). |
 sisKairos_<version>_x64-setup.exe` (unsigned, see TASKS P4-T07a). |
 | `pnpm audit` and, in `src-tauri`, `cargo audit` | Known-vulnerability checks for npm packages and Rust crates. Run before every release; results in `docs/qa/SECURITY.md`. |
 | `cargo test --release perf_ -- --ignored --nocapture` (in `src-tauri`) | The 50,000-item performance test (P4-T01, `docs/qa/PERFORMANCE.md`). Set `KAIROS_PERF_DB` to a new file to keep the database. |
@@ -74,6 +74,22 @@ sisKairos_<version>_x64-setup.exe` (unsigned, see TASKS P4-T07a). |
 **End-to-end tests:** a second Kairos window opens and clicks through the critical paths by itself, through WebDriver (only inside that window, never system-wide keystrokes). If they suddenly fail after a Windows update, WebView2 probably updated: download the matching `msedgedriver` (see §2; check the version in the registry key `HKLM\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}` → `pv`). CI doesn't run them yet (driver version matching on CI machines is fragile; tracked for Phase 4 QA). Old `.devdata\e2e\run-*` folders and `src-tauri\target-e2e` are safe to delete to free space. UI-checklist screenshots land in `.devdata\e2e\screens`; a failing test leaves a screenshot in `.devdata\e2e\failures`. Each fresh test profile starts on the welcome screens, which the tests skip. `accessibility.e2e.ts` runs axe-core on every screen in both themes and fails on any WCAG 2.2 A/AA violation (the findings are printed in the log).
 
 **Generated types:** `src/types/*.ts` are generated from Rust structs by `ts-rs` whenever `pnpm test:rust` runs (settings in `.cargo/config.toml` at the repo root). After changing a Rust type that the frontend uses, run `pnpm test:rust` and commit the updated files. CI fails if they are out of date. Never edit them by hand.
+
+**Update signing key (P4-T05):** auto-updates are signed with a key pair made by `pnpm tauri signer generate` on 2026-10-10.
+- The **private key** is `I:\DevTools\keys\kairos-updater.key` (no password). It is never in the repo.
+- **Back it up somewhere safe.** If it is lost, installed copies can no longer be updated; users would have to reinstall by hand.
+- The public key is in `src-tauri/tauri.conf.json` (`plugins.updater.pubkey`).
+- Because `bundle.createUpdaterArtifacts` is on, a release build needs:
+  `$env:TAURI_SIGNING_PRIVATE_KEY="I:\DevTools\keys\kairos-updater.key"; $env:TAURI_SIGNING_PRIVATE_KEY_PASSWORD=""`
+  Debug and E2E builds don't.
+
+**Publishing a release (auto-update):**
+1. Raise `version` in `src-tauri/tauri.conf.json` (and `package.json`).
+2. Run the release build with the signing variables.
+3. Run `pnpm release:manifest "What's new"`, which writes `latest.json` next to the installer.
+4. Create the GitHub release `v<version>` and upload the installer, its `.sig` and `latest.json`.
+
+Installed copies find it through `releases/latest/download/latest.json`, which only works if the repository's releases are public.
 
 Dev-only page: **Styleguide** in the sidebar (`/dev/styleguide`) shows every colour, type size and button in both themes.
 

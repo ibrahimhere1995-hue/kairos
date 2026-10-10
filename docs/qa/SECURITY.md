@@ -16,12 +16,12 @@ Reviewed 2026-10-10 against ARCHITECTURE §8 and PROJECT_RULES (local-first, no 
   - The Quick Capture window has `core:default` plus `window:allow-hide`.
   - Plugins with outside effects (opener, notifications, autostart, global shortcut) are used only from Rust; the frontend has no permission for them.
   - Follow-up: Kairos's own commands are callable from both windows (Tauri's default). An app permission manifest could limit the capture window to what it needs.
-- **Network.** Only `ai/gemini.rs` makes requests, to `generativelanguage.googleapis.com`, and only after consent with a saved key. The other outward actions open fixed addresses through the OS:
+- **Network.** Two places make requests. `ai/gemini.rs` calls `generativelanguage.googleapis.com`, and only after consent with a saved key. The updater (P4-T05) asks GitHub for `latest.json` once a day; this can be turned off, and it is off in development builds. It installs only signed updates, and only when the user asks. The other outward actions open fixed addresses through the OS:
   - Google AI Studio's key page;
   - Windows privacy pages (`ms-settings:`);
   - a `mailto:` link built from the user's own wishlist.
 
-  There is no telemetry, update check or crash report yet.
+  There is no telemetry or crash reporting.
 - **What AI requests contain.**
   - A2: the typed sentence plus the local date and time.
   - A1: the shrunk picture.

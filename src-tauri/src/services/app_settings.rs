@@ -20,6 +20,7 @@ const NAME: &str = "profile.name";
 const REVIEW_DAY: &str = "review.day";
 const WORK_START: &str = "planning.dayStart";
 const WORK_END: &str = "planning.dayEnd";
+const AUTO_UPDATE: &str = "updates.autoCheck";
 pub const NAME_MAX_CHARS: usize = 40;
 /// Internal: the local date the last daily summary was sent for.
 const SUMMARY_LAST_SENT: &str = "reminders.dailySummaryLastSent";
@@ -75,6 +76,7 @@ pub fn get(conn: &Connection) -> AppResult<AppSettings> {
         review_day: read(conn, REVIEW_DAY, defaults.review_day)?,
         work_day_start: read_time(conn, WORK_START, defaults.work_day_start)?,
         work_day_end: read_time(conn, WORK_END, defaults.work_day_end)?,
+        auto_update_check: read(conn, AUTO_UPDATE, defaults.auto_update_check)?,
     })
 }
 
@@ -106,6 +108,7 @@ pub fn update(conn: &mut Connection, next: &AppSettings) -> AppResult<AppSetting
     write(&tx, REVIEW_DAY, &next.review_day)?;
     write(&tx, WORK_START, &next.work_day_start)?;
     write(&tx, WORK_END, &next.work_day_end)?;
+    write(&tx, AUTO_UPDATE, &next.auto_update_check)?;
     tx.commit()?;
     get(conn)
 }
@@ -192,6 +195,7 @@ mod tests {
             review_day: Weekday::Friday,
             work_day_start: "08:30".into(),
             work_day_end: "17:00".into(),
+            auto_update_check: false,
         };
         assert_eq!(update(&mut c, &next).unwrap(), next);
         assert_eq!(get(&c).unwrap(), next);

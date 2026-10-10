@@ -19,4 +19,5 @@ export const DEFAULT_SETTINGS: AppSettings = {
   reviewDay: "sunday",
   workDayStart: "09:00",
   workDayEnd: "18:00",
+  autoUpdateCheck: true,
 };

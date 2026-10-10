@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <!-- Tray / menu bar mark (P4-T08): the logo in one colour, heavier strokes so it reads at
+       16 px on light and dark taskbars. Gold #C9A24A, transparent background. -->
+  <circle cx="512" cy="512" r="330" fill="none" stroke="#C9A24A" stroke-width="130"/>
+  <line x1="700" y1="324" x2="860" y2="164" stroke="#C9A24A" stroke-width="140" stroke-linecap="round"/>
+</svg>

@@ -69,6 +69,8 @@ pub struct AppSettings {
     /// Local `HH:mm`: the hours Plan my day and the overbooked check use (default 09:00–18:00).
     pub work_day_start: String,
     pub work_day_end: String,
+    /// P4-T05: look for a new version once a day (PRD: the update check can be turned off).
+    pub auto_update_check: bool,
 }
 
 impl Default for AppSettings {
@@ -85,6 +87,7 @@ impl Default for AppSettings {
             review_day: Weekday::default(),
             work_day_start: "09:00".into(),
             work_day_end: "18:00".into(),
+            auto_update_check: true,
         }
     }
 }

@@ -52,6 +52,11 @@
       "microphone": "Kairos can't use the microphone. Allow microphone access for apps in Windows privacy settings.",
       "failed": "Voice capture didn't work this time. Please try again, or type instead.",
       "unsupported": "Voice capture isn't available on this computer yet."
+    },
+    "update": {
+      "offline": "Kairos couldn’t reach the update server. Check your internet connection and try again.",
+      "notFound": "No update was found right now. Please try again later.",
+      "failed": "The update didn’t work this time. Kairos is unchanged; please try again later."
     }
   },
   "common": {
@@ -891,5 +896,19 @@
     "hold": "Hold to speak",
     "listening": "Listening… release when done",
     "openSettings": "Open Windows settings"
+  },
+  "updates": {
+    "title": "Updates",
+    "version": "You have Kairos {{version}}.",
+    "auto": "Check for updates",
+    "autoHelp": "Once a day Kairos asks GitHub whether a newer version exists. Nothing else is sent, and nothing installs without you.",
+    "checkNow": "Check now",
+    "checking": "Checking…",
+    "upToDate": "Kairos is up to date.",
+    "available": "Kairos {{version}} is available.",
+    "install": "Install and restart",
+    "installing": "Installing…",
+    "ready": "Kairos {{version}} is ready. Install it whenever suits you; Kairos restarts in a few seconds.",
+    "later": "Later"
   }
 }

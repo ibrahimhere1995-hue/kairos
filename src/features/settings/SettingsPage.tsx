@@ -4,8 +4,9 @@ import { AreasSettings } from "@/features/settings/areas/AreasSettings";
 import { BackupsSection } from "@/features/settings/backups/BackupsSection";
 import { DataSection } from "@/features/settings/data/DataSection";
 import { GeneralSettings } from "@/features/settings/GeneralSettings";
+import { UpdatesSection } from "@/features/settings/updates/UpdatesSection";
 
-/** Settings: appearance, calendar, reminders, startup, life areas, smart features, backups, your data. Everything saves as you change it. */
+/** Settings: appearance, calendar, reminders, startup, life areas, smart features, backups, your data, updates. Everything saves as you change it. */
 export function SettingsPage() {
   const { t } = useTranslation();
   return (
@@ -19,6 +20,7 @@ export function SettingsPage() {
       <SmartFeaturesSection />
       <BackupsSection />
       <DataSection />
+      <UpdatesSection />
     </div>
   );
 }

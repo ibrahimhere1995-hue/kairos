@@ -15,7 +15,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = ["tray-icon"] }
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 rusqlite_migration = "2.6.0"
@@ -52,6 +52,7 @@ ts-rs = "12"
 tauri-plugin-global-shortcut = "2"
 tauri-plugin-autostart = "2"
 tauri-plugin-opener = "2"
+tauri-plugin-updater = "2.13.2"
 
 # Not Windows: plain notifications (Windows uses tauri-winrt-notification for buttons).
 [target.'cfg(not(windows))'.dependencies]

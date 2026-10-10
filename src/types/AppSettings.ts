@@ -35,4 +35,8 @@ reviewDay: Weekday,
 /**
  * Local `HH:mm`: the hours Plan my day and the overbooked check use (default 09:00–18:00).
  */
-workDayStart: string, workDayEnd: string, };
+workDayStart: string, workDayEnd: string, 
+/**
+ * P4-T05: look for a new version once a day (PRD: the update check can be turned off).
+ */
+autoUpdateCheck: boolean, };

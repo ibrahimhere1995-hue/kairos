@@ -62,6 +62,18 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDIxRTEyRjhBOTgwMTc1RUMKUldUc2RRR1lpaS9oSWZYbUNtbml0NG9pWkhaaGF6ZW53SDd0SGNCRHpEZGZzcStFa3pDYXNlelMK",
+      "endpoints": [
+        "https://github.com/ibrahimhere1995-hue/kairos/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
+    }
   }
 }
