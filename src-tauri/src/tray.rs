@@ -14,6 +14,9 @@ use crate::i18n::t;
 use crate::notify::OPEN_ITEM;
 use crate::scheduler::messages::tray_next;
 use crate::services::today;
+
+/// The tray mark, generated from `icons/source/tray-icon.svg` (P4-T08).
+const TRAY_ICON: &[u8] = include_bytes!("../icons/tray@2x.png");
 use crate::{capture, window};
 
 const OPEN: &str = "open";
@@ -66,8 +69,14 @@ pub fn create(app: &App) -> tauri::Result<()> {
                 window::show_main(tray.app_handle());
             }
         });
-    if let Some(icon) = app.default_window_icon() {
-        builder = builder.icon(icon.clone());
+    // The one-colour mark (DESIGN_SYSTEM §1: must read at 16 px); the app icon if it can't load.
+    match tauri::image::Image::from_bytes(TRAY_ICON) {
+        Ok(icon) => builder = builder.icon(icon),
+        Err(_) => {
+            if let Some(icon) = app.default_window_icon() {
+                builder = builder.icon(icon.clone());
+            }
+        }
     }
     builder.build(app)?;
 

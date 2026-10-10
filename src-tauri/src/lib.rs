@@ -16,6 +16,7 @@ pub mod services;
 pub mod startup;
 #[cfg(desktop)]
 pub mod tray;
+pub mod updates;
 pub mod util;
 pub mod voice;
 
@@ -141,7 +142,9 @@ pub fn run() {
     let builder = builder
         .plugin(autostart::plugin())
         // Opens attachment files with the system's usual app (only from Rust commands).
-        .plugin(tauri_plugin_opener::init());
+        .plugin(tauri_plugin_opener::init())
+        // Signed updates from GitHub Releases; checked only when allowed (updates.rs).
+        .plugin(tauri_plugin_updater::Builder::new().build());
     // Windows notifications use tauri-winrt-notification directly (buttons); see notify.rs.
     #[cfg(not(windows))]
     let builder = builder.plugin(tauri_plugin_notification::init());
@@ -164,6 +167,8 @@ pub fn run() {
             app.manage(StartHidden::from_args());
             app.manage(commands::focus::FocusMute::default());
             app.manage(voice::VoiceState::default());
+            app.manage(updates::PendingUpdate::default());
+            updates::start_background(app.handle().clone());
 
             #[cfg(desktop)]
             {
@@ -276,6 +281,8 @@ pub fn run() {
             commands::voice::voice_start,
             commands::voice::voice_stop,
             commands::voice::voice_open_settings,
+            commands::updates::check_for_update,
+            commands::updates::install_update,
             commands::data::export_json,
             commands::data::export_ics,
             commands::data::import_ics,

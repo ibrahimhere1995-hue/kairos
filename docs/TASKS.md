@@ -93,11 +93,11 @@ Legend: 🧱 setup · 🗄 data · 🎨 UI · ⚙️ logic · 🧪 tests · 🚀
 - [x] **P4-T02 🧪 Security review** (workflow step 13) — capabilities, CSP, keychain, dependency audit (`pnpm audit`, `cargo audit`). *(Results: `docs/qa/SECURITY.md`; CSP turned on, program attachments no longer opened.)*
 - [x] **P4-T03 🧪 Code review pass** (step 14) — dead code, consistency, docs updated. *(6 unused strings removed; no dead code; no component over 250 lines; ARCHITECTURE layout brought up to date. Also: My Day loads the newest 200 slipped tasks + a count; "Move all" moves them all in Rust.)*
 - [ ] **P4-T04 ⚙️ Licensing** — free vs Pro gating, offline licence key verification, payment provider integration.
-- [ ] **P4-T05 🚀 Auto-update** — signed updates via `tauri-plugin-updater`, toggle in settings.
+- [x] **P4-T05 🚀 Auto-update** — signed updates via `tauri-plugin-updater`, toggle in settings. *(Releases on GitHub; steps in SETUP. Needs public releases to work for users.)*
 - [ ] **P4-T06 🚀 Opt-in crash reporting** (step 18) — anonymised, off by default.
 - [ ] **P4-T07 🚀 Signed installers** (step 17) — Windows (MSI/NSIS, code-signed) and macOS (DMG, Developer ID, notarised) via GitHub Actions.
 - [ ] **P4-T07a 📝 TODO (decide later): how to publish on Windows** — Microsoft Store (Microsoft signs it; no SmartScreen warning) vs Azure Trusted Signing (~$10/month, some countries only) vs a bought certificate (~$100–400/year), or stay unsigned. Beta 0.2.0 ships unsigned (decision 2026-10-09).
-- [ ] **P4-T08 🎨 Logo, app icons, tray icons** in all required sizes.
+- [x] **P4-T08 🎨 Logo, app icons, tray icons** in all required sizes. *(Mark only; the Fraunces wordmark comes with the landing page.)*
 - [ ] **P4-T09 🚀 Landing page** — tagline, screenshots in both themes, privacy promise, download + buy.
 - [ ] **P4-T10 🧪 QA testing** (step 16) on clean Windows 10, Windows 11, macOS Intel, macOS Apple Silicon.
 - [ ] **P4-T11 🚀 Launch** — Product Hunt, Reddit, productivity communities; collect feedback into the wishlist.

@@ -29,6 +29,9 @@ pub enum AppError {
     /// Voice capture failed; the reason is a short i18n key under `errors.voice`.
     #[error("voice capture failed: {0}")]
     Voice(&'static str),
+    /// Updating failed; the reason is a short i18n key under `errors.update`.
+    #[error("update failed: {0}")]
+    Update(&'static str),
 }
 
 impl AppError {
@@ -48,6 +51,7 @@ impl AppError {
             AppError::InvalidBackup => "invalid_backup",
             AppError::Ai(_) => "ai",
             AppError::Voice(_) => "voice",
+            AppError::Update(_) => "update",
         }
     }
 
@@ -64,6 +68,7 @@ impl AppError {
             AppError::InvalidBackup => "errors.invalidBackup".into(),
             AppError::Ai(reason) => format!("errors.ai.{reason}"),
             AppError::Voice(reason) => format!("errors.voice.{reason}"),
+            AppError::Update(reason) => format!("errors.update.{reason}"),
         }
     }
 

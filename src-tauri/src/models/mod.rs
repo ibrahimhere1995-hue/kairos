@@ -15,3 +15,4 @@ pub mod inputs;
 pub mod item;
 pub mod reminder;
 pub mod settings;
+pub mod update;

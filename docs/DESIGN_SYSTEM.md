@@ -11,8 +11,10 @@
 | **Feels like** | A beautifully made leather planner with a gold-edged page — but smart. |
 | **Never feels like** | Corporate dashboard, noisy gamified app, cheap template, guilt machine. |
 
-### Logo direction (to be designed)
-Wordmark "Kairos" in Fraunces, medium weight, slightly tightened letter-spacing. Symbol idea: a minimal circle (time) with a single gold tick/notch at the top-right — "the moment". Must work in one colour at 16 px (tray icon).
+### Logo
+Wordmark "Kairos" in Fraunces, medium weight, slightly tightened letter-spacing. Symbol: a minimal circle (time) with a single gold tick at the top-right — "the moment". Must work in one colour at 16 px (tray icon).
+- **App icon** (P4-T08): ivory ring and gold tick on a midnight rounded square — `src-tauri/icons/source/app-icon.svg`; every size is generated from it with `pnpm tauri icon src-tauri/icons/source/app-icon.svg -o src-tauri/icons`.
+- **Tray icon:** the mark alone in gold on transparent, with heavier strokes so it reads at 16 px on light and dark taskbars — `icons/source/tray-icon.svg` → `icons/tray.png` / `tray@2x.png`.
 
 ### Voice & copy
 - Plain, short, human. Write for a 12-year-old reading level.

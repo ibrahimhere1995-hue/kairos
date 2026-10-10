@@ -14,6 +14,7 @@ pub mod items;
 pub mod onboarding;
 pub mod settings;
 pub mod trash;
+pub mod updates;
 pub mod voice;
 
 use rusqlite::Connection;
