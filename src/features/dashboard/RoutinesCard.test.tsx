@@ -68,6 +68,7 @@ beforeEach(() => {
     get_dashboard: () => ({
       today: [],
       overdue: [bill, vitamins, review],
+      overdueTotal: 1,
       thisWeek: [],
       doneToday: [],
     }),

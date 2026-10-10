@@ -133,6 +133,24 @@ export function useSkipItem(messageKey = "toast.letGo") {
 }
 
 /** Gives several items one new moment in a single save ("Move all to today"). */
+/** "Move all to today" for more slipped tasks than My Day loaded (moved in Rust). */
+export function useMoveAllSlipped() {
+  const queryClient = useQueryClient();
+  const { t } = useTranslation();
+  const showToast = useToastStore((state) => state.show);
+  return useMutation({
+    mutationFn: ({ dayStart, today, also }: { dayStart: string; today: string; also: string[] }) =>
+      itemsApi.moveAllSlipped(dayStart, today, also, {
+        dueDate: today,
+        startAt: null,
+        endAt: null,
+      }),
+    onSuccess: (count) => showToast({ message: t("toast.movedToday", { count }) }),
+    onError: () => showToast({ message: t("calendar.moveFailed") }),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: itemKeys.all }),
+  });
+}
+
 export function useMoveItems() {
   const queryClient = useQueryClient();
   const { t } = useTranslation();

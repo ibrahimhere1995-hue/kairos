@@ -11,9 +11,14 @@ export type Dashboard = {
  */
 today: Array<Item>, 
 /**
- * Unfinished **tasks** scheduled before today (only tasks can slip).
+ * Unfinished **tasks** scheduled before today (only tasks can slip): the most recent
+ * `OVERDUE_SHOWN`, oldest first, plus routines' latest missed occurrences.
  */
 overdue: Array<Item>, 
+/**
+ * How many stored tasks slipped in all (more than `overdue` holds when there are many).
+ */
+overdueTotal: number, 
 /**
  * Not finished, scheduled after today and before the end of the week.
  */

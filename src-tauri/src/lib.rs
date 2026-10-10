@@ -214,6 +214,7 @@ pub fn run() {
             commands::items::uncomplete_item,
             commands::items::reschedule_item,
             commands::items::reschedule_items,
+            commands::items::move_all_slipped,
             commands::items::skip_item,
             commands::items::unskip_item,
             commands::items::list_unscheduled,

@@ -89,6 +89,7 @@ describe("groupDashboard", () => {
     overdue: [yesterday],
     thisWeek: [friday],
     doneToday: [done],
+    overdueTotal: 0,
   };
 
   it("places items by status: Now, Today, Slipped (only tasks), This week, Done", () => {
@@ -118,7 +119,10 @@ describe("groupDashboard", () => {
   });
 
   it("detects an empty day", () => {
-    const empty = groupDashboard({ today: [], overdue: [], thisWeek: [], doneToday: [] }, ctx);
+    const empty = groupDashboard(
+      { today: [], overdue: [], thisWeek: [], doneToday: [], overdueTotal: 0 },
+      ctx,
+    );
     expect(isEmpty(empty)).toBe(true);
     expect(isEmpty(groupDashboard(data, ctx))).toBe(false);
   });

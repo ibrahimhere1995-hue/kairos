@@ -57,7 +57,8 @@ pub fn overview<Tz: TimeZone>(
         conn, tz, start_utc, end_utc, today, tomorrow,
     )?);
     // Missed routines (repeating tasks) have their own calm card and aren't counted here.
-    let slipped = items::overdue_tasks(conn, &day_start, &today_text)?.len();
+    let slipped =
+        usize::try_from(items::count_overdue(conn, &day_start, &today_text)?).unwrap_or(0);
 
     let upcoming = open
         .iter()

@@ -11,7 +11,12 @@ import { OverbookedCard } from "@/features/dashboard/OverbookedCard";
 import { overload } from "@/features/dashboard/overload";
 import { RoutinesCard } from "@/features/dashboard/RoutinesCard";
 import { SlippedCard } from "@/features/dashboard/SlippedCard";
-import { groupDashboard, isEmpty, summarize } from "@/features/dashboard/groupDashboard";
+import {
+  groupDashboard,
+  isEmpty,
+  summarize,
+  unloadedSlipped,
+} from "@/features/dashboard/groupDashboard";
 import { useNow } from "@/features/dashboard/useNow";
 import { useAreas, useDashboard, useItemsInRange } from "@/features/items/api";
 import { useEditorStore } from "@/features/items/editorStore";
@@ -71,7 +76,10 @@ export function MyDayPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <Greeting now={now} summary={summarize(groupDashboard(dashboard.data, ctx))} />
+      <Greeting
+        now={now}
+        summary={summarize(groupDashboard(dashboard.data, ctx), unloadedSlipped(dashboard.data))}
+      />
       <SamplesNote />
       <ReviewNudge now={now} />
 
@@ -109,7 +117,13 @@ export function MyDayPage() {
             {...common}
           />
           {/* DESIGN_SYSTEM §6: the slipped card comes right after Now. */}
-          <SlippedCard entries={sections.slipped} areas={areas} today={ctx.today} />
+          <SlippedCard
+            entries={sections.slipped}
+            unloaded={unloadedSlipped(dashboard.data, areaId)}
+            areas={areas}
+            today={ctx.today}
+            dayStart={ctx.dayStart.toISOString()}
+          />
           {load && <OverbookedCard load={load} />}
           <RoutinesCard entries={sections.routines} areas={areas} today={ctx.today} />
           <DashboardSection

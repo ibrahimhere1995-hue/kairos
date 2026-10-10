@@ -25,7 +25,13 @@ export const testAreas: Area[] = [
   },
 ];
 
-export const emptyDashboard: Dashboard = { today: [], overdue: [], thisWeek: [], doneToday: [] };
+export const emptyDashboard: Dashboard = {
+  today: [],
+  overdue: [],
+  thisWeek: [],
+  overdueTotal: 0,
+  doneToday: [],
+};
 
 /**
  * Fake Rust backend for component tests: sensible empty answers for every command,

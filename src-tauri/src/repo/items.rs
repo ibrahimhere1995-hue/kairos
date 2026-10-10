@@ -285,22 +285,51 @@ pub fn open_today(
     )
 }
 
-/// Unfinished tasks scheduled before today (events never slip — PRD §6).
+/// Which unfinished tasks slipped: scheduled before today (events never slip — PRD §6).
+const SLIPPED: &str = "kind = 'task' AND (due_date < :today OR start_at < :day_start)";
+
+/// The `limit` most recently slipped tasks, oldest first.
 pub fn overdue_tasks(
     conn: &Connection,
     day_start: &str,
     today: &str,
+    limit: i64,
 ) -> rusqlite::Result<Vec<Item>> {
-    query_items(
+    let mut newest = query_items(
         conn,
         &format!(
             "SELECT {COLUMNS} FROM items
-             WHERE {OPEN} AND kind = 'task'
-               AND (due_date < :today OR start_at < :day_start)
-             ORDER BY COALESCE(start_at, due_date), created_at"
+             WHERE {OPEN} AND {SLIPPED}
+             ORDER BY COALESCE(start_at, due_date) DESC, created_at DESC
+             LIMIT :limit"
         ),
+        named_params! { ":day_start": day_start, ":today": today, ":limit": limit },
+    )?;
+    newest.reverse();
+    Ok(newest)
+}
+
+/// How many tasks slipped in all.
+pub fn count_overdue(conn: &Connection, day_start: &str, today: &str) -> rusqlite::Result<i64> {
+    conn.query_row(
+        &format!("SELECT COUNT(*) FROM items WHERE {OPEN} AND {SLIPPED}"),
         named_params! { ":day_start": day_start, ":today": today },
+        |r| r.get(0),
     )
+}
+
+/// Every slipped task's id ("Move all to today" when not all are loaded).
+pub fn overdue_ids(
+    conn: &Connection,
+    day_start: &str,
+    today: &str,
+) -> rusqlite::Result<Vec<String>> {
+    let mut stmt = conn.prepare(&format!("SELECT id FROM items WHERE {OPEN} AND {SLIPPED}"))?;
+    stmt.query_map(
+        named_params! { ":day_start": day_start, ":today": today },
+        |r| r.get(0),
+    )?
+    .collect()
 }
 
 /// Unfinished items scheduled after today and before the end of the week.
