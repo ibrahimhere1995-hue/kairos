@@ -50,7 +50,16 @@
         "form-action": "'none'",
         "frame-src": "'none'"
       },
-      "devCsp": null
+      "devCsp": {
+        "default-src": "'self'",
+        "script-src": "'self' 'unsafe-inline' 'unsafe-eval'",
+        "style-src": "'self' 'unsafe-inline'",
+        "img-src": "'self' data: blob:",
+        "font-src": "'self' data:",
+        "media-src": "'self'",
+        "connect-src": "'self' ipc: http://ipc.localhost ws://localhost:1420 http://localhost:1420 data:",
+        "object-src": "'none'"
+      }
     }
   },
   "bundle": {

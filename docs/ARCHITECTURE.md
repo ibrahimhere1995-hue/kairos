@@ -300,7 +300,7 @@ All commands return `Result<T, AppError>`; `AppError` has a `code` and a user-sa
 
 ## 8. Security
 - Tauri capabilities: grant only needed plugins/permissions per window (main vs capture window).
-- CSP (`tauri.conf.json`, P4-T02): `default-src 'self'`; scripts only from the app; `connect-src` only Tauri IPC (+ `data:` for picture previews) — network only in Rust. The dev server has no CSP (`devCsp: null`).
+- CSP (`tauri.conf.json`, P4-T02): `default-src 'self'`; scripts only from the app; `connect-src` only Tauri IPC (+ `data:` for picture previews) — network only in Rust. Development (`pnpm tauri dev`) uses its own looser `devCsp` (inline and eval scripts, the Vite websocket) because Vite needs them; `null` is not an option, since Tauri then applies the strict policy and the dev page stays blank.
 - No `eval`, no remote scripts, no remote fonts.
 - Gemini key: OS keychain only; never in DB, logs, or exports.
 - Updates: only signed releases install (minisign signature checked against the public key in `tauri.conf.json`); the private key stays outside the repo (SETUP).
